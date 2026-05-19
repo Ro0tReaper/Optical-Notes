@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIT452 Week 9 – Study Guide: Network Function Virtualization</title>
+<title>SIT452 Week 9 – Complete Study Guide: NFV</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -20,16 +20,8 @@
     --muted: #8b949e;
     --heading: #ffffff;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Lora', serif;
-    font-size: 16px;
-    line-height: 1.8;
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'Lora', serif; font-size: 16px; line-height: 1.8; }
 
   .hero {
     background: linear-gradient(135deg, #0d1117 0%, #1a1f35 50%, #0d1117 100%);
@@ -39,386 +31,105 @@
     position: relative;
     overflow: hidden;
   }
-
   .hero::before {
     content: '';
     position: absolute;
     inset: 0;
     background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(88,166,255,0.08) 0%, transparent 70%);
   }
+  .hero-tag { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+  .hero h1 { font-family: 'Sora', sans-serif; font-size: clamp(26px, 5vw, 50px); font-weight: 800; color: var(--heading); line-height: 1.2; position: relative; }
+  .hero p { margin-top: 12px; color: var(--muted); font-size: 14px; font-family: 'IBM Plex Mono', monospace; }
 
-  .hero-tag {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 16px;
-  }
-
-  .hero h1 {
-    font-family: 'Sora', sans-serif;
-    font-size: clamp(28px, 5vw, 52px);
-    font-weight: 800;
-    color: var(--heading);
-    line-height: 1.2;
-    position: relative;
-  }
-
-  .hero p {
-    margin-top: 16px;
-    color: var(--muted);
-    font-size: 15px;
-    font-family: 'IBM Plex Mono', monospace;
-  }
-
-  .toc {
+  .missing-banner {
     max-width: 860px;
-    margin: 40px auto;
+    margin: 28px auto 0;
     padding: 0 24px;
   }
-
-  .toc-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px 32px;
-  }
-
-  .toc-card h2 {
+  .missing-banner-inner {
+    background: rgba(247,129,102,0.07);
+    border: 1px solid rgba(247,129,102,0.3);
+    border-left: 4px solid var(--accent3);
+    border-radius: 8px;
+    padding: 14px 20px;
     font-family: 'Sora', sans-serif;
     font-size: 13px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 18px;
-    font-weight: 600;
-  }
-
-  .toc-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 24px;
-  }
-
-  .toc-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
     color: var(--text);
-    text-decoration: none;
-    font-family: 'Sora', sans-serif;
-    font-size: 13.5px;
-    padding: 6px 0;
-    border-bottom: 1px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
   }
+  .missing-banner-inner strong { color: var(--accent3); }
 
+  .toc { max-width: 860px; margin: 28px auto; padding: 0 24px; }
+  .toc-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px 28px; }
+  .toc-card h2 { font-family: 'Sora', sans-serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; font-weight: 600; }
+  .toc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; }
+  .toc-item { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-family: 'Sora', sans-serif; font-size: 13px; padding: 5px 0; border-bottom: 1px solid transparent; transition: color 0.2s, border-color 0.2s; }
   .toc-item:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .toc-item .new { font-family:'IBM Plex Mono',monospace; font-size:9px; background:rgba(247,129,102,0.2); color:var(--accent3); border:1px solid rgba(247,129,102,0.4); padding:1px 5px; border-radius:3px; }
   .toc-num { color: var(--muted); font-family: 'IBM Plex Mono', monospace; font-size: 11px; min-width: 22px; }
 
-  .content {
-    max-width: 860px;
-    margin: 0 auto 80px;
-    padding: 0 24px;
-  }
+  .content { max-width: 860px; margin: 0 auto 80px; padding: 0 24px; }
 
-  /* Section wrapper */
-  .section {
-    margin-bottom: 56px;
-  }
+  .section { margin-bottom: 52px; }
+  .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  .section-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); background: var(--surface); border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; white-space: nowrap; }
+  .section h2 { font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 700; color: var(--heading); }
 
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 28px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .section-num {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 4px 10px;
-    border-radius: 4px;
-    white-space: nowrap;
-  }
-
-  .section h2 {
-    font-family: 'Sora', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--heading);
-  }
-
-  /* Cards */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 22px 26px;
-    margin-bottom: 16px;
-  }
-
-  .card-title {
-    font-family: 'Sora', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .badge {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
-
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 14px; }
+  .card-title { font-family: 'Sora', sans-serif; font-weight: 700; font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .badge { font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 600; letter-spacing: 0.5px; white-space: nowrap; }
   .badge-blue { background: rgba(88,166,255,0.15); color: var(--accent); border: 1px solid rgba(88,166,255,0.3); }
   .badge-green { background: rgba(63,185,80,0.15); color: var(--accent2); border: 1px solid rgba(63,185,80,0.3); }
   .badge-red { background: rgba(247,129,102,0.15); color: var(--accent3); border: 1px solid rgba(247,129,102,0.3); }
   .badge-purple { background: rgba(210,168,255,0.15); color: var(--accent4); border: 1px solid rgba(210,168,255,0.3); }
   .badge-orange { background: rgba(255,166,87,0.15); color: var(--accent5); border: 1px solid rgba(255,166,87,0.3); }
+  .badge-new { background: rgba(247,129,102,0.2); color: var(--accent3); border: 1px solid rgba(247,129,102,0.5); font-weight:700; }
 
   .card p { color: var(--text); font-size: 15px; line-height: 1.8; margin-bottom: 10px; }
   .card p:last-child { margin-bottom: 0; }
 
-  ul.points {
-    list-style: none;
-    padding: 0;
-  }
+  ul.points { list-style: none; padding: 0; }
+  ul.points li { padding: 5px 0 5px 20px; position: relative; font-size: 14.5px; line-height: 1.7; color: var(--text); }
+  ul.points li::before { content: '▸'; position: absolute; left: 0; color: var(--muted); font-size: 12px; top: 8px; }
+  ul.points li strong { font-family: 'Sora', sans-serif; font-weight: 600; color: var(--heading); }
 
-  ul.points li {
-    padding: 6px 0 6px 20px;
-    position: relative;
-    font-size: 15px;
-    line-height: 1.7;
-    color: var(--text);
-  }
+  .analogy { background: linear-gradient(135deg, rgba(88,166,255,0.05) 0%, rgba(63,185,80,0.05) 100%); border: 1px solid rgba(88,166,255,0.25); border-left: 3px solid var(--accent); border-radius: 8px; padding: 16px 20px; margin: 14px 0; }
+  .analogy-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .analogy p { font-size: 14px; color: var(--text); font-style: italic; }
 
-  ul.points li::before {
-    content: '▸';
-    position: absolute;
-    left: 0;
-    color: var(--muted);
-    font-size: 12px;
-    top: 9px;
-  }
-
-  ul.points li strong {
-    font-family: 'Sora', sans-serif;
-    font-weight: 600;
-    color: var(--heading);
-  }
-
-  /* Analogy block */
-  .analogy {
-    background: linear-gradient(135deg, rgba(88,166,255,0.05) 0%, rgba(63,185,80,0.05) 100%);
-    border: 1px solid rgba(88,166,255,0.25);
-    border-left: 3px solid var(--accent);
-    border-radius: 8px;
-    padding: 18px 22px;
-    margin: 16px 0;
-  }
-
-  .analogy-label {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-
-  .analogy p { font-size: 14.5px; color: var(--text); font-style: italic; }
-
-  /* Comparison grid */
-  .compare-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .compare-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 18px;
-  }
-
-  .compare-card h4 {
-    font-family: 'Sora', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
-
+  .compare-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+  .compare-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .compare-card h4 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 10px; }
   .compare-card ul { list-style: none; }
-  .compare-card ul li {
-    font-size: 13px;
-    padding: 4px 0;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-    line-height: 1.5;
-  }
+  .compare-card ul li { font-size: 12.5px; padding: 4px 0; color: var(--muted); border-bottom: 1px solid var(--border); line-height: 1.5; }
   .compare-card ul li:last-child { border-bottom: none; }
   .compare-card ul li span { color: var(--text); }
 
-  /* Key fact callout */
-  .key-fact {
-    background: rgba(255,166,87,0.06);
-    border: 1px solid rgba(255,166,87,0.25);
-    border-left: 3px solid var(--accent5);
-    border-radius: 8px;
-    padding: 14px 18px;
-    margin: 14px 0;
-    font-size: 14px;
-    color: var(--text);
-  }
-
+  .key-fact { background: rgba(255,166,87,0.06); border: 1px solid rgba(255,166,87,0.25); border-left: 3px solid var(--accent5); border-radius: 8px; padding: 12px 16px; margin: 12px 0; font-size: 14px; color: var(--text); }
   .key-fact strong { color: var(--accent5); font-family: 'Sora', sans-serif; }
 
-  /* Flow steps */
-  .flow {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    margin: 12px 0;
-  }
+  .flow { display: flex; flex-direction: column; gap: 0; margin: 12px 0; }
+  .flow-step { display: flex; gap: 14px; align-items: flex-start; position: relative; }
+  .flow-step:not(:last-child)::after { content: ''; position: absolute; left: 15px; top: 34px; bottom: -4px; width: 2px; background: var(--border); }
+  .flow-num { width: 30px; height: 30px; min-width: 30px; border-radius: 50%; background: var(--surface2); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent); font-weight: 600; }
+  .flow-content { padding: 4px 0 18px; font-size: 14px; line-height: 1.7; }
+  .flow-content strong { font-family: 'Sora', sans-serif; font-weight: 600; color: var(--heading); display: block; margin-bottom: 2px; font-size: 13.5px; }
 
-  .flow-step {
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-    position: relative;
-  }
+  .code-block { background: #010409; border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; margin: 10px 0; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.7; color: #a5d6ff; overflow-x: auto; white-space: pre; }
+  .code-block .comment { color: #6e7681; }
+  .code-block .cmd { color: #79c0ff; }
+  .code-block .val { color: #a5d6ff; }
+  .code-block .section-label { color: var(--accent5); }
 
-  .flow-step:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    left: 15px;
-    top: 36px;
-    bottom: -4px;
-    width: 2px;
-    background: var(--border);
-  }
-
-  .flow-num {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    border-radius: 50%;
-    background: var(--surface2);
-    border: 2px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    color: var(--accent);
-    font-weight: 600;
-  }
-
-  .flow-content {
-    padding: 4px 0 20px;
-    font-size: 14.5px;
-    line-height: 1.7;
-  }
-
-  .flow-content strong {
-    font-family: 'Sora', sans-serif;
-    font-weight: 600;
-    color: var(--heading);
-    display: block;
-    margin-bottom: 2px;
-    font-size: 14px;
-  }
-
-  /* Code block */
-  .code-block {
-    background: #010409;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px 20px;
-    margin: 12px 0;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    line-height: 1.7;
-    color: #a5d6ff;
-    overflow-x: auto;
-  }
-
-  .code-block .comment { color: var(--muted); }
-
-  /* Table */
-  table.summary-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13.5px;
-    margin: 12px 0;
-  }
-
-  table.summary-table th {
-    font-family: 'Sora', sans-serif;
-    font-size: 11px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 10px 16px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface2);
-  }
-
-  table.summary-table td {
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-    vertical-align: top;
-    line-height: 1.6;
-  }
-
+  table.summary-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  table.summary-table th { font-family: 'Sora', sans-serif; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 9px 14px; text-align: left; border-bottom: 1px solid var(--border); background: var(--surface2); }
+  table.summary-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text); vertical-align: top; line-height: 1.6; }
   table.summary-table tr:last-child td { border-bottom: none; }
-  table.summary-table td:first-child {
-    font-family: 'Sora', sans-serif;
-    font-weight: 600;
-    color: var(--heading);
-    white-space: nowrap;
-  }
+  table.summary-table td:first-child { font-family: 'Sora', sans-serif; font-weight: 600; color: var(--heading); white-space: nowrap; }
 
-  /* PVLAN port type visual */
-  .pvlan-types {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-    margin: 14px 0;
-  }
-
-  .pvlan-box {
-    border-radius: 8px;
-    padding: 14px;
-    text-align: center;
-  }
-
-  .pvlan-box h4 {
-    font-family: 'Sora', sans-serif;
-    font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  .pvlan-box p { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
-
+  .pvlan-types { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 12px 0; }
+  .pvlan-box { border-radius: 8px; padding: 14px; text-align: center; }
+  .pvlan-box h4 { font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .pvlan-box p { font-size: 12px; color: var(--muted); line-height: 1.5; }
   .pvlan-prom { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); }
   .pvlan-prom h4 { color: var(--accent2); }
   .pvlan-iso { background: rgba(247,129,102,0.08); border: 1px solid rgba(247,129,102,0.25); }
@@ -426,54 +137,45 @@
   .pvlan-comm { background: rgba(88,166,255,0.08); border: 1px solid rgba(88,166,255,0.25); }
   .pvlan-comm h4 { color: var(--accent); }
 
-  /* Protocol encapsulation visual */
-  .encap {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin: 12px 0;
-  }
-
-  .encap-layer {
-    padding: 9px 16px;
-    border-radius: 6px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12.5px;
-    font-weight: 600;
-    text-align: center;
-  }
-
+  .encap { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }
+  .encap-layer { padding: 9px 16px; border-radius: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; font-weight: 600; text-align: center; }
   .enc-outer { background: rgba(255,166,87,0.12); border: 1px solid rgba(255,166,87,0.3); color: var(--accent5); }
   .enc-udp   { background: rgba(210,168,255,0.12); border: 1px solid rgba(210,168,255,0.3); color: var(--accent4); }
   .enc-vxlan { background: rgba(88,166,255,0.12); border: 1px solid rgba(88,166,255,0.3); color: var(--accent); }
   .enc-inner { background: rgba(63,185,80,0.12); border: 1px solid rgba(63,185,80,0.3); color: var(--accent2); }
   .enc-payload { background: var(--surface2); border: 1px solid var(--border); color: var(--muted); }
 
-  /* Divider */
-  hr.sec-divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 40px 0;
-  }
+  .proto-comm { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 12px 0; }
+  .proto-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .proto-box h4 { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; margin-bottom: 6px; }
+  .proto-box p { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+  .proto-box p span { color: var(--text); }
+
+  hr.sec-divider { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
 
   @media (max-width: 640px) {
-    .compare-grid { grid-template-columns: 1fr; }
-    .pvlan-types { grid-template-columns: 1fr; }
+    .compare-grid, .pvlan-types, .proto-comm { grid-template-columns: 1fr; }
     .toc-grid { grid-template-columns: 1fr; }
-    .hero { padding: 40px 20px 36px; }
-    .content, .toc { padding: 0 16px; }
-    .card { padding: 18px; }
-    table.summary-table { font-size: 12px; }
-    table.summary-table th, table.summary-table td { padding: 9px 10px; }
+    .hero { padding: 36px 20px 32px; }
+    .content, .toc, .missing-banner { padding: 0 14px; }
+    .card { padding: 16px; }
+    table.summary-table { font-size: 11.5px; }
+    table.summary-table th, table.summary-table td { padding: 8px 10px; }
   }
 </style>
 </head>
 <body>
 
 <div class="hero">
-  <div class="hero-tag">SIT452 · Week 9 · Exam Study Guide</div>
+  <div class="hero-tag">SIT452 · Week 9 · Complete Exam Study Guide · v2</div>
   <h1>Network Function Virtualization</h1>
-  <p>Cloud Computing &amp; Virtual Networks — condensed for fast review</p>
+  <p>All lecture content · All commands · All diagrams explained</p>
+</div>
+
+<div class="missing-banner">
+  <div class="missing-banner-inner">
+    <strong>v2 — What was added:</strong> OVS communication protocols (Management/OpenFlow/Netlink ports), OVS flow table structure, VSAN (missing virtual network type), Trunk interface config commands, Router-on-a-Stick config commands, full SVI config walkthrough with show commands, STP + VLAN section, all PVLAN Cisco config commands (primary, isolated, community, promiscuous port, SVI for PVLAN), and a complete VXLAN NX-OS lab configuration (features, loopback, underlay, OSPF, VNI, NVE interface).
+  </div>
 </div>
 
 <!-- TOC -->
@@ -482,15 +184,19 @@
     <h2>Contents</h2>
     <div class="toc-grid">
       <a class="toc-item" href="#s1"><span class="toc-num">01</span> VM Connection Methods</a>
-      <a class="toc-item" href="#s2"><span class="toc-num">02</span> Open vSwitch (OVS)</a>
-      <a class="toc-item" href="#s3"><span class="toc-num">03</span> VMDq & SR-IOV</a>
-      <a class="toc-item" href="#s4"><span class="toc-num">04</span> VLAN Basics</a>
-      <a class="toc-item" href="#s5"><span class="toc-num">05</span> Private VLAN (PVLAN)</a>
-      <a class="toc-item" href="#s6"><span class="toc-num">06</span> Layer 3 Switching</a>
-      <a class="toc-item" href="#s7"><span class="toc-num">07</span> Tunneling Protocols</a>
-      <a class="toc-item" href="#s8"><span class="toc-num">08</span> Q-in-Q / MPLS / VN-Tag</a>
-      <a class="toc-item" href="#s9"><span class="toc-num">09</span> VXLAN &amp; NVGRE</a>
-      <a class="toc-item" href="#s10"><span class="toc-num">10</span> Quick Recap Table</a>
+      <a class="toc-item" href="#s2"><span class="toc-num">02</span> Open vSwitch (OVS) <span class="new">+NEW</span></a>
+      <a class="toc-item" href="#s3"><span class="toc-num">03</span> VMDq &amp; SR-IOV</a>
+      <a class="toc-item" href="#s4"><span class="toc-num">04</span> Virtual Network Types <span class="new">+NEW</span></a>
+      <a class="toc-item" href="#s5"><span class="toc-num">05</span> VLAN &amp; Trunking <span class="new">+CMD</span></a>
+      <a class="toc-item" href="#s6"><span class="toc-num">06</span> Router-on-a-Stick <span class="new">+NEW</span></a>
+      <a class="toc-item" href="#s7"><span class="toc-num">07</span> VLAN Misconceptions</a>
+      <a class="toc-item" href="#s8"><span class="toc-num">08</span> STP &amp; VLAN <span class="new">+NEW</span></a>
+      <a class="toc-item" href="#s9"><span class="toc-num">09</span> Private VLAN (PVLAN) <span class="new">+CMD</span></a>
+      <a class="toc-item" href="#s10"><span class="toc-num">10</span> L3 Switch &amp; SVI <span class="new">+CMD</span></a>
+      <a class="toc-item" href="#s11"><span class="toc-num">11</span> Tunneling Protocols</a>
+      <a class="toc-item" href="#s12"><span class="toc-num">12</span> Q-in-Q &amp; MPLS &amp; VN-Tag</a>
+      <a class="toc-item" href="#s13"><span class="toc-num">13</span> VXLAN &amp; NVGRE <span class="new">+LAB</span></a>
+      <a class="toc-item" href="#s14"><span class="toc-num">14</span> Quick Recap Table</a>
     </div>
   </div>
 </div>
@@ -498,504 +204,741 @@
 <!-- CONTENT -->
 <div class="content">
 
-  <!-- SECTION 1 -->
-  <div class="section" id="s1">
-    <div class="section-header">
-      <span class="section-num">01</span>
-      <h2>VM Connection Methods</h2>
+<!-- ═══════════════════ SECTION 1 ═══════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header"><span class="section-num">01</span><h2>VM Connection Methods</h2></div>
+
+  <p style="margin-bottom:14px; color:var(--muted); font-size:14px;"><strong style="color:var(--text)">3 ways</strong> to connect VMs to a network — differing in where packet processing happens.</p>
+
+  <div class="compare-grid">
+    <div class="compare-card" style="border-top: 3px solid var(--accent);">
+      <h4 style="color:var(--accent)">① Virtual Switch</h4>
+      <ul>
+        <li><span>Pure software in hypervisor</span></li>
+        <li><span>All routing done in software (CPU)</span></li>
+        <li><span>Easy, flexible, supports VLANs</span></li>
+        <li><span>Higher CPU overhead</span></li>
+        <li><span>Examples: VMware vSwitch, OVS</span></li>
+      </ul>
     </div>
-
-    <p style="margin-bottom:16px; color:var(--muted); font-size:14px;">There are <strong style="color:var(--text)">3 ways</strong> to connect VMs to a network. They differ in where packet processing happens — software, hardware-assisted, or directly in the NIC.</p>
-
-    <div class="compare-grid">
-      <div class="compare-card" style="border-top: 3px solid var(--accent);">
-        <h4 style="color:var(--accent)">① Virtual Switch</h4>
-        <ul>
-          <li><span>Pure software in hypervisor</span></li>
-          <li><span>All routing in software (CPU)</span></li>
-          <li><span>Easy, flexible, supports VLANs</span></li>
-          <li><span>Higher CPU overhead</span></li>
-        </ul>
-      </div>
-      <div class="compare-card" style="border-top: 3px solid var(--accent2);">
-        <h4 style="color:var(--accent2)">② VMDq</h4>
-        <ul>
-          <li><span>Intel hardware tech</span></li>
-          <li><span>NIC sorts packets per-VM before CPU</span></li>
-          <li><span>Hypervisor still delivers packets</span></li>
-          <li><span>Reduces CPU overhead</span></li>
-        </ul>
-      </div>
-      <div class="compare-card" style="border-top: 3px solid var(--accent4);">
-        <h4 style="color:var(--accent4)">③ SR-IOV</h4>
-        <ul>
-          <li><span>Physical NIC appears as multiple virtual NICs</span></li>
-          <li><span>Each VM gets its own Virtual Function (VF)</span></li>
-          <li><span>Bypasses hypervisor entirely via DMA</span></li>
-          <li><span>Lowest latency; limits live migration</span></li>
-        </ul>
-      </div>
+    <div class="compare-card" style="border-top: 3px solid var(--accent2);">
+      <h4 style="color:var(--accent2)">② VMDq</h4>
+      <ul>
+        <li><span>Intel hardware technology</span></li>
+        <li><span>NIC sorts packets into per-VM queues before CPU sees them</span></li>
+        <li><span>Hypervisor still delivers via VMBus</span></li>
+        <li><span>Reduces CPU overhead significantly</span></li>
+      </ul>
     </div>
-
-    <div class="analogy">
-      <div class="analogy-label">📮 Post Office Analogy</div>
-      <p><strong>No optimization:</strong> hypervisor reads every letter and walks to each VM.<br>
-      <strong>VMDq:</strong> NIC pre-sorts letters into labeled mailboxes — hypervisor just delivers.<br>
-      <strong>SR-IOV:</strong> each VM has its own private mailbox slot — hypervisor is completely bypassed.</p>
+    <div class="compare-card" style="border-top: 3px solid var(--accent4);">
+      <h4 style="color:var(--accent4)">③ SR-IOV</h4>
+      <ul>
+        <li><span>Physical NIC presents as multiple virtual NICs</span></li>
+        <li><span>Each VM gets its own Virtual Function (VF)</span></li>
+        <li><span>Bypasses hypervisor entirely via DMA</span></li>
+        <li><span>Lowest latency; limits live migration</span></li>
+      </ul>
     </div>
   </div>
 
-  <hr class="sec-divider">
+  <div class="analogy">
+    <div class="analogy-label">📮 Post Office Analogy (from the lecture)</div>
+    <p><strong>No optimization:</strong> hypervisor reads every letter and walks to each VM — slow.<br>
+    <strong>VMDq:</strong> NIC pre-sorts letters into labeled mailboxes; hypervisor just delivers.<br>
+    <strong>SR-IOV:</strong> each VM has its own private mailbox slot; hypervisor is completely bypassed.</p>
+  </div>
+</div>
 
-  <!-- SECTION 2 -->
-  <div class="section" id="s2">
-    <div class="section-header">
-      <span class="section-num">02</span>
-      <h2>Open vSwitch (OVS)</h2>
-    </div>
+<hr class="sec-divider">
 
-    <div class="card">
-      <div class="card-title"><span class="badge badge-blue">SOFTWARE SWITCH</span> What is OVS?</div>
-      <p>The most popular virtual switch. It's a pure software switch embedded in the hypervisor. Every packet is routed in software — flexible but uses CPU cycles.</p>
-    </div>
+<!-- ═══════════════════ SECTION 2 ═══════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header"><span class="section-num">02</span><h2>Open vSwitch (OVS)</h2></div>
 
-    <p style="font-family:'Sora',sans-serif; font-size:14px; color:var(--muted); margin-bottom:14px;">OVS has 3 components:</p>
+  <div class="card">
+    <div class="card-title"><span class="badge badge-blue">WHAT IS IT</span> Overview</div>
+    <p>The most popular virtual switch. A pure software switch embedded in the hypervisor. Supports VLANs, port mirroring, traffic shaping, OpenFlow/SDN integration. Higher CPU overhead than hardware-assisted methods.</p>
+  </div>
 
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">3 COMPONENTS</span> OVS Architecture</div>
     <div class="flow">
       <div class="flow-step">
         <div class="flow-num">1</div>
         <div class="flow-content">
           <strong>ovs-vswitchd (Userspace Daemon)</strong>
-          Main switching daemon. Handles slow-path packet processing, switch configuration, and communicates with the kernel module.
+          Main switching daemon. Handles slow-path packet processing and switch configuration. Communicates with the kernel module via <strong>Netlink</strong>.
         </div>
       </div>
       <div class="flow-step">
         <div class="flow-num">2</div>
         <div class="flow-content">
           <strong>ovsdb-server (Database Server)</strong>
-          Stores persistent OVS configuration (bridges, ports, interfaces, flow rules). Survives reboots. Management tools communicate through this.
+          Stores persistent OVS config (bridges, ports, interfaces, flow rules). Survives reboots. Management tools connect to it via port <strong>6632/TCP</strong>.
         </div>
       </div>
       <div class="flow-step">
         <div class="flow-num">3</div>
         <div class="flow-content">
-          <strong>Kernel Module (openvswitch.ko)</strong>
-          Handles fast-path packet forwarding. Caches flow rules from userspace for instant lookup. If a packet matches a cached rule → forward immediately. No match → send to userspace daemon.
+          <strong>Kernel Module (openvswitch.ko) — Fast Path</strong>
+          Handles fast-path packet forwarding. Caches flow rules from userspace for instant lookup. On match → forward immediately. No match → send to userspace daemon.
         </div>
       </div>
     </div>
-
-    <div class="card" style="margin-top:16px;">
-      <div class="card-title"><span class="badge badge-green">FLOW</span> How packet forwarding works</div>
-      <div class="flow">
-        <div class="flow-step">
-          <div class="flow-num">①</div>
-          <div class="flow-content">Packet first goes to userspace; the highest-priority matching rule is applied.</div>
-        </div>
-        <div class="flow-step">
-          <div class="flow-num">②</div>
-          <div class="flow-content">Once forwarded, a "collapsed rule" (fast shortcut) is installed in the kernel.</div>
-        </div>
-        <div class="flow-step">
-          <div class="flow-num">③</div>
-          <div class="flow-content">Future matching packets hit the kernel rule directly — no userspace trip needed. A hash value speeds up this lookup.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:8px;">
-      <div class="card-title"><span class="badge badge-purple">SDN SUPPORT</span> OpenFlow Integration</div>
-      <p>OVS supports <strong>OpenFlow</strong> — an SDN protocol. An external SDN Controller pushes flow rules to OVS.</p>
-      <ul class="points" style="margin-top:10px;">
-        <li><strong>Match on:</strong> source/dest MAC, source/dest IP, TCP/UDP ports, VLAN tags, tunnel IDs, input port</li>
-        <li><strong>Actions:</strong> forward to port, drop, modify headers, send to controller, forward to next flow table</li>
-      </ul>
-    </div>
   </div>
 
-  <hr class="sec-divider">
-
-  <!-- SECTION 3 -->
-  <div class="section" id="s3">
-    <div class="section-header">
-      <span class="section-num">03</span>
-      <h2>VMDq &amp; SR-IOV in Detail</h2>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="badge badge-green">VMDq</span> Virtual Machine Device Queue</div>
-      <ul class="points">
-        <li>Intel hardware tech. NIC hardware sorts incoming packets into per-VM queues <em>before</em> the CPU sees them.</li>
-        <li>Hypervisor still delivers packets (uses VMBus), but sorting work is eliminated.</li>
-        <li>Multiple queues spread load across processor cores — better scalability.</li>
-        <li>Traffic still flows through the virtual switch.</li>
-      </ul>
-    </div>
-
-    <div class="card" style="margin-top:0;">
-      <div class="card-title"><span class="badge badge-purple">SR-IOV</span> Single Root I/O Virtualization</div>
-      <ul class="points">
-        <li>Physical NIC presents itself as <strong>multiple virtual NICs (Virtual Functions)</strong> to VMs.</li>
-        <li>Each VM gets a dedicated VF — traffic bypasses the hypervisor almost entirely via <strong>Direct Memory Access (DMA)</strong>.</li>
-        <li>Extremely low latency and high throughput.</li>
-        <li>Downside: reduced flexibility for <strong>live VM migration</strong> (because the VM is tightly tied to hardware).</li>
-      </ul>
-    </div>
-
-    <div class="key-fact">
-      <strong>Key Difference:</strong> VMDq creates separate <em>queues</em>; SR-IOV creates separate <em>virtual network devices (VFs)</em>. SR-IOV is faster and bypasses more of the stack.
-    </div>
-  </div>
-
-  <hr class="sec-divider">
-
-  <!-- SECTION 4 -->
-  <div class="section" id="s4">
-    <div class="section-header">
-      <span class="section-num">04</span>
-      <h2>VLAN Basics</h2>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="badge badge-blue">VLAN</span> Virtual LAN — What &amp; Why</div>
-      <p>A <strong>VLAN</strong> is a virtual network on a physical LAN that groups nodes based on function, not physical location. Hosts in the same VLAN communicate as if on the same switch, even if physically apart.</p>
-      <ul class="points" style="margin-top:10px;">
-        <li>Identified by a unique <strong>12-bit VLAN ID</strong> (supports up to 4096 VLANs).</li>
-        <li>Membership can be based on: port, MAC address, protocol, IP subnet, or application.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="badge badge-orange">IEEE 802.1Q</span> Trunking / VLAN Tagging</div>
-      <p>When frames need to carry VLAN info across switches, 802.1Q adds a <strong>4-byte tag</strong> into the Ethernet frame:</p>
-      <ul class="points" style="margin-top:8px;">
-        <li><strong>TPI (Tag Protocol ID):</strong> Always 0x8100 — marks the frame as 802.1Q tagged.</li>
-        <li><strong>PCP (Priority Code Point):</strong> 3 bits for QoS/traffic priority (0–7).</li>
-        <li><strong>CFI (Canonical Format Indicator):</strong> Always 0 for Ethernet (legacy compat).</li>
-        <li><strong>VLAN ID:</strong> 12 bits → up to 4096 VLANs.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="badge badge-red">MISCONCEPTIONS</span> VLAN vs Subnet — Not always 1:1</div>
-      <ul class="points">
-        <li>Common assumption: 1 VLAN = 1 subnet. Works fine for simple networks.</li>
-        <li><strong>Two subnets can share one VLAN:</strong> they both get all broadcast/flooded frames. Unusual, but valid when you can't easily change IP addresses.</li>
-        <li><strong>Two VLANs can share one subnet (more common in data centers):</strong> but a router can't tell them apart — use only when the two groups must never communicate.</li>
-      </ul>
-    </div>
-
-    <div class="key-fact">
-      <strong>Native VLAN Warning:</strong> Untagged frames go to the native VLAN (usually VLAN 1). This can allow VLAN 100 traffic to leak into VLAN 1. Best practice: tag ALL VLANs including the native one using <code>vlan dot1Q tag native</code>.
-    </div>
-  </div>
-
-  <hr class="sec-divider">
-
-  <!-- SECTION 5 -->
-  <div class="section" id="s5">
-    <div class="section-header">
-      <span class="section-num">05</span>
-      <h2>Private VLAN (PVLAN)</h2>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="badge badge-purple">PVLAN</span> What &amp; Why</div>
-      <p>A PVLAN adds <strong>Layer 2 isolation</strong> within a single VLAN. Normally hosts on the same VLAN can all talk to each other. PVLAN restricts that — useful for providers hosting many tenants on the same subnet without re-IPing.</p>
-      <p style="margin-top:8px;"><strong>Use case:</strong> Same IP subnet, but you want some hosts to be isolated from each other (e.g., hotel guests, datacenter tenants).</p>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="badge badge-blue">STRUCTURE</span> Primary &amp; Secondary VLANs</div>
-      <ul class="points">
-        <li><strong>Primary VLAN:</strong> The main VLAN visible to the outside network.</li>
-        <li><strong>Secondary VLANs (Isolated or Community):</strong> Sub-VLANs inside the primary.</li>
-      </ul>
-    </div>
-
-    <p style="font-family:'Sora',sans-serif; font-size:14px; color:var(--muted); margin-bottom:12px; margin-top:8px;">3 types of ports:</p>
-    <div class="pvlan-types">
-      <div class="pvlan-box pvlan-prom">
-        <h4>Promiscuous</h4>
-        <p>Talks to ALL ports in the PVLAN. Usually the router/gateway.</p>
+  <div class="card">
+    <div class="card-title"><span class="badge badge-orange">PROTOCOLS</span> OVS Communication Channels <span class="badge badge-new">WAS MISSING</span></div>
+    <div class="proto-comm">
+      <div class="proto-box">
+        <h4 style="color:var(--accent5)">Management Protocol</h4>
+        <p>Port <span>6632/TCP</span>. Used by management tools (like <span>ovs-vsctl</span>) to communicate with ovsdb-server.</p>
       </div>
-      <div class="pvlan-box pvlan-iso">
-        <h4>Isolated</h4>
-        <p>Can ONLY talk to promiscuous ports. Cannot reach other isolated or community ports.</p>
+      <div class="proto-box">
+        <h4 style="color:var(--accent2)">OpenFlow Protocol</h4>
+        <p>Port <span>6633/TCP</span>. Used by an external SDN Controller to push flow rules to ovs-vswitchd.</p>
       </div>
-      <div class="pvlan-box pvlan-comm">
-        <h4>Community</h4>
-        <p>Can talk to other ports in the same community AND promiscuous ports. Cannot reach isolated ports or other communities.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="badge badge-green">CONFIG STEPS</span> Setting up PVLAN</div>
-      <div class="flow">
-        <div class="flow-step"><div class="flow-num">1</div><div class="flow-content">Create the primary VLAN.</div></div>
-        <div class="flow-step"><div class="flow-num">2</div><div class="flow-content">Create secondary VLANs and set their type (isolated or community).</div></div>
-        <div class="flow-step"><div class="flow-num">3</div><div class="flow-content">Associate secondary VLANs with the primary VLAN.</div></div>
-        <div class="flow-step"><div class="flow-num">4</div><div class="flow-content">Assign switch ports to the appropriate VLAN type.</div></div>
+      <div class="proto-box">
+        <h4 style="color:var(--accent)">Netlink</h4>
+        <p>In-kernel communication. Used by ovs-vswitchd (userspace) to communicate with the <span>OVS Kernel Module</span>.</p>
       </div>
     </div>
   </div>
 
-  <hr class="sec-divider">
+  <div class="card">
+    <div class="card-title"><span class="badge badge-blue">FLOW TABLE STRUCTURE</span> How OVS matches packets <span class="badge badge-new">WAS MISSING</span></div>
+    <p>OVS maintains multiple flow tables. Each table has rules with match fields and actions:</p>
+    <ul class="points" style="margin-top:8px;">
+      <li><strong>First packet:</strong> goes to userspace. The highest-priority matching rule is applied.</li>
+      <li><strong>Collapsed rule:</strong> once forwarded, a shortcut rule combining all match fields (srcMAC + dstMAC + dstIP + dstTCPPort → action) is installed in the kernel.</li>
+      <li><strong>Subsequent packets:</strong> hit the kernel rule directly — no userspace needed. A <strong>hash value</strong> speeds up lookup.</li>
+    </ul>
+    <p style="margin-top:10px; font-size:13px; color:var(--muted);">The kernel table has columns: <code style="color:var(--accent)">srcMAC | dstMAC | dstIP | dstTCPPort | action</code></p>
+  </div>
 
-  <!-- SECTION 6 -->
-  <div class="section" id="s6">
-    <div class="section-header">
-      <span class="section-num">06</span>
-      <h2>Layer 3 Switching &amp; SVI</h2>
-    </div>
+  <div class="card">
+    <div class="card-title"><span class="badge badge-purple">FEATURES</span> OVS Layer 2 &amp; Layer 3</div>
+    <ul class="points">
+      <li><strong>L2:</strong> MAC learning and forwarding, VLAN tagging/trunking (802.1Q), STP (Spanning Tree Protocol), LACP (Link Aggregation), port mirroring</li>
+      <li><strong>L3:</strong> Basic IPv4/IPv6 routing, ARP proxying, Tunnel encapsulation/decapsulation</li>
+      <li><strong>SDN:</strong> OpenFlow support — match on src/dst MAC, src/dst IP, TCP/UDP ports, VLAN tags, tunnel IDs, input port. Actions: forward to port, drop, modify headers, send to controller, next flow table.</li>
+    </ul>
+  </div>
+</div>
 
-    <div class="card">
-      <div class="card-title"><span class="badge badge-blue">L3 SWITCH</span> What is it?</div>
-      <p>A <strong>Layer 3 switch</strong> does both L2 switching AND L3 routing — in hardware. Unlike a normal switch, it can route traffic between VLANs without an external router.</p>
-    </div>
+<hr class="sec-divider">
 
-    <div class="card">
-      <div class="card-title"><span class="badge badge-green">SVI</span> Switch Virtual Interface</div>
-      <p>An <strong>SVI</strong> is a logical interface on a Layer 3 switch tied to a VLAN. You assign it an IP address — it then acts as the default gateway for hosts in that VLAN.</p>
-      <div class="key-fact" style="margin-top:12px;">
-        <strong>SVI is only "up" when:</strong> (1) its associated VLAN exists AND (2) at least one active port belongs to that VLAN. The "autostate" feature controls this behavior.
-      </div>
-    </div>
+<!-- ═══════════════════ SECTION 3 ═══════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header"><span class="section-num">03</span><h2>VMDq &amp; SR-IOV in Detail</h2></div>
 
-    <div class="card">
-      <div class="card-title"><span class="badge badge-orange">NOTE</span> SVI vs Routed Ports</div>
-      <p>You can also use <strong>routed ports</strong> on an L3 switch (like a router interface), but SVIs are generally preferred because they're more efficient and flexible for VLAN-based routing.</p>
-    </div>
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">VMDq</span> Virtual Machine Device Queue</div>
+    <ul class="points">
+      <li>Intel hardware tech. NIC sorts incoming packets into per-VM queues <em>before</em> the CPU sees them.</li>
+      <li>Multiple queues spread load across processor cores → removes processing bottleneck.</li>
+      <li>Hypervisor still delivers packets using <strong>VMBus</strong>. Traffic still goes through the virtual switch.</li>
+      <li>Reduces vSwitch workload and enables better scalability. (See diagram: VM → vNIC → vSwitch → NIC with VMDq queues)</li>
+    </ul>
+  </div>
 
-    <div class="analogy">
-      <div class="analogy-label">💡 Simple way to remember</div>
-      <p>Router-on-a-stick = one router interface with sub-interfaces per VLAN over a trunk link. L3 switch + SVI = cleaner, hardware-accelerated version of the same idea, built into the switch itself.</p>
+  <div class="card">
+    <div class="card-title"><span class="badge badge-purple">SR-IOV</span> Single Root I/O Virtualization</div>
+    <ul class="points">
+      <li>Physical NIC presents itself as multiple <strong>Virtual Functions (VFs)</strong> — one per VM.</li>
+      <li>Also contains one <strong>Physical Function (PF)</strong> for the host/hypervisor control.</li>
+      <li>An internal <strong>L2 sorter (switch)</strong> inside the NIC routes traffic to the right VF.</li>
+      <li>VM communicates directly with its VF via <strong>DMA (Direct Memory Access)</strong> — bypasses the vSwitch entirely.</li>
+      <li>Extremely low latency and high throughput. Downside: limits <strong>live VM migration</strong>.</li>
+    </ul>
+    <div class="key-fact" style="margin-top:12px;"><strong>Key difference from VMDq:</strong> VMDq = separate queues, hypervisor still involved. SR-IOV = separate virtual network devices (VFs), hypervisor bypassed entirely.</div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════════ SECTION 4 ═══════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header"><span class="section-num">04</span><h2>Common Types of Virtual Networks <span class="badge badge-new" style="font-size:10px;">ADDED VSAN</span></h2></div>
+
+  <p style="color:var(--muted); font-size:14px; margin-bottom:14px;">The lecture lists 5 types. All 5 are examinable:</p>
+
+  <table class="summary-table">
+    <thead><tr><th>Type</th><th>What it does</th><th>Key detail</th></tr></thead>
+    <tbody>
+      <tr><td>VLAN</td><td>Groups nodes logically on one physical LAN regardless of location</td><td>12-bit ID → 4096 max</td></tr>
+      <tr><td>PVLAN</td><td>Adds L2 isolation within a single VLAN</td><td>Isolated / Community / Promiscuous ports</td></tr>
+      <tr><td>Stretched VLAN</td><td>Extends a VLAN across multiple sites over an L3 WAN</td><td>Enables VM migration without IP change</td></tr>
+      <tr><td>VXLAN</td><td>L2 overlay tunneled over L3 using MAC-in-UDP</td><td>24-bit VNI → 16M networks</td></tr>
+      <tr><td>VSAN</td><td>Virtual Storage Area Network — logically partitions a physical SAN fabric into separate SANs</td><td>Isolates storage traffic between tenants on the same fabric</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════════ SECTION 5 ═══════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header"><span class="section-num">05</span><h2>VLAN Basics &amp; Trunking</h2></div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-blue">VLAN</span> What &amp; Why</div>
+    <p>Groups nodes by function, not physical location. Hosts in the same VLAN communicate as if on the same switch. Identified by a <strong>12-bit VLAN ID</strong> (max 4096). Membership can be by port, MAC, protocol, IP subnet, or application.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-orange">IEEE 802.1Q</span> Trunking / VLAN Tagging</div>
+    <p>Adds a <strong>4-byte tag</strong> to Ethernet frames so VLAN info is carried across switches (trunk links):</p>
+    <ul class="points" style="margin-top:8px;">
+      <li><strong>TPI (Tag Protocol ID):</strong> 0x8100 — marks frame as 802.1Q tagged.</li>
+      <li><strong>PCP (Priority Code Point):</strong> 3 bits for QoS/traffic priority (0–7, IEEE 802.1p).</li>
+      <li><strong>CFI (Canonical Format Indicator):</strong> Always 0 for Ethernet (legacy Token Ring compat).</li>
+      <li><strong>VLAN ID:</strong> 12 bits → up to 4096 VLANs.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">COMMANDS</span> Trunk Interface Configuration (Cisco NX-OS) <span class="badge badge-new">WAS MISSING</span></div>
+    <div class="code-block"><span class="comment">! Example 3-2: Creating VLANs 101 and 201 and a trunk interface</span>
+N7K-Switch1(config)# <span class="cmd">vlan 101, 201</span>
+
+N7K-Switch1(config-vlan)# <span class="cmd">interface ethernet 1/11</span>
+N7K-Switch1(config-if)# <span class="cmd">switchport</span>
+N7K-Switch1(config-if)# <span class="cmd">switchport mode trunk</span>
+N7K-Switch1(config-if)# <span class="cmd">switchport trunk allowed vlan 101,201</span>
+N7K-Switch1(config-if)# <span class="cmd">no shutdown</span></div>
+  </div>
+
+  <div class="key-fact">
+    <strong>Native VLAN Warning:</strong> Untagged frames go to the native VLAN (usually VLAN 1). This can cause VLAN 100 frames to leak into VLAN 1 — a Layer 2 security risk. Fix: <code>Switch(config)# vlan dot1Q tag native</code> — forces all VLANs including native to be tagged on trunks (Cisco Nexus command).
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════════ SECTION 6 ═══════════════════ -->
+<div class="section" id="s6">
+  <div class="section-header"><span class="section-num">06</span><h2>Router-on-a-Stick <span class="badge badge-new" style="font-size:10px;">WAS MISSING</span></h2></div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-blue">CONCEPT</span> What is Router-on-a-Stick?</div>
+    <p>A way to route between VLANs using a <strong>single physical router interface</strong> with multiple sub-interfaces — one per VLAN. The router connects to the switch via a trunk link. Each sub-interface handles one VLAN.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">COMMANDS</span> Router Sub-Interface Config <span class="badge badge-new">WAS MISSING</span></div>
+    <div class="code-block"><span class="comment">! Figure 3-7: Router-on-a-Stick for inter-VLAN routing</span>
+<span class="comment">! Sub-interface for VLAN 101</span>
+Router# <span class="cmd">show running-config interface GigabitEthernet 0/0.101</span>
+interface GigabitEthernet0/0.101
+  encapsulation dot1Q <span class="val">101</span>
+  ip address <span class="val">10.1.1.100 255.255.255.0</span>
+end
+
+<span class="comment">! Sub-interface for VLAN 201</span>
+Router# <span class="cmd">show running-config interface GigabitEthernet 0/0.201</span>
+interface GigabitEthernet0/0.201
+  encapsulation dot1Q <span class="val">201</span>
+  ip address <span class="val">10.2.2.200 255.255.255.0</span>
+end</div>
+    <p style="font-size:13px; color:var(--muted); margin-top:8px;">Each sub-interface gets the VLAN tag (encapsulation dot1Q) and an IP address. The connected switch port must be a trunk allowing those VLANs.</p>
+  </div>
+
+  <div class="analogy">
+    <div class="analogy-label">💡 Router-on-a-stick vs L3 Switch</div>
+    <p>Router-on-a-stick = external router with sub-interfaces, software routing, one trunk cable. L3 Switch + SVI = same concept built into the switch hardware — faster, more scalable, preferred in data centers.</p>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════════ SECTION 7 ═══════════════════ -->
+<div class="section" id="s7">
+  <div class="section-header"><span class="section-num">07</span><h2>Two Common VLAN Misconceptions</h2></div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-red">MYTH 1</span> One VLAN always = One Subnet</div>
+    <ul class="points">
+      <li>Common assumption: each VLAN maps to exactly one IP subnet. Works fine for simple networks.</li>
+      <li><strong>Two subnets can share one VLAN:</strong> both get all broadcast/flooded frames. Unusual but valid when you can't change IP addresses (e.g., service provider networks).</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="badge badge-red">MYTH 2</span> One Subnet always fits in One VLAN</div>
+    <ul class="points">
+      <li><strong>Two VLANs can share one IP subnet</strong> — more common in data centers (e.g., voice and data on same addresses, must never talk to each other).</li>
+      <li>A router sees both as the same network and cannot distinguish them — only works if the two groups never need to route to each other.</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════════ SECTION 8 ═══════════════════ -->
+<div class="section" id="s8">
+  <div class="section-header"><span class="section-num">08</span><h2>Spanning Tree Protocol (STP) &amp; VLANs <span class="badge badge-new" style="font-size:10px;">WAS MISSING</span></h2></div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-blue">STP</span> Why it matters with VLANs</div>
+    <p>When multiple switches are interconnected (for redundancy), Layer 2 loops can form — causing broadcast storms. <strong>Spanning Tree Protocol (STP)</strong> prevents this by automatically blocking redundant paths and maintaining only a loop-free topology.</p>
+    <ul class="points" style="margin-top:10px;">
+      <li>STP elects a <strong>Root Bridge</strong> — all other switches calculate the shortest path to it.</li>
+      <li>Redundant links are placed in a <strong>blocking state</strong>; only the best path stays active.</li>
+      <li>If an active link fails, STP recalculates and unblocks a previously blocked path.</li>
+      <li>In VLAN environments, each VLAN can run its own STP instance (<strong>PVST+ / Rapid PVST+</strong>) allowing different VLANs to use different paths for load balancing.</li>
+    </ul>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════════ SECTION 9 ═══════════════════ -->
+<div class="section" id="s9">
+  <div class="section-header"><span class="section-num">09</span><h2>Private VLAN (PVLAN)</h2></div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-purple">CONCEPT</span> What &amp; Why</div>
+    <p>Adds <strong>Layer 2 isolation within a single VLAN</strong> — same IP subnet, restricted communication. Useful for providers hosting many tenants, or datacenter security where servers shouldn't reach each other directly.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-blue">STRUCTURE</span> Primary + Secondary VLANs</div>
+    <ul class="points">
+      <li><strong>Primary VLAN (e.g. VLAN 100):</strong> The visible VLAN to the outside network. Associated with secondary VLANs.</li>
+      <li><strong>Isolated Secondary VLAN (e.g. VLAN 101):</strong> Ports can only talk to promiscuous ports.</li>
+      <li><strong>Community Secondary VLAN (e.g. VLAN 102):</strong> Ports talk to each other in the community + promiscuous ports.</li>
+    </ul>
+  </div>
+
+  <div class="pvlan-types">
+    <div class="pvlan-box pvlan-prom"><h4>Promiscuous Port</h4><p>Talks to ALL ports in the PVLAN. Typically the router/gateway/firewall.</p></div>
+    <div class="pvlan-box pvlan-iso"><h4>Isolated Port</h4><p>Can ONLY talk to promiscuous ports. Cannot reach any other isolated or community host.</p></div>
+    <div class="pvlan-box pvlan-comm"><h4>Community Port</h4><p>Talks to other ports in same community + promiscuous ports. Blocked from isolated and other communities.</p></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">COMMANDS</span> Step 1 — Define VLANs <span class="badge badge-new">WAS MISSING</span></div>
+    <div class="code-block"><span class="comment">! Primary VLAN</span>
+vlan <span class="val">100</span>
+  private-vlan primary
+  private-vlan association <span class="val">101,102</span>
+
+<span class="comment">! Isolated Secondary VLAN</span>
+vlan <span class="val">101</span>
+  private-vlan isolated
+
+<span class="comment">! Community Secondary VLAN</span>
+vlan <span class="val">102</span>
+  private-vlan community</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">COMMANDS</span> Step 2 — Configure Promiscuous Port <span class="badge badge-new">WAS MISSING</span></div>
+    <div class="code-block"><span class="comment">! Example 3-7: Promiscuous port (router-facing) on Switch1</span>
+Switch1(config)# <span class="cmd">interface ethernet 1/2</span>
+Switch1(config-if)# <span class="cmd">switchport</span>
+Switch1(config-if)# <span class="cmd">switchport mode private-vlan promiscuous</span>
+Switch1(config-if)# <span class="cmd">switchport private-vlan mapping 50 60,70</span>
+<span class="comment">! Maps primary VLAN 50 to secondary VLANs 60 and 70</span>
+Switch1(config-if)# <span class="cmd">no shutdown</span>
+
+<span class="comment">! Standard trunk to another switch</span>
+Switch1(config)# <span class="cmd">interface Ethernet 1/1</span>
+Switch1(config-if)# <span class="cmd">switchport</span>
+Switch1(config-if)# <span class="cmd">switchport mode trunk</span>
+Switch1(config-if)# <span class="cmd">switchport trunk allowed vlan all</span>
+Switch1(config-if)# <span class="cmd">no shutdown</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">COMMANDS</span> Step 3 — SVI for PVLAN on N7K (NX-OS) <span class="badge badge-new">WAS MISSING</span></div>
+    <div class="code-block"><span class="comment">! Example 3-8: Enable features and configure PVLAN on N7K-Switch1</span>
+N7K-Switch1(config)# <span class="cmd">feature private-vlan</span>
+N7K-Switch1(config)# <span class="cmd">feature interface-vlan</span>
+
+<span class="comment">! Define Primary VLAN 50 and secondary VLANs 60 (isolated), 70 (community)</span>
+N7K-Switch1(config)# <span class="cmd">vlan 50</span>
+N7K-Switch1(config-vlan)# <span class="cmd">private-vlan primary</span>
+N7K-Switch1(config-vlan)# <span class="cmd">private-vlan association 60,70</span>
+N7K-Switch1(config-vlan)# <span class="cmd">vlan 60</span>
+N7K-Switch1(config-vlan)# <span class="cmd">private-vlan isolated</span>
+N7K-Switch1(config-vlan)# <span class="cmd">vlan 70</span>
+N7K-Switch1(config-vlan)# <span class="cmd">private-vlan community</span>
+
+<span class="comment">! Trunk port toward Switch1</span>
+N7K-Switch1(config-vlan)# <span class="cmd">interface Ethernet 1/20</span>
+N7K-Switch1(config-if)# <span class="cmd">switchport</span>
+N7K-Switch1(config-if)# <span class="cmd">switchport mode trunk</span>
+N7K-Switch1(config-if)# <span class="cmd">switchport trunk allowed vlan all</span>
+N7K-Switch1(config-if)# <span class="cmd">no shutdown</span>
+
+<span class="comment">! SVI for the Primary VLAN (routes between secondary VLANs and upstream)</span>
+N7K-Switch1(config-if)# <span class="cmd">interface vlan 50</span>
+N7K-Switch1(config-if)# <span class="cmd">ip address 10.0.50.1/24</span>
+N7K-Switch1(config-if)# <span class="cmd">private-vlan mapping 60,70</span>
+<span class="comment">! Associates secondary VLANs with the SVI — required for routing</span></div>
+  </div>
+
+  <div class="key-fact">
+    <strong>PVLAN Summary:</strong> Primary VLAN = the "container". Secondary VLANs restrict who talks to whom within it. The promiscuous port (router/gateway) is the only one that can reach everyone. The SVI on the primary VLAN with <code>private-vlan mapping</code> allows routing between secondaries and the upstream network.
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════════ SECTION 10 ═══════════════════ -->
+<div class="section" id="s10">
+  <div class="section-header"><span class="section-num">10</span><h2>Layer 3 Switch &amp; SVI</h2></div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-blue">L3 SWITCH</span> What is it?</div>
+    <p>A switch that does both <strong>L2 switching and L3 routing</strong> in hardware. Uses <strong>Switch Virtual Interfaces (SVIs)</strong> to route between VLANs without an external router. You can also use <strong>routed ports</strong> (IP directly on a port like a router), but SVIs are preferred.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">SVI UP CONDITIONS</span></div>
+    <p>An SVI is only <code>up</code> when BOTH of these are true simultaneously:</p>
+    <ul class="points" style="margin-top:8px;">
+      <li>Its associated VLAN <strong>exists</strong> in the switch database.</li>
+      <li>At least one <strong>active port</strong> (access or trunk) belongs to that VLAN.</li>
+    </ul>
+    <p style="margin-top:8px; font-size:13.5px;">The <strong>autostate</strong> feature (Cisco) controls whether the SVI state tracks active ports or stays up manually.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">COMMANDS</span> SVI Configuration Walkthrough <span class="badge badge-new">WAS MISSING</span></div>
+    <div class="code-block"><span class="comment">! Example 3-3: Create SVIs for VLANs 101 and 201</span>
+N7K-Switch1(config)# <span class="cmd">vlan 101,201</span>
+
+<span class="comment">! Enable SVI feature (NX-OS specific)</span>
+N7K-Switch1(config-vlan)# <span class="cmd">feature interface-vlan</span>
+
+<span class="comment">! SVI for VLAN 101</span>
+N7K-Switch1(config)# <span class="cmd">interface vlan 101</span>
+N7K-Switch1(config-if)# <span class="cmd">ip address 10.1.1.1/24</span>
+N7K-Switch1(config-if)# <span class="cmd">no shutdown</span>
+
+<span class="comment">! SVI for VLAN 201</span>
+N7K-Switch1(config-if)# <span class="cmd">interface vlan 201</span>
+N7K-Switch1(config-if)# <span class="cmd">ip address 10.2.1.3/24</span>
+N7K-Switch1(config-if)# <span class="cmd">no shutdown</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-orange">DEMO</span> SVI State — VLAN must exist first <span class="badge badge-new">WAS MISSING</span></div>
+    <div class="code-block"><span class="comment">! Create SVI before VLAN exists → SVI will be DOWN</span>
+N7K-Switch1(config)# <span class="cmd">interface vlan 501</span>
+N7K-Switch1(config-if)# <span class="cmd">ip address 192.168.5.1/24</span>
+N7K-Switch1(config-if)# <span class="cmd">no shutdown</span>
+N7K-Switch1(config-if)# <span class="cmd">show interface vlan 501 brief</span>
+
+<span class="comment">Vlan501  --    down    VLAN does not exist</span>
+
+<span class="comment">! Now create the VLAN → SVI still down (no active port yet)</span>
+N7K-Switch1(config)# <span class="cmd">vlan 501</span>
+<span class="comment">Vlan501  --    down    VLAN is down</span>
+
+<span class="comment">! Add an active access port to VLAN 501 → SVI comes UP</span>
+N7K-Switch1(config-vlan)# <span class="cmd">interface Ethernet 3/11</span>
+N7K-Switch1(config-if)# <span class="cmd">switchport</span>
+N7K-Switch1(config-if)# <span class="cmd">switchport mode access</span>
+N7K-Switch1(config-if)# <span class="cmd">switchport access vlan 501</span>
+N7K-Switch1(config-if)# <span class="cmd">no shutdown</span>
+N7K-Switch1(config-if)# <span class="cmd">show interface vlan 501 brief</span>
+<span class="comment">Vlan501  --    up      --</span></div>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════════ SECTION 11 ═══════════════════ -->
+<div class="section" id="s11">
+  <div class="section-header"><span class="section-num">11</span><h2>Tunneling Protocols — Overview</h2></div>
+
+  <p style="color:var(--muted); font-size:14px; margin-bottom:14px;">When VMs need L2 connectivity across L3 networks, tunneling wraps L2 frames inside L3 packets. 4 main protocols:</p>
+
+  <table class="summary-table">
+    <thead><tr><th>Protocol</th><th>Main Use</th><th>Key Limitation</th></tr></thead>
+    <tbody>
+      <tr><td>Q-in-Q (802.1ad)</td><td>Service provider L2 VPN across metro networks</td><td>Only 4096 customer IDs (12-bit VLAN)</td></tr>
+      <tr><td>MPLS</td><td>WAN carrier-grade routing and VPNs (Layer 2.5)</td><td>Too complex/expensive for datacenter edge</td></tr>
+      <tr><td>VN-Tag (802.1qbh)</td><td>Per-VM virtual Ethernet interfaces on shared switch port</td><td>Not universally recognized; may need further encap</td></tr>
+      <tr><td>VXLAN</td><td>Large-scale datacenter overlay (L2 over L3)</td><td>UDP overhead; needs VTEP support</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════════ SECTION 12 ═══════════════════ -->
+<div class="section" id="s12">
+  <div class="section-header"><span class="section-num">12</span><h2>Q-in-Q / MPLS / VN-Tag / Stretched VLAN</h2></div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-orange">Q-in-Q</span> IEEE 802.1ad — Double VLAN Tagging</div>
+    <p>Service provider adds an <strong>outer VLAN tag</strong> (SP's VLAN) around the customer's inner 802.1Q tag. Customer VLANs pass transparently across the SP network.</p>
+    <ul class="points" style="margin-top:8px;">
+      <li>Easy to implement — no routing protocols needed between SP and customer.</li>
+      <li>Outer 12-bit VLAN ID = customer identifier. Inner tag = customer's own VLAN.</li>
+      <li>Only <strong>4096 customers max</strong> — not suitable for large clouds.</li>
+      <li>Used in <strong>Metro Ethernet (E-LINE / E-LAN)</strong> and Transparent Firewall/IPS setups.</li>
+      <li>Added/removed by the access switch. Forwarding uses MAC + outer VLAN tag.</li>
+    </ul>
+    <div class="code-block"><span class="comment">! Customer router sub-interfaces</span>
+R1(config)# <span class="cmd">interface fastEthernet 0/0.12</span>
+R1(config-subif)# <span class="cmd">encapsulation dot1Q 12</span>
+R1(config-subif)# <span class="cmd">ip address 192.168.12.1 255.255.255.0</span>
+
+<span class="comment">! SP switch — configure Q-in-Q tunnel toward customer</span>
+SW1(config)# <span class="cmd">interface fastEthernet 0/19</span>
+SW1(config-if)# <span class="cmd">switchport trunk encapsulation dot1q</span>
+SW1(config-if)# <span class="cmd">switchport mode trunk</span>
+
+<span class="comment">! SP edge port — tag customer traffic with outer VLAN 123</span>
+SW1(config)# <span class="cmd">interface fastEthernet 0/1</span>
+SW1(config-if)# <span class="cmd">switchport access vlan 123</span>
+SW1(config-if)# <span class="cmd">switchport mode dot1q-tunnel</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-purple">MPLS</span> MultiProtocol Label Switching — "Layer 2.5"</div>
+    <ul class="points">
+      <li>Introduced late 1990s. Works with IPv4 and IPv6.</li>
+      <li><strong>LER (Label Edge Router):</strong> enters/exits MPLS network. Pushes or pops labels. Makes initial path selection.</li>
+      <li><strong>LSR (Label Switching Router):</strong> interior transit routers. Forward by label only — no IP lookup.</li>
+      <li><strong>LSP (Label Switched Path):</strong> unidirectional tunnel between a pair of LERs — required for any MPLS forwarding.</li>
+      <li><strong>VPLS:</strong> MPLS-based multi-point Ethernet service (MAC learning, flooding, broadcasts across MPLS).</li>
+      <li>Not popular in cloud data centers — too complex and expensive at the edge. Tunneling in vSwitch consumes server CPU.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-blue">VN-Tag</span> IEEE 802.1qbh — Virtual NIC Tagging</div>
+    <ul class="points">
+      <li>Adds a <strong>VIF (Virtual Interface) identifier</strong> to frames so a switch can forward to individual VMs on the same physical port.</li>
+      <li>Traditional switches can't forward frames where source and destination are on the same port. VN-Tag fixes this.</li>
+      <li>A single NIC can carry multiple VM traffic streams using different VIF tags.</li>
+      <li>Used mainly with <strong>fabric extenders</strong>. The controlling bridge assigns VIF IDs.</li>
+      <li>Not universally recognized — may need further encapsulation in the datacenter network.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">STRETCHED VLAN</span></div>
+    <p>A VLAN extended across multiple physical sites over an L3 WAN. L2 frames are encapsulated in L3 WAN packets. Allows VMs to live-migrate between sites without changing their IP address or network configuration.</p>
+  </div>
+</div>
+
+<hr class="sec-divider">
+
+<!-- ═══════════════════ SECTION 13 ═══════════════════ -->
+<div class="section" id="s13">
+  <div class="section-header"><span class="section-num">13</span><h2>VXLAN &amp; NVGRE</h2></div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-blue">VXLAN</span> Virtual Extensible LAN — The Modern DC Solution</div>
+    <p>Proposed by Cisco and VMware. Tunnels Layer 2 Ethernet frames inside <strong>UDP/IP packets</strong> over Layer 3. Creates a massive overlay solving VLAN's 4096 limit.</p>
+    <ul class="points" style="margin-top:8px;">
+      <li><strong>24-bit VXLAN Network Identifier (VNI) → up to 16 million virtual networks.</strong></li>
+      <li>Provides L2 adjacency across L3 boundaries.</li>
+      <li>Supports overlapping IP addresses across tenants (logical isolation per VNI).</li>
+      <li>Minimizes forwarding table size on physical switches.</li>
+      <li>UDP destination port: <strong>4789</strong>.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="badge badge-orange">ENCAPSULATION</span> VXLAN Frame Stack</div>
+    <div class="encap">
+      <div class="encap-layer enc-outer">Outer Ethernet Header (physical network MAC addresses)</div>
+      <div class="encap-layer enc-udp">Outer IP Header + UDP Header (dest port 4789)</div>
+      <div class="encap-layer enc-vxlan">VXLAN Header (8 bytes — contains 24-bit VNI)</div>
+      <div class="encap-layer enc-inner">Inner Ethernet Header (original tenant L2 frame)</div>
+      <div class="encap-layer enc-payload">Original Payload (tenant data)</div>
     </div>
   </div>
 
-  <hr class="sec-divider">
-
-  <!-- SECTION 7 -->
-  <div class="section" id="s7">
-    <div class="section-header">
-      <span class="section-num">07</span>
-      <h2>Tunneling Protocols — Overview</h2>
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">VTEP</span> Virtual Tunnel Endpoint — How forwarding works</div>
+    <p>The VTEP maintains a table mapping <strong>inner VM MAC → outer server IP</strong>. Packet flow:</p>
+    <div class="flow" style="margin-top:12px;">
+      <div class="flow-step"><div class="flow-num">1</div><div class="flow-content">VM (Red 1) sends a frame to another VM (Red 2) on a different physical server.</div></div>
+      <div class="flow-step"><div class="flow-num">2</div><div class="flow-content">Source VTEP looks up Red 1's MAC → finds it maps to Server 2's IP address.</div></div>
+      <div class="flow-step"><div class="flow-num">3</div><div class="flow-content">VTEP encapsulates the L2 frame: wraps it in VXLAN header + UDP + outer IP, sends over L3 network.</div></div>
+      <div class="flow-step"><div class="flow-num">4</div><div class="flow-content">Destination VTEP strips VXLAN header, delivers original L2 frame to Red 2. Red 2 never knows it crossed an L3 boundary.</div></div>
     </div>
+  </div>
 
-    <p style="color:var(--muted); font-size:14px; margin-bottom:16px;">When VMs or customers need Layer 2 connectivity across Layer 3 networks, tunneling wraps L2 frames inside L3 packets. There are four main protocols covered:</p>
-
+  <div class="card">
+    <div class="card-title"><span class="badge badge-red">TUNNEL LOCATION</span> Where does VTEP/encapsulation live?</div>
     <table class="summary-table">
-      <thead>
-        <tr>
-          <th>Protocol</th>
-          <th>Main Use</th>
-          <th>Key Limitation</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Location</th><th>Examples</th><th>Notes</th></tr></thead>
       <tbody>
-        <tr>
-          <td>Q-in-Q (802.1ad)</td>
-          <td>Service provider L2 VPN across metro networks</td>
-          <td>Only 4096 customer IDs (12-bit VLAN)</td>
-        </tr>
-        <tr>
-          <td>MPLS</td>
-          <td>WAN carrier-grade routing and VPNs</td>
-          <td>Too complex/expensive for datacenter edge</td>
-        </tr>
-        <tr>
-          <td>VN-Tag</td>
-          <td>Per-VM virtual Ethernet interfaces on switches</td>
-          <td>Not universally recognized; may need further encapsulation</td>
-        </tr>
-        <tr>
-          <td>VXLAN</td>
-          <td>Large-scale datacenter overlay networks</td>
-          <td>UDP overhead; needs VTEP support</td>
-        </tr>
+        <tr><td>vSwitch</td><td>VMware vSphere/NSX (VXLAN), Windows Server 2012 (NVGRE)</td><td>Consumes CPU. Cannot use with SR-IOV.</td></tr>
+        <tr><td>NIC</td><td>NICs with tunnel offload hardware</td><td>Few NICs support this; required if SR-IOV bypasses the vSwitch.</td></tr>
+        <tr><td>ToR Switch</td><td>Top-of-Rack switch acts as VTEP</td><td>Traffic within same rack skips tunneling — saves overhead.</td></tr>
       </tbody>
     </table>
   </div>
 
-  <hr class="sec-divider">
-
-  <!-- SECTION 8 -->
-  <div class="section" id="s8">
-    <div class="section-header">
-      <span class="section-num">08</span>
-      <h2>Q-in-Q / MPLS / VN-Tag</h2>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="badge badge-orange">Q-in-Q</span> IEEE 802.1ad — Double Tagging</div>
-      <p>A service provider technique where the provider adds an <strong>outer VLAN tag</strong> (their VLAN ID) around the customer's inner 802.1Q tag. The customer's VLAN is preserved transparently across the provider network.</p>
-      <ul class="points" style="margin-top:10px;">
-        <li>Easy to implement — no routing protocols needed between SP and customer.</li>
-        <li>The outer 12-bit VLAN ID identifies the customer; the inner tag is the customer's own VLAN.</li>
-        <li>Only supports up to <strong>4096 customers</strong> — too small for large cloud providers.</li>
-        <li>Access switch adds/removes the outer tag; forwarding uses MAC + outer VLAN tag.</li>
-      </ul>
-      <div class="code-block">
-<span class="comment"># Customer router sub-interface</span>
-int fa0/0.12
-  encapsulation dot1Q 12
-  ip address 192.168.12.1 255.255.255.0
-
-<span class="comment"># SP switch: enable Q-in-Q tunnel toward customer</span>
-int fa0/1
-  switchport access vlan 123
-  switchport mode dot1q-tunnel</div>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="badge badge-purple">MPLS</span> MultiProtocol Label Switching</div>
-      <p>Called a <strong>"Layer 2.5"</strong> protocol — sits between L2 and L3. Routers forward packets based on short fixed-length <strong>labels</strong> instead of IP addresses, making forwarding much faster.</p>
-      <ul class="points" style="margin-top:10px;">
-        <li><strong>LER (Label Edge Router):</strong> enters/exits MPLS network, assigns labels (push/pop).</li>
-        <li><strong>LSR (Label Switching Router):</strong> interior routers that forward by label only.</li>
-        <li><strong>LSP (Label Switched Path):</strong> unidirectional tunnel between LER pairs.</li>
-        <li><strong>VPLS:</strong> MPLS-based L2 multi-point Ethernet service (MAC learning, flooding, broadcasts).</li>
-        <li>Not popular in cloud data centers — too complex and expensive at the edge.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="badge badge-blue">VN-Tag</span> Virtual NIC Tag (IEEE 802.1qbh)</div>
-      <p>Adds a <strong>virtual interface (VIF) identifier</strong> to frames so a switch can forward traffic to individual VMs even when they share the same physical switch port.</p>
-      <ul class="points" style="margin-top:8px;">
-        <li>Traditional switches can't forward frames where source and destination are on the same port — VN-Tag solves this.</li>
-        <li>A single NIC can carry traffic for multiple VMs using different VIF tags.</li>
-        <li>Mainly used with <strong>fabric extenders</strong>. The controlling bridge assigns VIF IDs.</li>
-        <li>Not recognized by all equipment — may need further encapsulation.</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="badge badge-green">STRETCHED VLAN</span></div>
-      <p>A VLAN extended across multiple physical sites over a Layer 3 WAN. L2 frames are encapsulated in L3 WAN packets. Allows VMs to migrate between sites without changing IP addresses.</p>
-    </div>
+  <div class="card">
+    <div class="card-title"><span class="badge badge-purple">NVGRE</span> Network Virtualization using GRE (Microsoft)</div>
+    <ul class="points">
+      <li>Microsoft's alternative to VXLAN. Uses a <strong>GRE header</strong> instead of UDP+VXLAN header — slightly smaller frame.</li>
+      <li>Inner L2 header has no VLAN tag (removed before encapsulation).</li>
+      <li>Tunnel endpoint called <strong>NVE (Network Virtual Endpoint)</strong> — part of Microsoft Hyper-V.</li>
+    </ul>
   </div>
 
-  <hr class="sec-divider">
+  <div class="card">
+    <div class="card-title"><span class="badge badge-green">VXLAN LAB</span> Full NX-OS Configuration (from lecture slides 100–103) <span class="badge badge-new">WAS MISSING</span></div>
+    <p style="font-size:13px; color:var(--muted); margin-bottom:10px;">Topology: VTEP1 (SW1, loopback 1.1.1.1) ↔ IP Underlay (OSPF, 192.168.0.0/30) ↔ VTEP2 (SW2, loopback 2.2.2.2). Host A (10.10.10.11) on SW1, Host C (10.10.10.33) on SW2. Both in VLAN 100, VNI 10100.</p>
 
-  <!-- SECTION 9 -->
-  <div class="section" id="s9">
-    <div class="section-header">
-      <span class="section-num">09</span>
-      <h2>VXLAN &amp; NVGRE</h2>
-    </div>
+    <div class="code-block"><span class="section-label">! ══ SW1 Configuration ══════════════════════════════════</span>
 
-    <div class="card">
-      <div class="card-title"><span class="badge badge-blue">VXLAN</span> Virtual Extensible LAN — The Modern Solution</div>
-      <p>Proposed by Cisco and VMware. VXLAN tunnels Layer 2 (Ethernet) frames inside <strong>UDP/IP packets</strong> over a Layer 3 network — creating a massive overlay.</p>
-      <ul class="points" style="margin-top:10px;">
-        <li>Solves VLAN's 4096 limit: uses a <strong>24-bit VXLAN ID → up to 16 million virtual networks.</strong></li>
-        <li>Provides L2 adjacency across L3 boundaries.</li>
-        <li>Supports overlapping IP addresses across tenants (logical isolation).</li>
-        <li>Minimizes forwarding table size on physical switches.</li>
-      </ul>
-    </div>
+<span class="comment">! Step 1: Enable required features</span>
+<span class="cmd">feature ospf</span>
+<span class="cmd">feature interface-vlan</span>
+<span class="cmd">feature nv overlay</span>
+<span class="cmd">nv overlay evpn</span>
 
-    <div class="card">
-      <div class="card-title"><span class="badge badge-green">VTEP</span> Virtual Tunnel Endpoint</div>
-      <p>The device (or software) that performs VXLAN encapsulation and decapsulation. Each VTEP maintains a table mapping <strong>inner VM MAC addresses → outer server IP addresses</strong>.</p>
-      <div class="flow" style="margin-top:14px;">
-        <div class="flow-step"><div class="flow-num">1</div><div class="flow-content">VM (Red 1) sends a frame to another VM (Red 2).</div></div>
-        <div class="flow-step"><div class="flow-num">2</div><div class="flow-content">Source VTEP looks up Red 1 MAC → finds it maps to Server 2's IP.</div></div>
-        <div class="flow-step"><div class="flow-num">3</div><div class="flow-content">VTEP encapsulates the L2 frame inside a VXLAN/UDP/IP packet and sends it over L3.</div></div>
-        <div class="flow-step"><div class="flow-num">4</div><div class="flow-content">Destination VTEP strips the VXLAN header and delivers the original L2 frame to Red 2.</div></div>
-      </div>
-    </div>
+<span class="comment">! Step 2: Loopback interface (VTEP source IP)</span>
+interface loopback0
+  ip address <span class="val">1.1.1.1/32</span>
+  ip router ospf 1 area 0.0.0.0
+  no shutdown
 
-    <div class="card">
-      <div class="card-title"><span class="badge badge-orange">ENCAPSULATION</span> VXLAN Frame Structure</div>
-      <div class="encap">
-        <div class="encap-layer enc-outer">Outer Ethernet Header</div>
-        <div class="encap-layer enc-udp">Outer IP Header + UDP Header (dest port 4789)</div>
-        <div class="encap-layer enc-vxlan">VXLAN Header (24-bit VNI — VXLAN Network Identifier)</div>
-        <div class="encap-layer enc-inner">Inner Ethernet Header (original L2 frame)</div>
-        <div class="encap-layer enc-payload">Original Payload (tenant data)</div>
-      </div>
-    </div>
+<span class="comment">! Step 3: Underlay link to SW2</span>
+interface Ethernet1/3
+  description UNDERLAY_TO_SW2
+  no switchport
+  ip address <span class="val">192.168.0.1/30</span>
+  ip router ospf 1 area 0.0.0.0
+  no shutdown
 
-    <div class="card">
-      <div class="card-title"><span class="badge badge-purple">NVGRE</span> Network Virtualization using GRE (Microsoft)</div>
-      <ul class="points">
-        <li>Microsoft's alternative to VXLAN — uses a <strong>GRE header</strong> instead of UDP+VXLAN header (slightly smaller frame).</li>
-        <li>Inner L2 header has no VLAN tag (removed before encapsulation).</li>
-        <li>The tunnel endpoint is called <strong>NVE (Network Virtual Endpoint)</strong> — part of Microsoft Hyper-V.</li>
-      </ul>
-    </div>
+<span class="comment">! Step 4: OSPF underlay</span>
+router ospf 1
+  router-id <span class="val">1.1.1.1</span>
 
-    <div class="card">
-      <div class="card-title"><span class="badge badge-red">TUNNEL LOCATION</span> Where does encapsulation happen?</div>
-      <table class="summary-table">
-        <thead>
-          <tr><th>Location</th><th>How</th><th>Notes</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>vSwitch</td>
-            <td>VMware vSphere / NSX (VXLAN), Windows Server 2012 (NVGRE)</td>
-            <td>Consumes CPU. Cannot use with SR-IOV.</td>
-          </tr>
-          <tr>
-            <td>NIC</td>
-            <td>NIC hardware with tunnel offload support</td>
-            <td>Few NICs support this; required if SR-IOV is in use.</td>
-          </tr>
-          <tr>
-            <td>ToR Switch</td>
-            <td>Top-of-Rack switch acts as VTEP</td>
-            <td>Traffic within same rack doesn't need tunneling — saves overhead.</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="key-fact" style="margin-top:12px;">
-        <strong>SR-IOV + Tunneling:</strong> If SR-IOV is used (traffic bypasses vSwitch), tunneling MUST happen at the NIC or the ToR switch — not the vSwitch.
-      </div>
-    </div>
+<span class="comment">! Step 5: Define VLAN and bind to VNI</span>
+vlan <span class="val">100</span>
+  name VXLAN_OVERLAY_VLAN
+  vn-segment <span class="val">10100</span>
+
+<span class="comment">! Step 6: Access port for Host A</span>
+interface Ethernet1/1
+  description HOST_A
+  switchport
+  switchport mode access
+  switchport access vlan <span class="val">100</span>
+  no shutdown
+
+<span class="comment">! Step 7: SVI for VLAN 100 (overlay gateway)</span>
+interface vlan <span class="val">100</span>
+  description OVERLAY_GW_SW1
+  no shutdown
+  ip address <span class="val">10.10.10.1/24</span>
+
+<span class="comment">! Step 8: NVE (VTEP) interface</span>
+interface nve1
+  no shutdown
+  source-interface loopback0
+  member vni <span class="val">10100</span>
+    ingress-replication protocol static
+    peer-ip <span class="val">2.2.2.2</span>
+<span class="comment">! peer-ip = SW2's loopback — static ingress replication</span></div>
+
+    <div class="code-block"><span class="section-label">! ══ SW2 Configuration ══════════════════════════════════</span>
+
+interface loopback0
+  ip address <span class="val">2.2.2.2/32</span>
+  ip router ospf 1 area 0.0.0.0
+  no shutdown
+
+interface Ethernet1/3
+  description UNDERLAY_TO_SW1
+  no switchport
+  ip address <span class="val">192.168.0.2/30</span>
+  ip router ospf 1 area 0.0.0.0
+  no shutdown
+
+router ospf 1
+  router-id <span class="val">2.2.2.2</span>
+
+vlan <span class="val">100</span>
+  name VXLAN_OVERLAY_VLAN
+  vn-segment <span class="val">10100</span>          <span class="comment">! Same VNI on both VTEPs</span>
+
+interface Ethernet1/1
+  description HOST_C
+  switchport
+  switchport mode access
+  switchport access vlan <span class="val">100</span>
+  no shutdown
+
+interface vlan <span class="val">100</span>
+  description OVERLAY_GW_SW2
+  no shutdown
+  ip address <span class="val">10.10.10.2/24</span>
+
+interface nve1
+  no shutdown
+  source-interface loopback0
+  member vni <span class="val">10100</span>
+    ingress-replication protocol static
+    peer-ip <span class="val">1.1.1.1</span>           <span class="comment">! SW2 peers with SW1's loopback</span></div>
+
+    <p style="font-size:13px; color:var(--muted); margin-top:10px;">Result: Host A (10.10.10.11) and Host C (10.10.10.33) are in the same L2 domain (VLAN 100 / VNI 10100), even though they're on different physical switches across an L3 OSPF underlay. VXLAN encapsulates their Ethernet frames in UDP/IP and sends them over the underlay.</p>
   </div>
+</div>
 
-  <hr class="sec-divider">
+<hr class="sec-divider">
 
-  <!-- SECTION 10 -->
-  <div class="section" id="s10">
-    <div class="section-header">
-      <span class="section-num">10</span>
-      <h2>Quick Recap — Everything at a Glance</h2>
-    </div>
+<!-- ═══════════════════ SECTION 14 ═══════════════════ -->
+<div class="section" id="s14">
+  <div class="section-header"><span class="section-num">14</span><h2>Quick Recap — Everything at a Glance</h2></div>
 
-    <table class="summary-table">
-      <thead>
-        <tr><th>Concept</th><th>One-liner</th><th>Key Number / Detail</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Virtual Switch</td><td>Software switch in hypervisor, all routing in CPU</td><td>High CPU overhead</td></tr>
-        <tr><td>VMDq</td><td>NIC pre-sorts packets into per-VM queues</td><td>Still uses virtual switch</td></tr>
-        <tr><td>SR-IOV</td><td>VM gets its own virtual NIC (VF), bypasses hypervisor via DMA</td><td>Lowest latency; limits live migration</td></tr>
-        <tr><td>Open vSwitch</td><td>Popular software switch with kernel fast-path + userspace slow-path</td><td>Supports OpenFlow / SDN</td></tr>
-        <tr><td>VLAN</td><td>Logical network grouping on a physical LAN</td><td>12-bit ID → 4096 VLANs max</td></tr>
-        <tr><td>802.1Q</td><td>Standard for tagging VLAN info in Ethernet frames</td><td>4-byte tag: TPI + PCP + CFI + VLAN ID</td></tr>
-        <tr><td>PVLAN</td><td>L2 isolation within a VLAN using promiscuous/isolated/community ports</td><td>Promiscuous = gateway, Isolated = no peer talk</td></tr>
-        <tr><td>L3 Switch + SVI</td><td>Switch that routes between VLANs; SVI = virtual interface per VLAN</td><td>SVI needs active VLAN + active port to be up</td></tr>
-        <tr><td>Q-in-Q</td><td>Double VLAN tag for SP tunneling customer VLANs</td><td>Only 4096 customers</td></tr>
-        <tr><td>MPLS</td><td>Label-based routing, "Layer 2.5", carrier-grade</td><td>Too complex for DC edge</td></tr>
-        <tr><td>Stretched VLAN</td><td>VLAN spanning multiple sites over L3 WAN</td><td>Allows VM migration without IP change</td></tr>
-        <tr><td>VN-Tag</td><td>Virtual NIC tag for per-VM forwarding on shared port</td><td>IEEE 802.1qbh</td></tr>
-        <tr><td>VXLAN</td><td>L2 over L3 using MAC-in-UDP; modern DC overlay</td><td>24-bit VNI → 16 million networks</td></tr>
-        <tr><td>VTEP</td><td>Endpoint that encaps/decaps VXLAN; maps MAC → outer IP</td><td>Can live in vSwitch, NIC, or ToR</td></tr>
-        <tr><td>NVGRE</td><td>Microsoft's alternative to VXLAN using GRE instead of UDP</td><td>Endpoint = NVE (Hyper-V)</td></tr>
-      </tbody>
-    </table>
+  <table class="summary-table">
+    <thead><tr><th>Concept</th><th>One-liner</th><th>Key Number / Detail</th></tr></thead>
+    <tbody>
+      <tr><td>Virtual Switch</td><td>Software switch in hypervisor, all routing in CPU</td><td>High CPU overhead; VMware vSwitch / OVS</td></tr>
+      <tr><td>VMDq</td><td>NIC pre-sorts packets into per-VM queues</td><td>Still uses vSwitch / VMBus</td></tr>
+      <tr><td>SR-IOV</td><td>VM gets its own virtual NIC (VF); bypasses hypervisor via DMA</td><td>Lowest latency; limits live migration</td></tr>
+      <tr><td>OVS Components</td><td>ovsdb-server (config DB) + ovs-vswitchd (daemon) + kernel module</td><td>Mgmt: 6632, OpenFlow: 6633, Netlink: kernel↔userspace</td></tr>
+      <tr><td>OVS Fast Path</td><td>First packet → userspace; installs collapsed rule in kernel; subsequent packets skip userspace</td><td>Hash lookup speeds up kernel rule matching</td></tr>
+      <tr><td>VLAN</td><td>Logical network grouping on a physical LAN</td><td>12-bit ID → 4096 VLANs max</td></tr>
+      <tr><td>802.1Q Tag</td><td>4-byte tag added to Ethernet frames for trunking</td><td>TPI (0x8100) + PCP (3-bit QoS) + CFI (0) + VLAN ID (12-bit)</td></tr>
+      <tr><td>Trunk Config</td><td>switchport mode trunk + switchport trunk allowed vlan</td><td>On Nexus: also need "switchport" first</td></tr>
+      <tr><td>Native VLAN Risk</td><td>Untagged frames leak into VLAN 1</td><td>Fix: <code>vlan dot1Q tag native</code></td></tr>
+      <tr><td>Router-on-a-Stick</td><td>Single router port + sub-interfaces per VLAN</td><td>encapsulation dot1Q &lt;vlan-id&gt; on each sub-interface</td></tr>
+      <tr><td>VLAN Misconceptions</td><td>VLAN ≠ always 1:1 with subnet</td><td>2 subnets can share 1 VLAN; 2 VLANs can share 1 subnet</td></tr>
+      <tr><td>STP</td><td>Prevents L2 loops; elects root bridge; blocks redundant paths</td><td>Per-VLAN STP (PVST+) allows load balancing across VLANs</td></tr>
+      <tr><td>PVLAN</td><td>L2 isolation within a VLAN using primary + secondary VLANs</td><td>Ports: Promiscuous (all), Isolated (→prom only), Community (→comm+prom)</td></tr>
+      <tr><td>PVLAN Config</td><td>private-vlan primary → association → isolated/community → port modes</td><td>SVI needs <code>private-vlan mapping</code> to route between secondaries</td></tr>
+      <tr><td>L3 Switch + SVI</td><td>Routes between VLANs in hardware; SVI = virtual interface per VLAN with IP</td><td>SVI needs: VLAN exists + active port in VLAN</td></tr>
+      <tr><td>feature interface-vlan</td><td>NX-OS command to enable SVI creation</td><td>Required on Nexus before creating interface vlan X</td></tr>
+      <tr><td>Q-in-Q (802.1ad)</td><td>Outer SP VLAN tag wraps customer's inner VLAN tag</td><td>4096 customer limit; mode: dot1q-tunnel</td></tr>
+      <tr><td>MPLS</td><td>Label-based routing, "Layer 2.5", LER/LSR/LSP</td><td>Too complex for DC edge; VPLS for L2 multi-point</td></tr>
+      <tr><td>Stretched VLAN</td><td>VLAN spanning multiple sites over L3 WAN</td><td>Enables VM migration without IP change</td></tr>
+      <tr><td>VN-Tag (802.1qbh)</td><td>Per-VM virtual Ethernet tag on shared port</td><td>Used with fabric extenders; not universally recognized</td></tr>
+      <tr><td>VSAN</td><td>Virtual SAN — logical partition of a SAN fabric</td><td>Isolates storage traffic between tenants</td></tr>
+      <tr><td>VXLAN</td><td>L2 over L3 using MAC-in-UDP; modern DC overlay</td><td>24-bit VNI → 16M networks; UDP port 4789</td></tr>
+      <tr><td>VTEP / NVE</td><td>Encap/decap endpoint for VXLAN; maps inner MAC → outer IP</td><td>Can live in vSwitch, NIC, or ToR switch</td></tr>
+      <tr><td>VXLAN Lab Key Commands</td><td>feature nv overlay → nv overlay evpn → vn-segment → interface nve1 → member vni → peer-ip</td><td>Underlay uses OSPF; loopback = VTEP source IP</td></tr>
+      <tr><td>NVGRE</td><td>Microsoft alternative to VXLAN using GRE header</td><td>NVE endpoint; part of Hyper-V; smaller frame than VXLAN</td></tr>
+      <tr><td>SR-IOV + Tunneling</td><td>If SR-IOV is used, tunneling must be at NIC or ToR — not vSwitch</td><td>SR-IOV bypasses the vSwitch entirely</td></tr>
+    </tbody>
+  </table>
 
-    <div class="analogy" style="margin-top:24px;">
-      <div class="analogy-label">🧠 Big Picture</div>
-      <p>The whole module is about one problem: <strong>how do we connect virtual machines efficiently and securely, both within a datacenter and across sites?</strong> The methods go from simple software switches → hardware offload → full bypass (SR-IOV). The networking side goes from flat VLANs → isolation (PVLAN) → extending L2 across L3 (VXLAN). VXLAN wins in modern cloud because it scales to 16 million logical networks and works over any IP network.</p>
-    </div>
+  <div class="analogy" style="margin-top:24px;">
+    <div class="analogy-label">🧠 Big Picture — How it all connects</div>
+    <p>The whole module answers: <strong>how do we connect VMs efficiently, scalably, and securely?</strong><br>
+    Compute side: vSwitch (flexible) → VMDq (hardware sort) → SR-IOV (hardware bypass).<br>
+    Network side: VLAN (basic isolation) → PVLAN (isolation within VLAN) → Stretched VLAN / VXLAN (extend L2 across L3).<br>
+    VXLAN wins in modern cloud because it scales to 16M networks, works over any IP underlay (OSPF/BGP), and the VTEP can live in software or hardware. The lab shows exactly how to wire it up on Cisco NX-OS.</p>
   </div>
+</div>
 
 </div><!-- /content -->
-
 </body>
 </html>
