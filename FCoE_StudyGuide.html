@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FCoE — Final Exam Study Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222635;
+    --border: #2e3347;
+    --accent: #38bdf8;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --accent4: #f59e0b;
+    --accent5: #f472b6;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --tag-bg: #1e2640;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+  .sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 260px; height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto; padding: 20px 0;
+    z-index: 100;
+  }
+  .sidebar-logo { padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+  .sidebar-logo h2 { font-size: 14px; color: var(--accent); letter-spacing: .05em; text-transform: uppercase; }
+  .sidebar-logo p { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .nav-section { padding: 6px 20px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-top: 8px; }
+  .nav-link {
+    display: block; padding: 7px 20px; font-size: 13px;
+    color: var(--muted); text-decoration: none; cursor: pointer;
+    border-left: 3px solid transparent; transition: all .15s;
+  }
+  .nav-link:hover, .nav-link.active { color: var(--text); background: var(--surface2); border-left-color: var(--accent); }
+  .main { margin-left: 260px; padding: 40px 48px; max-width: 1100px; }
+
+  .page-header { margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .page-header h1 { font-size: 32px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .page-header p { color: var(--muted); margin-top: 6px; }
+
+  .section { margin-bottom: 60px; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+  .section-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .section-header h2 { font-size: 22px; font-weight: 700; }
+
+  .concept { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 20px; }
+  .concept-title { font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+
+  .tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--tag-bg); text-transform: uppercase; letter-spacing: .05em; }
+  .tag-analogy { color: var(--accent4); border: 1px solid #f59e0b40; }
+  .tag-tech { color: var(--accent); border: 1px solid #38bdf840; }
+  .tag-why { color: var(--accent3); border: 1px solid #34d39940; }
+  .tag-nums { color: var(--accent5); border: 1px solid #f472b640; }
+
+  .analogy-box { background: #1c1a10; border: 1px solid #f59e0b30; border-left: 3px solid var(--accent4); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; font-style: italic; color: #fde68a; }
+  .why-box { background: #0e1c17; border: 1px solid #34d39930; border-left: 3px solid var(--accent3); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; color: #a7f3d0; }
+  .nums-box { background: #1a1020; border: 1px solid #f472b630; border-left: 3px solid var(--accent5); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+  .callout { background: #0e1520; border: 1px solid #38bdf830; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #7dd3fc; margin: 10px 0; }
+  .callout strong { color: var(--accent); }
+
+  .chain { color: var(--muted); font-size: 13.5px; line-height: 1.9; margin: 10px 0; }
+  .chain .arrow { color: var(--accent); font-weight: 700; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-bottom: 20px; }
+  th { background: var(--surface2); color: var(--accent); font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  ul { padding-left: 20px; }
+  li { margin-bottom: 7px; color: var(--muted); }
+  li strong { color: var(--text); }
+  h3 { font-size: 16px; font-weight: 600; color: var(--text); margin: 20px 0 10px; }
+  h4 { font-size: 14px; font-weight: 600; color: var(--accent2); margin: 14px 0 8px; }
+  p { margin-bottom: 10px; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  code { background: var(--surface2); padding: 2px 7px; border-radius: 4px; font-size: 12.5px; color: var(--accent2); font-family: monospace; }
+
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .badge-fcoe { background: #0e2030; color: var(--accent); }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .compare-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+  .compare-card h4 { font-size: 15px; margin-top: 0; margin-bottom: 10px; }
+
+  /* frame diagram */
+  .frame-diagram { display: flex; gap: 2px; margin: 16px 0; border-radius: 8px; overflow: hidden; font-size: 11px; font-weight: 700; }
+  .frame-part { padding: 12px 6px; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 70px; flex-direction: column; gap: 4px; }
+  .fp-eth { background: #1e3050; color: #7dd3fc; flex: 3; }
+  .fp-fcoe { background: #1e3020; color: #6ee7b7; flex: 2; }
+  .fp-sof { background: #f59e0b22; color: #fcd34d; border: 1px solid #f59e0b40; flex: 0.7; }
+  .fp-fc { background: #f97316aa; color: #fff; flex: 5; }
+  .fp-eof { background: #f59e0b22; color: #fcd34d; border: 1px solid #f59e0b40; flex: 0.7; }
+  .fp-fcs { background: #1e2050; color: #a5b4fc; flex: 1; }
+  .frame-label { font-size: 10px; color: var(--muted); margin-top: 16px; margin-bottom: 4px; }
+
+  /* CEE cards */
+  .cee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  .cee-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .cee-card .cee-name { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 6px; }
+  .cee-card .cee-abbr { font-size: 10px; color: var(--muted); margin-bottom: 10px; }
+
+  /* quiz */
+  .quiz { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 32px; }
+  .quiz-header { background: linear-gradient(135deg, #0e2030, #1a1030); padding: 16px 24px; font-size: 15px; font-weight: 700; color: var(--accent2); }
+  .quiz-item { padding: 14px 24px; border-bottom: 1px solid var(--border); }
+  .quiz-item:last-child { border-bottom: none; }
+  .quiz-q { font-weight: 600; margin-bottom: 8px; }
+  .quiz-a { font-size: 13px; color: var(--muted); padding-left: 14px; border-left: 2px solid var(--accent3); }
+  .quiz-a strong { color: var(--accent3); }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h2>Finals Study Guide</h2>
+    <p>FCoE SAN • Module 11</p>
+  </div>
+
+  <div class="nav-section">Lesson 1 — FCoE Overview</div>
+  <a class="nav-link" onclick="scrollTo('what-is-fcoe')">What is FCoE? &amp; Drivers</a>
+  <a class="nav-link" onclick="scrollTo('components')">Components (CNA, Switch)</a>
+  <a class="nav-link" onclick="scrollTo('connectivity')">Connectivity Types</a>
+  <a class="nav-link" onclick="scrollTo('vlan-vsan')">VLAN &amp; VSAN in FCoE</a>
+  <a class="nav-link" onclick="scrollTo('port-types')">FCoE Port Types</a>
+
+  <div class="nav-section">Lesson 2 — CEE</div>
+  <a class="nav-link" onclick="scrollTo('cee-intro')">What is CEE?</a>
+  <a class="nav-link" onclick="scrollTo('pfc')">PFC — Priority Flow Control</a>
+  <a class="nav-link" onclick="scrollTo('ets')">ETS — Enhanced TX Selection</a>
+  <a class="nav-link" onclick="scrollTo('cn')">CN — Congestion Notification</a>
+  <a class="nav-link" onclick="scrollTo('dcbx')">DCBX — Config Exchange</a>
+
+  <div class="nav-section">Lesson 3 — FCoE Architecture</div>
+  <a class="nav-link" onclick="scrollTo('frame-structure')">FCoE Frame Structure</a>
+  <a class="nav-link" onclick="scrollTo('frame-mapping')">FCoE Frame Mapping (Stack)</a>
+  <a class="nav-link" onclick="scrollTo('fcoe-process')">FCoE Process (3 Phases)</a>
+  <a class="nav-link" onclick="scrollTo('fip')">FIP — Init Protocol</a>
+  <a class="nav-link" onclick="scrollTo('addressing')">FCoE Addressing (SPMA/FPMA)</a>
+  <a class="nav-link" onclick="scrollTo('forwarding')">Frame Forwarding</a>
+
+  <div class="nav-section">Review</div>
+  <a class="nav-link" onclick="scrollTo('big-tables')">Master Comparison Tables</a>
+  <a class="nav-link" onclick="scrollTo('quiz')">Exam Q&amp;A</a>
+</nav>
+
+<!-- ══════════ MAIN ══════════ -->
+<main class="main">
+
+<div class="page-header">
+  <h1>FCoE SAN — Complete Finals Study Guide</h1>
+  <p>Module 11 • FC over Ethernet • All 28 slides covered. Close the deck — you're done with it.</p>
+</div>
+
+<!-- ════════════════════════════════════════
+         LESSON 1: OVERVIEW OF FCoE SAN
+     ════════════════════════════════════════ -->
+
+<div class="section" id="what-is-fcoe">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2030;">🔀</div>
+    <div><span class="badge badge-fcoe">Lesson 1</span><h2>What is FCoE? &amp; Why It Exists</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-title">🧩 Big Picture Analogy <span class="tag tag-analogy">Analogy</span></div>
+    <div class="analogy-box">
+      Imagine a data center as an office building. Right now it has two completely separate cable systems running through the walls: one set of cables for internet/LAN traffic (Ethernet) and another set of cables for storage (FC). Every server needs two network cards, two cable runs, two switch types. That's double the cost, double the power, double the complexity.
+
+      FCoE is like building one single unified cable system that carries both types of traffic simultaneously — the storage data rides inside the Ethernet cable, hidden in a special compartment. You rip out the duplicate infrastructure and replace it with one converged network.
+    </div>
+
+    <div class="concept-title">⚙️ Technical Definition <span class="tag tag-tech">Technical</span></div>
+    <p><strong>FCoE (Fibre Channel over Ethernet)</strong> is a SAN technology that transports FC storage traffic alongside regular Ethernet traffic over a single <strong>Converged Enhanced Ethernet (CEE)</strong> network.</p>
+    <ul style="margin-top:8px;">
+      <li>Uses the <strong>FCoE protocol</strong> to encapsulate FC frames inside Ethernet frames — the FC frame is placed inside the Ethernet frame's payload.</li>
+      <li>Ensures <strong>lossless</strong> delivery of FC traffic over Ethernet (regular Ethernet can drop frames; CEE adds enhancements to prevent this — covered in Lesson 2).</li>
+      <li>FC stays FC — the FC frame itself is unchanged. Only the outer wrapping changes to Ethernet.</li>
+    </ul>
+
+    <h3>Why FCoE? — The Drivers</h3>
+    <p>Traditional data centers have two separate physical networks side by side: an <strong>Ethernet LAN network</strong> for compute-to-compute traffic, and a <strong>separate FC SAN</strong> for compute-to-storage traffic. That means:</p>
+    <ul>
+      <li>Two types of adapters per server (NIC + FC HBA)</li>
+      <li>Two cable runs per server</li>
+      <li>Two sets of switches (Ethernet switches + FC switches)</li>
+      <li>More power draw, more rack space, more management complexity</li>
+    </ul>
+
+    <div class="why-box">
+      <strong>FCoE solves this by converging both networks into one:</strong><br>
+      ✅ Reduces the number of adapters, cables, and switches<br>
+      ✅ Reduces power and space consumption in the data center<br>
+      ✅ Simplifies management — one network instead of two
+    </div>
+
+    <div class="callout"><strong>Key insight for the exam:</strong> FCoE does NOT replace FC. The FC fabric and FC protocols still exist underneath. FCoE just replaces the FC physical cables between servers and the SAN with shared Ethernet cables — saving infrastructure costs while keeping the FC architecture intact.</div>
+  </div>
+</div>
+
+<!-- ─── COMPONENTS ─── -->
+<div class="section" id="components">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2030;">🔧</div>
+    <div><span class="badge badge-fcoe">Lesson 1</span><h2>FCoE SAN Components</h2></div>
+  </div>
+
+  <div class="concept">
+    <p>FCoE SAN has three key component categories: <strong>network adapters</strong>, <strong>cables</strong>, and the <strong>FCoE switch</strong>.</p>
+
+    <h3>1. Network Adapters</h3>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4 style="color:var(--accent);">CNA — Converged Network Adapter</h4>
+        <ul>
+          <li>A <strong>single physical card</strong> that does the job of BOTH a NIC and an FC HBA</li>
+          <li>Encapsulates FC frames into Ethernet frames and sends them over CEE links</li>
+          <li>Has three separate ASICs (chips) on one card: <strong>10GE ASIC</strong> (Ethernet), <strong>FC ASIC</strong> (Fibre Channel), <strong>FCoE ASIC</strong> (translation layer)</li>
+          <li>One card → replaces two cards → saves a PCIe slot, power, cost</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <h4 style="color:var(--accent2);">Software FCoE Adapter</h4>
+        <ul>
+          <li>A software module running in the OS or hypervisor kernel</li>
+          <li>Performs FCoE processing using an existing supported NIC</li>
+          <li>The NIC carries both FCoE storage traffic AND regular Ethernet LAN traffic simultaneously</li>
+          <li>Lower cost (no extra hardware) but uses CPU cycles</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>2. Cables</h3>
+    <p>Same as regular Ethernet — copper (for short distances) and fiber optic cables. No special FC-specific cables needed on the CEE portion of the network.</p>
+
+    <h3>3. FCoE Switch — The Most Important Component</h3>
+    <div class="analogy-box">
+      Think of the FCoE switch as a bilingual translator living at the border between two countries — the Ethernet world and the FC world. Packets arrive from the Ethernet side, the switch strips off the Ethernet wrapping, extracts the FC frame inside, and passes it into the FC fabric. In the other direction, FC frames come in and get wrapped in Ethernet before going out to the CNA.
+    </div>
+
+    <p>The FCoE switch has three internal building blocks:</p>
+    <table>
+      <tr><th>Part</th><th>What it does</th></tr>
+      <tr><td><strong>FCF (Fibre Channel Forwarder)</strong></td><td>The brain of the FCoE switch. It bridges CEE ↔ FC worlds. It handles FCoE login requests, applies zoning, provides all FC fabric services, and encapsulates/decapsulates FC frames.</td></tr>
+      <tr><td><strong>Ethernet Bridge</strong></td><td>The regular Ethernet switching logic. Handles forwarding of regular LAN traffic and FCoE frames on the Ethernet side.</td></tr>
+      <tr><td><strong>Ports</strong></td><td>Has both FC ports (to connect to FC SAN or FC switches) and Ethernet ports (to connect to compute systems via CEE links)</td></tr>
+    </table>
+
+    <p>The FCoE switch forwards frames based on <strong>Ethertype</strong> — a field in the Ethernet header that tells the switch what type of payload is inside (FCoE traffic gets a specific Ethertype value that identifies it as FCoE, so the switch knows to route it through the FCF instead of the Ethernet bridge).</p>
+
+    <div class="callout"><strong>FCF = Fibre Channel Forwarder.</strong> This is the key term. It's not just a switch — it's the functional component that makes FCoE possible by bridging between CEE and FC. Expect exam questions about what FCF does.</div>
+  </div>
+</div>
+
+<!-- ─── CONNECTIVITY ─── -->
+<div class="section" id="connectivity">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2030;">🔗</div>
+    <div><span class="badge badge-fcoe">Lesson 1</span><h2>FCoE SAN Connectivity Types</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Think of two deployment scenarios. The first is like a renovation: you already have FC SAN wiring in the back of the building (storage side stays FC), and you just replace the cable runs from servers to the main switch with a new converged cable. The second is a fresh build from scratch — everything is FCoE end-to-end, no legacy FC cables anywhere.
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4 style="color:var(--accent);">FCoE with Existing FC SAN</h4>
+        <ul>
+          <li>Compute systems have CNAs, connected via <strong>CEE links</strong> to FCoE switches</li>
+          <li>FCoE switches then connect to the <strong>existing FC SAN</strong> via standard FC links</li>
+          <li>Storage systems keep their existing FC ports — no changes needed on the storage side</li>
+          <li><strong>Suitable for:</strong> Environments that already have an FC SAN and want to reduce server-side cabling without rebuilding storage infrastructure</li>
+          <li>The FCoE switch acts as the bridge: CEE on one side, FC SAN on the other</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <h4 style="color:var(--accent3);">End-to-End FCoE</h4>
+        <ul>
+          <li>Compute systems have CNAs connected to FCoE switches via CEE links</li>
+          <li>Multiple FCoE switches interconnect to form the fabric</li>
+          <li>Storage systems also have <strong>FCoE ports</strong> — the FC SAN fabric itself runs over CEE</li>
+          <li><strong>Suitable for:</strong> New deployments built entirely on FCoE from the start</li>
+          <li>No traditional FC cables anywhere — everything goes over CEE</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chain">
+      <strong>FCoE with Existing FC SAN flow:</strong><br>
+      Compute System (CNA) <span class="arrow">→</span> CEE Link <span class="arrow">→</span> FCoE Switch (FCF converts FCoE ↔ FC) <span class="arrow">→</span> FC SAN <span class="arrow">→</span> Storage System (FC ports)
+    </div>
+    <div class="chain" style="margin-top:12px;">
+      <strong>End-to-End FCoE flow:</strong><br>
+      Compute System (CNA) <span class="arrow">→</span> CEE Link <span class="arrow">→</span> FCoE Switch <span class="arrow">→</span> CEE Link <span class="arrow">→</span> FCoE Switch <span class="arrow">→</span> Storage System (FCoE ports)
+    </div>
+  </div>
+</div>
+
+<!-- ─── VLAN & VSAN ─── -->
+<div class="section" id="vlan-vsan">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2030;">🏷️</div>
+    <div><span class="badge badge-fcoe">Lesson 1</span><h2>VLAN &amp; VSAN in FCoE</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Think of VLAN as a virtual room inside an Ethernet network — you logically separate traffic without running separate cables. VSAN is the same concept but for the FC SAN side — a virtual storage fabric. In FCoE, they must be paired: each VSAN (storage zone) gets its own dedicated VLAN (Ethernet lane) to travel through. And critically, those storage-carrying VLANs must NOT be shared with regular LAN traffic — they're reserved exclusively for storage.
+    </div>
+
+    <ul>
+      <li>In an <strong>FCoE with existing FC SAN</strong> environment, both VLANs (Ethernet logical segments) and VSANs (FC virtual SANs) co-exist.</li>
+      <li>The FCoE switch supports <strong>VSAN-to-VLAN mapping</strong>: each VSAN is assigned a dedicated VLAN.</li>
+      <li>VLANs that carry FCoE/VSAN traffic <strong>must NOT carry regular LAN traffic</strong> — they are reserved solely for storage to ensure performance and lossless delivery.</li>
+    </ul>
+
+    <h3>Example from the Slides</h3>
+    <table>
+      <tr><th>VLAN</th><th>VSAN</th><th>FCoE?</th><th>What it means</th></tr>
+      <tr><td><strong>10</strong></td><td>N/A</td><td>No</td><td>Regular LAN traffic only — no storage</td></tr>
+      <tr><td><strong>20</strong></td><td>N/A</td><td>No</td><td>Regular LAN traffic only — no storage</td></tr>
+      <tr><td><strong>30</strong></td><td>100</td><td>Yes</td><td>FCoE storage traffic for VSAN 100 — dedicated, no LAN traffic allowed</td></tr>
+      <tr><td><strong>40</strong></td><td>200</td><td>Yes</td><td>FCoE storage traffic for VSAN 200 — dedicated, no LAN traffic allowed</td></tr>
+    </table>
+
+    <div class="callout"><strong>Trunk links</strong> carry multiple VLANs at once. In the slide example, the link from the compute system to the FCoE switch trunks all 4 VLANs (10,20,30,40). The link from the FCoE switch to the Ethernet switch only needs VLANs 10,20 (LAN traffic). The link from FCoE switch to FC switch carries VSANs 100,200 (storage fabric).</div>
+  </div>
+</div>
+
+<!-- ─── PORT TYPES ─── -->
+<div class="section" id="port-types">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2030;">🔌</div>
+    <div><span class="badge badge-fcoe">Lesson 1</span><h2>FCoE Port Types</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      In FC-SAN, you learned about N_Port, F_Port, E_Port. FCoE adds "virtual" versions of those same ports — same job, but operating over Ethernet instead of dedicated FC cables. The "V" prefix = Virtual. A VN_Port is a virtual N_Port, a VF_Port is a virtual F_Port, and a VE_Port is a virtual E_Port.
+    </div>
+
+    <table>
+      <tr><th>Port</th><th>Full Name</th><th>Where it lives</th><th>What it does</th><th>FC equivalent</th></tr>
+      <tr><td><code>VN_Port</code></td><td>Virtual Node Port</td><td>Compute system (CNA) or FCoE storage system</td><td>Virtual end point — the CNA's FCoE interface that acts like an FC node port but over Ethernet</td><td>N_Port</td></tr>
+      <tr><td><code>VF_Port</code></td><td>Virtual Fabric Port</td><td>FCoE switch (FCF side)</td><td>Connects to a VN_Port on a compute system. Switch side of the virtual FC link over CEE.</td><td>F_Port</td></tr>
+      <tr><td><code>VE_Port</code></td><td>Virtual Expansion Port</td><td>FCoE switch</td><td>Connects FCoE switch to another FCoE switch — forms a virtual ISL between FCoE switches. Also used in FCIP tunnels.</td><td>E_Port</td></tr>
+      <tr><td><code>E_Port</code></td><td>Expansion Port</td><td>FCoE switch or FC switch</td><td>Standard FC E_Port — used for ISL between an FCoE switch and a traditional FC switch</td><td>E_Port (unchanged)</td></tr>
+      <tr><td><code>F_Port</code></td><td>Fabric Port</td><td>FC switch</td><td>Standard FC F_Port — connects FC switch to FC storage systems (N_Ports)</td><td>F_Port (unchanged)</td></tr>
+      <tr><td><code>N_Port</code></td><td>Node Port</td><td>FC storage system</td><td>Standard FC N_Port — end point on the FC SAN side (traditional storage)</td><td>N_Port (unchanged)</td></tr>
+    </table>
+
+    <div class="callout"><strong>Reading the diagram from the slide:</strong> In the top path (end-to-end FCoE): Compute → <code>VN_Port</code> → CEE → <code>VF_Port</code> on FCoE Switch → <code>VE_Port</code> ↔ <code>VE_Port</code> (virtual ISL between FCoE switches) → <code>VF_Port</code> → <code>VN_Port</code> on FCoE storage. In the bottom path (FCoE + existing FC SAN): Compute → <code>VN_Port</code> → CEE → <code>VF_Port</code> on FCoE switch, <code>E_Port</code> → FC switch → <code>F_Port</code> → <code>N_Port</code> on FC storage.</div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ════════════════════════════════════════
+         LESSON 2: CEE
+     ════════════════════════════════════════ -->
+
+<div class="section" id="cee-intro">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1a1030;">⚙️</div>
+    <div><span class="badge badge-fcoe">Lesson 2</span><h2>Converged Enhanced Ethernet (CEE) — What &amp; Why</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Regular Ethernet is like a highway that can drop cars (frames) when traffic gets congested — if the exit ramp (receive buffer) is full, the car just gets discarded. For web browsing, that's OK — TCP retransmits. But for storage I/O, dropping a frame is catastrophic — it would corrupt your data operation.
+
+      CEE is an upgraded version of Ethernet specifically designed to be <strong>lossless</strong> — it adds a set of intelligent traffic management tools that prevent frames from ever being dropped, no matter the congestion level.
+    </div>
+
+    <p><strong>CEE (Converged Enhanced Ethernet)</strong> = a set of enhancements added to standard Ethernet to make it:</p>
+    <ul>
+      <li><strong>Lossless</strong> — FC traffic absolutely cannot be dropped. Regular Ethernet can and does drop frames. CEE prevents this.</li>
+      <li><strong>Convergence-capable</strong> — able to carry multiple traffic types (LAN, SAN, IPC) on the same physical link without any one type hurting another.</li>
+    </ul>
+
+    <p>CEE requires four specific functionalities working together:</p>
+    <div class="cee-grid">
+      <div class="cee-card">
+        <div class="cee-name">PFC</div>
+        <div class="cee-abbr">Priority-Based Flow Control</div>
+        <p style="font-size:13px;color:var(--muted);margin:0;">Pauses specific traffic classes independently — doesn't freeze the whole link</p>
+      </div>
+      <div class="cee-card">
+        <div class="cee-name">ETS</div>
+        <div class="cee-abbr">Enhanced Transmission Selection</div>
+        <p style="font-size:13px;color:var(--muted);margin:0;">Allocates guaranteed bandwidth per traffic class; shares unused bandwidth</p>
+      </div>
+      <div class="cee-card">
+        <div class="cee-name">CN</div>
+        <div class="cee-abbr">Congestion Notification</div>
+        <p style="font-size:13px;color:var(--muted);margin:0;">Detects congestion and signals the SOURCE to slow down before frames are dropped</p>
+      </div>
+      <div class="cee-card">
+        <div class="cee-name">DCBX</div>
+        <div class="cee-abbr">Data Center Bridging Exchange Protocol</div>
+        <p style="font-size:13px;color:var(--muted);margin:0;">Auto-distributes CEE config from switches to network adapters — ensures consistency</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PFC ─── -->
+<div class="section" id="pfc">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1a1030;">🚦</div>
+    <div><span class="badge badge-fcoe">Lesson 2</span><h2>PFC — Priority-Based Flow Control</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Imagine a highway with 8 lanes. Without PFC, if there's an accident in lane 3, you close ALL 8 lanes — every car stops. That's what regular Ethernet PAUSE does — it freezes the entire link. PFC is like being able to close just lane 3 while all 7 other lanes keep flowing freely. Each lane can be independently paused and resumed.
+    </div>
+
+    <p>Regular Ethernet has a basic PAUSE mechanism — but it pauses the <em>entire</em> physical link. That means if your FC storage traffic is congested, your LAN traffic also stops. That's unacceptable in a converged network.</p>
+
+    <p><strong>PFC creates 8 virtual links (lanes) on a single physical Ethernet link.</strong> Each virtual link corresponds to a priority level (0–7) or class of service. Key properties:</p>
+    <ul>
+      <li>Each virtual link can be <strong>independently paused and restarted</strong> without affecting other virtual links.</li>
+      <li>The PAUSE mechanism operates per priority/class of service — FCoE traffic gets its own priority lane, LAN traffic gets a different lane.</li>
+      <li>When the receive buffer for one priority class fills up, only that specific virtual link is PAUSED — all others continue normally.</li>
+    </ul>
+
+    <div class="why-box">
+      <strong>Why PFC is the foundation of CEE:</strong> Without PFC, you cannot safely run FC storage traffic over Ethernet — any congestion on the shared link would drop FC frames, which FC doesn't handle gracefully. PFC is what makes the "lossless" in CEE possible.
+    </div>
+
+    <div class="chain">
+      Receive buffer for priority X fills up <span class="arrow">→</span> Receiver sends PAUSE frame to transmitter <span class="arrow">→</span> Transmitter pauses ONLY virtual link for priority X <span class="arrow">→</span> All other priorities (1,2,3,4,5,6,7) continue flowing <span class="arrow">→</span> Buffer clears <span class="arrow">→</span> PAUSE lifted <span class="arrow">→</span> transmission resumes
+    </div>
+  </div>
+</div>
+
+<!-- ─── ETS ─── -->
+<div class="section" id="ets">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1a1030;">📊</div>
+    <div><span class="badge badge-fcoe">Lesson 2</span><h2>ETS — Enhanced Transmission Selection</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Think of shared office space in a building. ETS is like a fair scheduling system for meeting rooms. LAN traffic gets rooms Mon/Wed, SAN traffic gets rooms Tue/Thu, IPC gets Fri. But if LAN doesn't need its rooms on Wednesday, ETS redistributes those unused timeslots to whoever needs them — no wasted capacity.
+    </div>
+
+    <p><strong>ETS (Enhanced Transmission Selection)</strong> manages how bandwidth is allocated across different traffic classes on the shared CEE link.</p>
+    <ul>
+      <li>Allocates a <strong>guaranteed minimum bandwidth percentage</strong> to each traffic class — for example: LAN 30%, SAN/FCoE 50%, IPC 20%.</li>
+      <li>If one traffic class doesn't use its allocated bandwidth (e.g., LAN is quiet), ETS makes that unused bandwidth <strong>available to other classes</strong> that need more — dynamically and automatically.</li>
+      <li>Traffic classes include: <strong>LAN</strong> (regular Ethernet), <strong>SAN</strong> (FCoE storage), and <strong>IPC</strong> (Inter Process Communication — cluster/VM traffic).</li>
+    </ul>
+
+    <div class="why-box">
+      <strong>ETS + PFC together:</strong> PFC prevents drops (lossless); ETS prevents starvation (fairness). PFC = the emergency brake. ETS = the traffic scheduler. Both are needed for a converged network where FC and LAN traffic coexist.
+    </div>
+  </div>
+</div>
+
+<!-- ─── CN ─── -->
+<div class="section" id="cn">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1a1030;">📡</div>
+    <div><span class="badge badge-fcoe">Lesson 2</span><h2>CN — Congestion Notification</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Imagine GPS navigation sending a real-time traffic alert back through the network to every car heading toward a jam — "slow down now, there's congestion at exit 42." The cars rate-limit themselves before they even reach the bottleneck. Congestion Notification does exactly this for FCoE switches: it detects a bottleneck and sends a message back to the original sender to slow down, preventing the congestion from spreading.
+    </div>
+
+    <p><strong>CN (Congestion Notification)</strong> provides a proactive mechanism for detecting network congestion and signaling the source <em>before</em> frames are dropped.</p>
+
+    <div class="chain">
+      Traffic builds up at a switch (congestion point) <span class="arrow">→</span> Switch detects congestion <span class="arrow">→</span> Switch sends <strong>Congestion Notification Message (CNM)</strong> back to the source node (Node A) <span class="arrow">→</span> Source receives CNM <span class="arrow">→</span> Source applies <strong>rate limiting</strong> — slows its transmission <span class="arrow">→</span> Congestion clears <span class="arrow">→</span> Source resumes full rate
+    </div>
+
+    <div class="callout"><strong>CN is end-to-end.</strong> The slide diagram shows the CNM travelling back all the way from the congested switch to the compute system (Node A), not just to the immediately adjacent switch. The source itself rate-limits to protect the network from packet loss.</div>
+  </div>
+</div>
+
+<!-- ─── DCBX ─── -->
+<div class="section" id="dcbx">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1a1030;">🤝</div>
+    <div><span class="badge badge-fcoe">Lesson 2</span><h2>DCBX — Data Center Bridging Exchange Protocol</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Think of DCBX as automatic configuration sync — like how your phone automatically pulls settings from a company MDM system the moment you connect to corporate Wi-Fi. The FCoE switch (MDM) pushes all its CEE configuration (PFC settings, ETS bandwidth allocations) to every CNA and network adapter that connects to it. Every device ends up with consistent settings automatically, without manual configuration.
+    </div>
+
+    <p><strong>DCBX (Data Center Bridging Exchange Protocol)</strong> allows CEE-capable devices to discover each other and exchange/configure their CEE feature settings.</p>
+    <ul>
+      <li>A switch can <strong>distribute its configuration values</strong> (PFC priorities, ETS allocations, etc.) to all attached network adapters automatically.</li>
+      <li>This ensures <strong>consistent CEE configuration</strong> across the entire network — no manual per-device setup needed.</li>
+      <li>Without DCBX, you'd have to manually configure every CNA and switch to agree on which priorities are lossless, which bandwidth percentages to use, etc. DCBX automates this.</li>
+    </ul>
+
+    <div class="why-box">
+      <strong>DCBX is the glue</strong> that makes PFC + ETS + CN work consistently across all devices in the network. Think of it as the automatic "handshake and agreement" protocol — devices connect, exchange DCBX messages, agree on settings, and the CEE network becomes self-configuring.
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ════════════════════════════════════════
+         LESSON 3: FCoE ARCHITECTURE
+     ════════════════════════════════════════ -->
+
+<div class="section" id="frame-structure">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2018;">📦</div>
+    <div><span class="badge badge-fcoe">Lesson 3</span><h2>FCoE Frame Structure</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      An FCoE frame is like a Russian nesting doll. The outermost doll is the Ethernet frame — what the network sees. Open it up and inside is the FCoE PDU (Protocol Data Unit). Open that and inside is the actual FC frame — completely unchanged, exactly as it would look on a pure FC SAN.
+    </div>
+
+    <p class="frame-label">FCoE Frame Structure (outer → inner):</p>
+    <div class="frame-diagram">
+      <div class="frame-part fp-eth">
+        <span>Ethernet Header</span>
+        <span style="font-size:9px;font-weight:400;color:#93c5fd;">Dest MAC | Src MAC | VLAN Tag | Ethertype</span>
+      </div>
+      <div class="frame-part fp-fcoe">
+        <span>FCoE Header</span>
+        <span style="font-size:9px;font-weight:400;color:#6ee7b7;">Version | Reserved</span>
+      </div>
+      <div class="frame-part fp-sof">SOF</div>
+      <div class="frame-part fp-fc">
+        <span>Encapsulated FC Frame</span>
+        <span style="font-size:9px;font-weight:400;">(including FC CRC — unchanged)</span>
+      </div>
+      <div class="frame-part fp-eof">EOF</div>
+      <div class="frame-part fp-fcs">FCS</div>
+    </div>
+
+    <table style="margin-top:16px;">
+      <tr><th>Field</th><th>What it contains</th><th>Layer</th></tr>
+      <tr><td><strong>Ethernet Header</strong></td><td>Destination MAC address, Source MAC address, VLAN Tag, Ethertype (identifies this as FCoE traffic)</td><td>Outer Ethernet wrapper</td></tr>
+      <tr><td><strong>FCoE Header</strong></td><td>Version number + Reserved fields — minimal, just enough to identify it as FCoE and carry version info</td><td>FCoE PDU header</td></tr>
+      <tr><td><strong>SOF</strong></td><td>Start of Frame — same FC delimiter, preserved from the original FC frame</td><td>FC frame boundary</td></tr>
+      <tr><td><strong>Encapsulated FC Frame</strong></td><td>The <em>entire original FC frame</em>, including its own FC CRC. The FC frame is NOT modified — just wrapped.</td><td>FC payload</td></tr>
+      <tr><td><strong>EOF</strong></td><td>End of Frame — same FC delimiter</td><td>FC frame boundary</td></tr>
+      <tr><td><strong>FCS</strong></td><td>Frame Check Sequence — Ethernet-level error detection for the outer Ethernet frame</td><td>Outer Ethernet trailer</td></tr>
+    </table>
+
+    <div class="callout"><strong>Key point:</strong> The FC frame inside is completely untouched — it still has its own FC header, FC CRC, SOF, and EOF. FCoE just wraps it in an Ethernet frame. The Ethertype in the Ethernet header tells the FCoE switch: "this isn't regular LAN traffic — extract the FC frame inside and process it through the FCF."</div>
+  </div>
+</div>
+
+<!-- ─── FRAME MAPPING ─── -->
+<div class="section" id="frame-mapping">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2018;">📋</div>
+    <div><span class="badge badge-fcoe">Lesson 3</span><h2>FCoE Frame Mapping (Protocol Stack)</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Think of FCoE as two existing protocol stacks being fused together. FC has its own 5-layer stack (FC-0 to FC-4). Ethernet (IEEE 802.3) has a 2-layer stack (Physical + MAC). FCoE replaces FC's physical layers (FC-0 and FC-1) with Ethernet's physical layers — the rest of FC stays exactly the same above that.
+    </div>
+
+    <table>
+      <tr><th>FCoE Protocol Stack</th><th>What it maps to</th></tr>
+      <tr><td><strong>FC-4</strong> (Protocol Mappings — SCSI, etc.)</td><td>FC upper layers — unchanged from pure FC</td></tr>
+      <tr><td><strong>FC-3</strong> (Services)</td><td>FC services — unchanged</td></tr>
+      <tr><td><strong>FC-2</strong> (Framing, addressing, flow control)</td><td>FC framing — unchanged</td></tr>
+      <tr><td><strong>FCoE Mapping Layer</strong></td><td>The translation/encapsulation layer — maps FC frames into Ethernet frames. This is what FCoE adds.</td></tr>
+      <tr><td><strong>Layer 2 — MAC</strong> (IEEE 802.3)</td><td>Standard Ethernet MAC layer — replaces FC-1</td></tr>
+      <tr><td><strong>Layer 1 — Physical</strong> (IEEE 802.3)</td><td>Standard Ethernet physical — replaces FC-0</td></tr>
+    </table>
+
+    <div class="why-box">
+      <strong>The big insight:</strong> FCoE replaces FC-0 (physical) and FC-1 (encoding) with standard Ethernet physical and MAC layers. Everything above — FC-2 (frames, addressing, flow control), FC-3, FC-4 (SCSI) — stays 100% intact. This is why an FC SAN on the other end doesn't care whether the frame came over a pure FC link or an FCoE link — the FC frame it receives is identical.
+    </div>
+  </div>
+</div>
+
+<!-- ─── FCoE PROCESS ─── -->
+<div class="section" id="fcoe-process">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2018;">🔄</div>
+    <div><span class="badge badge-fcoe">Lesson 3</span><h2>FCoE Process — 3 Phases</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Think of connecting to a new company Wi-Fi for the first time. Phase 1 (Discovery): your device scans for available networks and finds the corporate access points. Phase 2 (Login): you authenticate, get an IP address, get a username confirmed. Phase 3 (Data Transfer): you're connected and actively using the network — downloading, uploading, working normally.
+    </div>
+
+    <p>The FCoE process has <strong>three sequential phases</strong> every time an FCoE device connects:</p>
+
+    <table>
+      <tr><th>Phase</th><th>What happens</th></tr>
+      <tr>
+        <td><strong>1. Discovery Phase</strong></td>
+        <td>
+          <ul style="margin:0;">
+            <li>FCFs (Fibre Channel Forwarders on FCoE switches) discover each other and form the FCoE fabric</li>
+            <li>FCoE nodes (CNAs on compute systems) find available FCFs they can log into</li>
+            <li>Nodes and FCFs discover the right <strong>VN_Port ↔ VF_Port pairings</strong> — which node port will connect to which switch fabric port</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>2. Login Phase</strong></td>
+        <td>
+          <ul style="margin:0;">
+            <li>Virtual FC links are established: <strong>VN_Port ↔ VF_Port</strong> (node to switch) and <strong>VE_Port ↔ VE_Port</strong> (switch to switch ISLs)</li>
+            <li>The VN_Port performs an <strong>FC login</strong> (same FLOGI process as in FC-SAN) and receives an FC address</li>
+            <li>The VN_Port also receives a <strong>unique MAC address</strong> for Ethernet-level frame delivery</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><strong>3. Data Transfer Phase</strong></td>
+        <td>
+          <ul style="margin:0;">
+            <li>VN_Ports now send and receive regular FC frames — encapsulated in Ethernet — over the CEE network</li>
+            <li>From this point on, FC I/O flows exactly as in a native FC SAN, just physically transported over CEE</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+
+    <div class="chain">
+      Power on <span class="arrow">→</span> <strong>Discovery:</strong> CNA finds available FCFs <span class="arrow">→</span> <strong>Login:</strong> Virtual links created, FC address obtained, MAC address assigned <span class="arrow">→</span> <strong>Data Transfer:</strong> FC frames encapsulated in Ethernet and flowing across CEE
+    </div>
+  </div>
+</div>
+
+<!-- ─── FIP ─── -->
+<div class="section" id="fip">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2018;">🔍</div>
+    <div><span class="badge badge-fcoe">Lesson 3</span><h2>FIP — FCoE Initialization Protocol</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      FIP is the "pre-game" protocol — it's not for moving storage data. It's the discovery and registration conversation that happens <em>before</em> any data flows. Think of it like the handshake + ID check at the door before you're allowed into the building. Once you're verified and logged in (via FIP), the door is open and you use regular FC frames for actual I/O.
+    </div>
+
+    <p><strong>FIP (FCoE Initialization Protocol)</strong> is a separate protocol used exclusively for discovering FCFs and establishing the virtual links between FCoE nodes and FCoE switches. It does NOT carry FC storage data — it only carries discovery and login parameters.</p>
+
+    <h3>FIP Discovery and Login Sequence</h3>
+    <table>
+      <tr><th>Step</th><th>Who sends</th><th>Frame type</th><th>Purpose</th></tr>
+      <tr><td>1</td><td>FCoE node (CNA)</td><td><strong>FIP Solicitation</strong> (multicast)</td><td>Broadcast to the network: "Are there any FCFs available for me to log into?"</td></tr>
+      <tr><td>2</td><td>Each available FCF</td><td><strong>FIP Advertisement</strong> (unicast)</td><td>FCF replies directly to the node: "I'm here, and here's my info."</td></tr>
+      <tr><td>3</td><td>FCoE node</td><td><strong>FIP FLOGI Request</strong></td><td>Node sends a FLOGI (Fabric Login) to a chosen FCF — same login as FC-SAN, but carried in FIP</td></tr>
+      <tr><td>4</td><td>FCF</td><td><strong>FIP FLOGI Accept</strong></td><td>FCF responds with the node's assigned <strong>FC address AND MAC address</strong> for the VN_Port</td></tr>
+    </table>
+
+    <div class="callout"><strong>After step 4, the virtual link (VN_Port ↔ VF_Port) is fully established.</strong> From here on, the node uses regular FCoE frames (FC wrapped in Ethernet) for all storage I/O — FIP's job is done. The key detail: FIP Solicitation is <strong>multicast</strong> (sent to all); FCF Advertisement is <strong>unicast</strong> (sent directly back to the specific node).</div>
+  </div>
+</div>
+
+<!-- ─── ADDRESSING ─── -->
+<div class="section" id="addressing">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2018;">🏷️</div>
+    <div><span class="badge badge-fcoe">Lesson 3</span><h2>FCoE Addressing — SPMA &amp; FPMA</h2></div>
+  </div>
+
+  <div class="concept">
+    <p>In FCoE, frame forwarding on the Ethernet side uses <strong>MAC addresses</strong> (just like regular Ethernet). Every VN_Port, VF_Port, and VE_Port gets a MAC address for Ethernet-level routing.</p>
+    <ul style="margin-bottom:14px;">
+      <li><strong>VF_Ports and VE_Ports</strong> get their MAC addresses from the FCoE switch itself.</li>
+      <li><strong>VN_Ports</strong> (on compute systems) can get their MAC addresses in two different ways — SPMA or FPMA.</li>
+    </ul>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4 style="color:var(--accent);">SPMA — Server-Provided MAC Address</h4>
+        <ul>
+          <li>The <strong>compute system</strong> provides the MAC address to its VN_Port</li>
+          <li>Follows standard Ethernet conventions — MAC is either burned-in to the CNA hardware or configured by the administrator</li>
+          <li>The server controls its own MAC identity — same as how regular NICs work</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <h4 style="color:var(--accent3);">FPMA — Fabric-Provided MAC Address</h4>
+        <ul>
+          <li>The <strong>FCoE switch</strong> dynamically assigns the MAC address to the VN_Port <em>during node login</em></li>
+          <li>The MAC address has two parts: <strong>24-bit FC-MAP</strong> (fabric identifier prefix) + <strong>24-bit FC address</strong> (the node's FC fabric address)</li>
+          <li>The FC address is embedded in the MAC address — making MAC ↔ FC address mapping trivial</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout"><strong>FPMA is clever:</strong> because the MAC address contains the FC address inside it (FCMAP + FC address = 48-bit MAC), the FCoE switch can look at a frame's destination MAC and immediately know the destination FC address without needing a separate lookup table. This simplifies routing in the fabric.</div>
+  </div>
+</div>
+
+<!-- ─── FORWARDING ─── -->
+<div class="section" id="forwarding">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2018;">➡️</div>
+    <div><span class="badge badge-fcoe">Lesson 3</span><h2>FCoE Frame Forwarding</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Forwarding an FCoE frame is like a two-address delivery system. The outer envelope (Ethernet frame) carries the MAC address of the next-hop switch — just enough to get to the FCoE switch. Once there, the switch opens the envelope, reads the inner address (FC address inside the FC frame), and routes the FC frame onwards into the FC SAN based on that inner address.
+    </div>
+
+    <p>To forward a frame, a sending node needs to know <strong>two addresses</strong>:</p>
+    <ul>
+      <li>The <strong>MAC address</strong> of the destination FCoE switch port — used for Ethernet-level delivery across the CEE network</li>
+      <li>The <strong>FC address</strong> of the destination node port — used inside the FC frame for FC-level routing</li>
+    </ul>
+
+    <h3>Forwarding Example (from the slide)</h3>
+    <table>
+      <tr><th>Step</th><th>Frame</th><th>Address used</th></tr>
+      <tr><td>Compute (MAC A, FC addr 050100) sends to storage (FC addr 011C00)</td><td>Ethernet frame: Dst=<strong>MAC B</strong>, Src=MAC A. Inside: FC frame with D_ID=<strong>011C00</strong>, S_ID=<strong>050100</strong></td><td>Ethernet: MAC B (FCoE switch). FC: 011C00 (storage destination)</td></tr>
+      <tr><td>FCoE switch (MAC B, Domain 05) receives and decapsulates</td><td>Strips Ethernet wrapper. Extracts FC frame: D_ID=011C00, S_ID=050100</td><td>Reads FC address D_ID=011C00</td></tr>
+      <tr><td>FCoE switch forwards pure FC frame to FC switch (Domain 01)</td><td>FC Frame only: D_ID=011C00, S_ID=050100</td><td>FC routing over FC link</td></tr>
+      <tr><td>FC switch routes to storage system (FC addr 011C00)</td><td>FC Frame arrives at storage system</td><td>Done</td></tr>
+    </table>
+
+    <div class="callout"><strong>The CEE side uses MAC addresses. The FC side uses FC addresses.</strong> The FCoE switch is the translation point — on the left it looks like an Ethernet switch; on the right it looks like an FC switch. The FCoE frame carries both addresses simultaneously: MAC in the outer Ethernet header, FC address embedded in the inner FC frame header.</div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ════════════════════════════
+     MASTER COMPARISON TABLES
+     ════════════════════════════ -->
+
+<div class="section" id="big-tables">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1a1030;">📊</div>
+    <h2>Master Comparison Tables</h2>
+  </div>
+
+  <h3>FC-SAN vs. iSCSI vs. FCIP vs. FCoE — The Complete Picture</h3>
+  <table>
+    <tr><th>Feature</th><th>FC-SAN</th><th>iSCSI</th><th>FCIP</th><th>FCoE</th></tr>
+    <tr><td>Transport</td><td>FC protocol</td><td>TCP/IP</td><td>FC frames tunneled over TCP/IP</td><td>FC frames encapsulated in Ethernet</td></tr>
+    <tr><td>Purpose</td><td>Primary SAN fabric</td><td>IP-based storage access</td><td>Connect distant FC SANs</td><td>Converge FC + Ethernet on one cable</td></tr>
+    <tr><td>Physical media</td><td>FC cables (MMF/SMF)</td><td>Ethernet cables</td><td>IP network (any media)</td><td>CEE Ethernet cables</td></tr>
+    <tr><td>Adapter on server</td><td>FC HBA</td><td>NIC / TOE NIC / iSCSI HBA</td><td>FCIP gateway (not on server)</td><td>CNA or Software FCoE adapter</td></tr>
+    <tr><td>Switch type</td><td>FC switch / director</td><td>IP/Ethernet switch</td><td>FCIP gateway + FC switch</td><td>FCoE switch (has FCF inside)</td></tr>
+    <tr><td>FC frames altered?</td><td>Native FC</td><td>N/A (SCSI encapsulated, not FC)</td><td>No — FC frame wrapped in IP, not altered</td><td>No — FC frame wrapped in Ethernet, not altered</td></tr>
+    <tr><td>Distance</td><td>Limited (FC cable distances)</td><td>Unlimited (IP)</td><td>Unlimited (IP)</td><td>Data center scale (Ethernet distances)</td></tr>
+    <tr><td>Lossless?</td><td>Yes (BB_Credit)</td><td>No (TCP retransmits)</td><td>Relies on TCP</td><td>Yes (CEE — PFC ensures lossless)</td></tr>
+    <tr><td>Use case</td><td>Primary enterprise SAN</td><td>Cost-effective, remote access</td><td>Disaster recovery, long-distance SAN</td><td>Data center convergence — fewer cables</td></tr>
+  </table>
+
+  <h3>CEE Four Functionalities — Quick Reference</h3>
+  <table>
+    <tr><th>Functionality</th><th>Acronym</th><th>What problem it solves</th><th>How it works</th></tr>
+    <tr><td><strong>Priority-Based Flow Control</strong></td><td>PFC</td><td>Regular Ethernet PAUSE freezes the entire link — can't pause just FC traffic</td><td>Creates 8 virtual links on one physical link; each can be independently paused by priority class</td></tr>
+    <tr><td><strong>Enhanced Transmission Selection</strong></td><td>ETS</td><td>One traffic type could starve others on a shared link</td><td>Guarantees minimum bandwidth per traffic class (LAN, SAN, IPC); shares unused bandwidth dynamically</td></tr>
+    <tr><td><strong>Congestion Notification</strong></td><td>CN</td><td>Congestion builds up until frames are dropped — too late</td><td>Congested switch sends CNM back to the source; source rate-limits itself proactively</td></tr>
+    <tr><td><strong>Data Center Bridging Exchange Protocol</strong></td><td>DCBX</td><td>Each device needs manual CEE configuration — inconsistent, error-prone</td><td>Switch distributes its CEE config (PFC/ETS settings) to all attached adapters automatically</td></tr>
+  </table>
+
+  <h3>FCoE Port Types — Full Reference</h3>
+  <table>
+    <tr><th>Port</th><th>Type</th><th>Lives on</th><th>Connects to</th><th>FC equivalent</th></tr>
+    <tr><td><code>VN_Port</code></td><td>Virtual Node Port</td><td>Compute system (CNA) or FCoE storage</td><td>VF_Port on FCoE switch</td><td>N_Port</td></tr>
+    <tr><td><code>VF_Port</code></td><td>Virtual Fabric Port</td><td>FCoE switch (FCF)</td><td>VN_Port on compute/storage</td><td>F_Port</td></tr>
+    <tr><td><code>VE_Port</code></td><td>Virtual Expansion Port</td><td>FCoE switch</td><td>VE_Port on another FCoE switch (virtual ISL)</td><td>E_Port</td></tr>
+    <tr><td><code>E_Port</code></td><td>Expansion Port</td><td>FCoE switch or FC switch</td><td>E_Port on FC switch (ISL)</td><td>E_Port</td></tr>
+    <tr><td><code>F_Port</code></td><td>Fabric Port</td><td>FC switch</td><td>N_Port on FC storage system</td><td>F_Port</td></tr>
+    <tr><td><code>N_Port</code></td><td>Node Port</td><td>FC storage system</td><td>F_Port on FC switch</td><td>N_Port</td></tr>
+  </table>
+
+  <h3>FCoE Addressing — SPMA vs. FPMA</h3>
+  <table>
+    <tr><th>Feature</th><th>SPMA</th><th>FPMA</th></tr>
+    <tr><td>Who provides MAC?</td><td>Server/compute system</td><td>FCoE switch (fabric)</td></tr>
+    <tr><td>When assigned?</td><td>Static — burned-in or admin-configured</td><td>Dynamically at login time</td></tr>
+    <tr><td>MAC structure</td><td>Standard Ethernet MAC</td><td>24-bit FC-MAP + 24-bit FC address</td></tr>
+    <tr><td>Benefit</td><td>Familiar Ethernet model, admin control</td><td>MAC embeds FC address → easier switch routing</td></tr>
+  </table>
+
+  <h3>Key Terms at a Glance</h3>
+  <table>
+    <tr><th>Term</th><th>Plain meaning</th></tr>
+    <tr><td>FCoE</td><td>FC over Ethernet — runs FC storage traffic over Ethernet infrastructure</td></tr>
+    <tr><td>CEE</td><td>Converged Enhanced Ethernet — the enhanced Ethernet standard that makes FCoE possible (lossless)</td></tr>
+    <tr><td>CNA</td><td>Converged Network Adapter — one card that replaces both NIC and FC HBA</td></tr>
+    <tr><td>FCF</td><td>Fibre Channel Forwarder — the module inside an FCoE switch that bridges CEE ↔ FC</td></tr>
+    <tr><td>FIP</td><td>FCoE Initialization Protocol — discovery/login handshake before data flows</td></tr>
+    <tr><td>FCoE PDU</td><td>The FCoE Protocol Data Unit — the FCoE header + FC frame (what goes inside the Ethernet payload)</td></tr>
+    <tr><td>Ethertype</td><td>Field in Ethernet header identifying the payload type — FCoE has its own unique Ethertype</td></tr>
+    <tr><td>FC-MAP</td><td>24-bit prefix in FPMA MAC address identifying the FCoE fabric</td></tr>
+    <tr><td>VSAN</td><td>Virtual SAN — a logical partition of an FC fabric</td></tr>
+    <tr><td>VLAN</td><td>Virtual LAN — a logical partition of an Ethernet network; each VSAN maps to a dedicated VLAN in FCoE</td></tr>
+  </table>
+</div>
+
+<!-- ════════════════════════════
+            EXAM Q&A
+     ════════════════════════════ -->
+
+<div class="section" id="quiz">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1a1030;">🎯</div>
+    <h2>Exam Q&amp;A — Test Yourself</h2>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-header">🧪 FCoE Exam Questions</div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q1: What is FCoE and what is the core problem it solves?</div>
+      <div class="quiz-a"><strong>A:</strong> FCoE (Fibre Channel over Ethernet) encapsulates FC frames inside Ethernet frames and transports them over a CEE network. It solves the data center infrastructure problem of having two separate physical networks (FC SAN + Ethernet LAN) — requiring duplicate adapters, cables, and switches per server. FCoE converges both onto a single network, reducing cost, power, and space consumption.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q2: What is a CNA and how does it differ from having a NIC + FC HBA?</div>
+      <div class="quiz-a"><strong>A:</strong> A CNA (Converged Network Adapter) is a single physical card that provides both NIC (Ethernet) and FC HBA (Fibre Channel) functionality in one. It has three separate ASICs on one card: a 10GE ASIC, an FC ASIC, and an FCoE ASIC. It encapsulates FC frames into Ethernet frames and sends them over CEE links. Having a CNA means one adapter instead of two — saves PCIe slots, cables, cost, and power.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q3: What is FCF and what does it do inside an FCoE switch?</div>
+      <div class="quiz-a"><strong>A:</strong> FCF stands for Fibre Channel Forwarder. It is the module inside an FCoE switch that acts as the communication bridge between the CEE (Ethernet) network and the FC SAN. The FCF handles FCoE login requests, applies zoning, provides all FC fabric services, and encapsulates/decapsulates FC frames as they cross between the two worlds. The FCoE switch also contains an Ethernet Bridge for regular LAN traffic.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q4: What are the two FCoE SAN connectivity types and when is each used?</div>
+      <div class="quiz-a"><strong>A:</strong> (1) <strong>FCoE with Existing FC SAN</strong> — compute systems with CNAs connect via CEE to FCoE switches, which then connect to a traditional FC SAN where storage systems remain on FC ports. Used when an existing FC SAN is already in place and you want to converge server-side cabling without replacing storage infrastructure. (2) <strong>End-to-End FCoE</strong> — everything is FCoE including the storage systems (which have FCoE ports). FCoE switches interconnect throughout. Used for brand-new deployments built entirely on FCoE.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q5: Why does FCoE need CEE? Why can't it just run on regular Ethernet?</div>
+      <div class="quiz-a"><strong>A:</strong> Regular Ethernet is a "lossy" network — when buffers fill up due to congestion, frames are simply dropped. TCP traffic recovers from this through retransmission, but FC storage traffic cannot tolerate dropped frames — it would corrupt I/O operations. CEE adds the enhancements (PFC, ETS, CN, DCBX) that make Ethernet lossless, allowing FC frames to be transported without ever being dropped regardless of congestion levels.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q6: Explain the four CEE functionalities and what each one does.</div>
+      <div class="quiz-a"><strong>A:</strong> <strong>PFC</strong> — creates 8 virtual links on one physical link; each can be independently paused by priority class, so FC storage traffic can be paused without freezing LAN traffic. <strong>ETS</strong> — guarantees minimum bandwidth to each traffic class (LAN, SAN, IPC) and dynamically shares unused bandwidth. <strong>CN</strong> — when a switch detects congestion, it sends a Congestion Notification Message back to the source, which then rate-limits itself before frames are dropped. <strong>DCBX</strong> — the switch automatically distributes its CEE configuration to all attached network adapters, ensuring consistent settings across the network without manual per-device configuration.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q7: How many virtual links does PFC create, and what is the key advantage over regular Ethernet PAUSE?</div>
+      <div class="quiz-a"><strong>A:</strong> PFC creates <strong>8 virtual links</strong> on a single physical Ethernet link. Regular Ethernet PAUSE pauses the entire physical link — all traffic classes stop. PFC allows each virtual link to be paused and restarted independently based on user priority/class of service. So if FC traffic needs to be paused (receive buffer filling up), only the FC priority lane stops — LAN traffic in other priority lanes continues flowing normally.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q8: What is the FCoE frame structure? What's inside an FCoE frame?</div>
+      <div class="quiz-a"><strong>A:</strong> An FCoE frame is an Ethernet frame containing an FCoE PDU as its payload. Structure from outside in: <strong>Ethernet Header</strong> (Destination MAC, Source MAC, VLAN Tag, Ethertype) → <strong>FCoE Header</strong> (Version, Reserved) → <strong>SOF</strong> → <strong>Encapsulated FC Frame</strong> (complete and unchanged, including its own FC CRC) → <strong>EOF</strong> → <strong>FCS</strong> (Ethernet Frame Check Sequence). The FC frame inside is not modified — it is the same frame that would travel on a pure FC network.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q9: What are the three phases of the FCoE process?</div>
+      <div class="quiz-a"><strong>A:</strong> (1) <strong>Discovery Phase</strong> — FCFs discover each other and form the FCoE fabric; FCoE nodes find available FCFs; nodes and FCFs identify VN_Port ↔ VF_Port pairings. (2) <strong>Login Phase</strong> — virtual FC links are created (VN_Port↔VF_Port, VE_Port↔VE_Port); VN_Port performs FC login and obtains an FC address; VN_Port obtains a unique MAC address. (3) <strong>Data Transfer Phase</strong> — VN_Ports transfer FC frames (encapsulated in Ethernet) over the CEE network normally.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q10: What is FIP and what are its four steps?</div>
+      <div class="quiz-a"><strong>A:</strong> FIP (FCoE Initialization Protocol) is used to discover FCFs and establish virtual links before any data transfers. FIP frames carry discovery/login parameters, not FC storage data. Steps: (1) FCoE node sends <strong>multicast FIP Solicitation</strong> to find available FCFs. (2) Each FCF replies with a <strong>unicast FIP Advertisement</strong>. (3) FCoE node sends <strong>FIP FLOGI request</strong> to a chosen FCF. (4) FCF responds with <strong>FIP FLOGI Accept</strong> containing both the FC address and MAC address for the VN_Port.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q11: What is the difference between SPMA and FPMA?</div>
+      <div class="quiz-a"><strong>A:</strong> Both are VN_Port MAC address assignment methods. <strong>SPMA (Server-Provided MAC Address)</strong> — the compute system provides the MAC address for its VN_Port, either burned-in or admin-configured, following standard Ethernet convention. <strong>FPMA (Fabric-Provided MAC Address)</strong> — the FCoE switch dynamically assigns the MAC address to the VN_Port at login time. The FPMA MAC has two parts: a 24-bit FC-MAP (fabric identifier) + 24-bit FC address — so the FC address is embedded in the MAC itself, making routing simpler for the switch.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q12: To forward an FCoE frame, what two addresses must a node know and why?</div>
+      <div class="quiz-a"><strong>A:</strong> A node must know: (1) The <strong>MAC address</strong> of the destination FCoE switch port — this is used for Ethernet-level delivery across the CEE network (outer Ethernet frame header). (2) The <strong>FC address</strong> of the destination node port — this is embedded in the FC frame inside and used for FC-level routing once the FCoE switch strips off the Ethernet wrapper and forwards the FC frame into the FC SAN. Without the MAC, the Ethernet network can't deliver the frame to the right switch. Without the FC address, the switch can't route it to the right storage port.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q13: What is VSAN-to-VLAN mapping and what rule applies to storage VLANs in FCoE?</div>
+      <div class="quiz-a"><strong>A:</strong> In an FCoE environment with an existing FC SAN, VSANs (virtual FC fabrics) and VLANs (virtual Ethernet segments) co-exist. The FCoE switch maps each VSAN to a dedicated VLAN — each VSAN gets its own exclusive VLAN for its traffic to travel through the Ethernet network. The critical rule: <strong>VLANs that carry VSAN (FCoE) traffic must NOT also carry regular LAN traffic</strong>. They must be dedicated exclusively to storage — this maintains the lossless, predictable behavior needed for FC storage operations.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q14: In FCoE frame mapping, what does FCoE replace in the FC protocol stack?</div>
+      <div class="quiz-a"><strong>A:</strong> FCoE replaces <strong>FC-0</strong> (the physical layer — cables, connectors, optical specs) and <strong>FC-1</strong> (encoding/decoding — 8b/10b encoding) with Ethernet's physical layer (IEEE 802.3 Physical) and MAC layer (IEEE 802.3 MAC). A new <strong>FCoE Mapping Layer</strong> sits between FC-2 and the Ethernet MAC, handling encapsulation. Everything above — FC-2 (framing, addressing, flow control), FC-3, and FC-4 (SCSI) — remains completely unchanged. This is why FC SANs on the receiving end see normal FC frames.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:32px; padding:20px; background:var(--surface); border-radius:12px; border:1px solid var(--border); font-size:13px; color:var(--muted);">
+    <strong style="color:var(--accent);">What these notes cover:</strong> 100% of Module 11 (FCoE) — all 28 slides.
+    <br><br>
+    <strong style="color:var(--accent2);">Concepts that need deeper thinking beyond a table cell:</strong>
+    <ul style="margin-top:8px;">
+      <li><strong>CEE as a system</strong> — PFC + ETS + CN + DCBX work together; understand how each solves a different piece of the "lossless Ethernet" problem</li>
+      <li><strong>FIP sequence</strong> — trace the 4 steps: Solicitation (multicast) → Advertisement (unicast) → FLOGI request → FLOGI Accept with FC+MAC address</li>
+      <li><strong>FCoE frame nesting</strong> — Ethernet wraps FCoE header wraps FC frame — know each layer's contents</li>
+      <li><strong>FPMA structure</strong> — understand why FC-MAP + FC address in the MAC simplifies routing</li>
+      <li><strong>Two connectivity modes</strong> — know which scenario each is suited for (existing FC SAN vs. new deployment)</li>
+    </ul>
+  </div>
+</div>
+
+</main>
+
+<script>
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  event.target.classList.add('active');
+}
+const sections = document.querySelectorAll('.section[id]');
+const links = document.querySelectorAll('.nav-link');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.id; });
+  links.forEach(l => {
+    l.classList.remove('active');
+    if (l.getAttribute('onclick') && l.getAttribute('onclick').includes(current)) l.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

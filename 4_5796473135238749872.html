@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FC-SAN & IP-SAN — Final Exam Study Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #222635;
+    --border: #2e3347;
+    --accent: #6c8ef7;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --accent4: #f59e0b;
+    --accent5: #f472b6;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --tag-bg: #1e2640;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  /* ── Layout ── */
+  .sidebar {
+    position: fixed; top: 0; left: 0;
+    width: 260px; height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto; padding: 20px 0;
+    z-index: 100;
+  }
+  .sidebar-logo {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .sidebar-logo h2 { font-size: 14px; color: var(--accent); letter-spacing: .05em; text-transform: uppercase; }
+  .sidebar-logo p { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .nav-section { padding: 6px 20px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-top: 8px; }
+  .nav-link {
+    display: block; padding: 7px 20px; font-size: 13px;
+    color: var(--muted); text-decoration: none; cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all .15s;
+  }
+  .nav-link:hover, .nav-link.active { color: var(--text); background: var(--surface2); border-left-color: var(--accent); }
+  .main { margin-left: 260px; padding: 40px 48px; max-width: 1100px; }
+
+  /* ── Page header ── */
+  .page-header { margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .page-header h1 { font-size: 32px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .page-header p { color: var(--muted); margin-top: 6px; }
+
+  /* ── Section ── */
+  .section { margin-bottom: 60px; }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 28px;
+  }
+  .section-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .section-header h2 { font-size: 22px; font-weight: 700; }
+
+  /* ── Concept block ── */
+  .concept {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .concept-title {
+    font-size: 16px; font-weight: 700;
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .tag {
+    font-size: 10px; font-weight: 600; padding: 2px 8px;
+    border-radius: 99px; background: var(--tag-bg);
+    text-transform: uppercase; letter-spacing: .05em;
+  }
+  .tag-analogy { color: var(--accent4); border: 1px solid #f59e0b40; }
+  .tag-tech { color: var(--accent); border: 1px solid #6c8ef740; }
+  .tag-why { color: var(--accent3); border: 1px solid #34d39940; }
+  .tag-nums { color: var(--accent5); border: 1px solid #f472b640; }
+
+  /* ── Analogy box ── */
+  .analogy-box {
+    background: #1c1a10; border: 1px solid #f59e0b30;
+    border-left: 3px solid var(--accent4);
+    border-radius: 8px; padding: 14px 16px; margin-bottom: 14px;
+    font-style: italic; color: #fde68a;
+  }
+  /* ── Why box ── */
+  .why-box {
+    background: #0e1c17; border: 1px solid #34d39930;
+    border-left: 3px solid var(--accent3);
+    border-radius: 8px; padding: 14px 16px; margin-bottom: 14px;
+    color: #a7f3d0;
+  }
+  /* ── Numbers box ── */
+  .nums-box {
+    background: #1a1020; border: 1px solid #f472b630;
+    border-left: 3px solid var(--accent5);
+    border-radius: 8px; padding: 14px 16px; margin-bottom: 14px;
+  }
+  /* ── Chain ── */
+  .chain { color: var(--muted); font-size: 13.5px; line-height: 1.8; }
+  .chain .arrow { color: var(--accent); font-weight: 700; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-bottom: 20px; }
+  th { background: var(--surface2); color: var(--accent); font-weight: 600; padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--border); }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  /* ── Bullets ── */
+  ul { padding-left: 20px; }
+  li { margin-bottom: 6px; color: var(--muted); }
+  li strong { color: var(--text); }
+
+  /* ── Inline highlight ── */
+  code { background: var(--surface2); padding: 2px 7px; border-radius: 4px; font-size: 12.5px; color: var(--accent2); font-family: monospace; }
+
+  /* ── Sub-heading ── */
+  h3 { font-size: 16px; font-weight: 600; color: var(--text); margin: 20px 0 10px; }
+  h4 { font-size: 14px; font-weight: 600; color: var(--accent2); margin: 14px 0 8px; }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  /* ── Quiz ── */
+  .quiz { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-top: 32px; }
+  .quiz-header { background: linear-gradient(135deg, #1a2040, #1a1530); padding: 16px 24px; font-size: 15px; font-weight: 700; color: var(--accent2); }
+  .quiz-item { padding: 14px 24px; border-bottom: 1px solid var(--border); }
+  .quiz-item:last-child { border-bottom: none; }
+  .quiz-q { font-weight: 600; margin-bottom: 8px; }
+  .quiz-a { font-size: 13px; color: var(--muted); padding-left: 14px; border-left: 2px solid var(--accent3); }
+  .quiz-a strong { color: var(--accent3); }
+
+  /* ── Callout ── */
+  .callout { background: #0e1520; border: 1px solid #6c8ef730; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #93c5fd; margin: 10px 0; }
+  .callout strong { color: var(--accent); }
+
+  /* ── Comparison grid ── */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .compare-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+  .compare-card h4 { font-size: 15px; margin-top: 0; margin-bottom: 10px; }
+  .compare-card ul { margin-top: 0; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Active section highlight */
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 99px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .05em; margin-bottom: 6px;
+  }
+  .badge-fc { background: #1e2a50; color: var(--accent); }
+  .badge-ip { background: #1e3025; color: var(--accent3); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ SIDEBAR ══════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h2>Finals Study Guide</h2>
+    <p>FC-SAN &amp; IP-SAN • Module 9 &amp; 10</p>
+  </div>
+
+  <div class="nav-section">FC-SAN Module 9</div>
+  <a class="nav-link" onclick="scrollTo('what-is-san')">What is a SAN?</a>
+  <a class="nav-link" onclick="scrollTo('sdnw')">Software-Defined Networking</a>
+  <a class="nav-link" onclick="scrollTo('fc-components')">FC Components &amp; Cables</a>
+  <a class="nav-link" onclick="scrollTo('fc-topology-inter')">Interconnectivity &amp; Ports</a>
+  <a class="nav-link" onclick="scrollTo('fc-protocol')">FC Protocol Stack</a>
+  <a class="nav-link" onclick="scrollTo('addressing')">Addressing: FC &amp; WWN</a>
+  <a class="nav-link" onclick="scrollTo('frames')">Frames, Sequences, Exchanges</a>
+  <a class="nav-link" onclick="scrollTo('fabric-services')">Fabric Services &amp; Login</a>
+  <a class="nav-link" onclick="scrollTo('flow-control')">Flow Control (BB_Credit)</a>
+  <a class="nav-link" onclick="scrollTo('topologies')">Fabric Topologies</a>
+  <a class="nav-link" onclick="scrollTo('link-agg')">Link Aggregation</a>
+  <a class="nav-link" onclick="scrollTo('zoning')">Zoning</a>
+
+  <div class="nav-section">IP-SAN Module 10</div>
+  <a class="nav-link" onclick="scrollTo('ipsan-intro')">IP SAN Overview</a>
+  <a class="nav-link" onclick="scrollTo('iscsi-components')">iSCSI Components</a>
+  <a class="nav-link" onclick="scrollTo('iscsi-initiators')">iSCSI Initiator Types</a>
+  <a class="nav-link" onclick="scrollTo('iscsi-connectivity')">iSCSI Connectivity</a>
+  <a class="nav-link" onclick="scrollTo('iscsi-protocol')">iSCSI Protocol Stack</a>
+  <a class="nav-link" onclick="scrollTo('iscsi-names')">iSCSI Addressing &amp; Names</a>
+  <a class="nav-link" onclick="scrollTo('iscsi-discovery')">iSCSI Discovery</a>
+  <a class="nav-link" onclick="scrollTo('fcip')">FCIP</a>
+  <a class="nav-link" onclick="scrollTo('fcip-tunnels')">FCIP Tunnels &amp; Merging</a>
+  <a class="nav-link" onclick="scrollTo('fcip-stack')">FCIP Protocol Stack</a>
+
+  <div class="nav-section">Review</div>
+  <a class="nav-link" onclick="scrollTo('big-table')">Master Comparison Tables</a>
+  <a class="nav-link" onclick="scrollTo('quiz')">Exam Q&amp;A</a>
+</nav>
+
+<!-- ══════════════════ MAIN ══════════════════ -->
+<main class="main">
+
+<div class="page-header">
+  <h1>FC-SAN &amp; IP-SAN — Complete Finals Study Guide</h1>
+  <p>Everything from Module 9 (FC-SAN) and Module 10 (IP-SAN). Close the slides. You won't need them.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--                   PART 1: FC-SAN                    -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<div class="section" id="what-is-san">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">🗄️</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>What is a SAN &amp; Why It Exists</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-title">🧩 Big Picture Analogy <span class="tag tag-analogy">Analogy</span></div>
+    <div class="analogy-box">
+      Think of storage like a city's water system. In DAS (Direct-Attached Storage), each house has its own private well — you own all the water, but you can't share it, and if your pump breaks, you're out of water. A SAN is like connecting every house to a shared city waterworks — the water (storage) is centralized, multiple houses (servers) can draw from it simultaneously, and you can extend pipes across the entire city or even to the next town.
+    </div>
+
+    <div class="concept-title">⚙️ Technical Explanation <span class="tag tag-tech">Technical</span></div>
+    <p>A <strong>Storage Area Network (SAN)</strong> is a dedicated, high-speed network whose <em>primary</em> purpose is to connect compute systems to storage systems (and storage systems to each other). Key points:</p>
+    <ul style="margin-top:10px;">
+      <li>Multiple compute systems can <strong>share and access the same storage resources</strong> simultaneously.</li>
+      <li>It provides <strong>block-based storage access</strong> (unlike NAS which provides file-based).</li>
+      <li>A SAN can span wide geographic distances, enabling <strong>remote replication</strong>, <strong>remote backup</strong>, and <strong>disaster recovery</strong> across sites — no more shipping backup tapes.</li>
+      <li>SAN overcomes <strong>DAS limitations</strong>: DAS is private per server, wastes capacity, and is hard to scale. SAN consolidates storage so overall utilization improves and management becomes centralized.</li>
+    </ul>
+
+    <div class="why-box" style="margin-top:14px;">
+      <strong>Why it matters:</strong> Without SAN, organizations waste 30–70% of their storage capacity because each server over-provisions to avoid running out. SAN enables true storage pooling, which is foundational to cloud infrastructure.
+    </div>
+
+    <h4>Types of Network Communication (the big picture)</h4>
+    <table>
+      <tr><th>Type</th><th>What it connects</th><th>Protocol used</th></tr>
+      <tr><td><strong>Compute-to-Compute</strong></td><td>Servers talking to servers</td><td>IP (LAN/WAN)</td></tr>
+      <tr><td><strong>Compute-to-Storage</strong></td><td>Servers talking to storage</td><td>FC, iSCSI, FCoE</td></tr>
+      <tr><td><strong>Inter-Cloud</strong></td><td>Clouds talking to clouds</td><td>WAN / Internet</td></tr>
+    </table>
+
+    <h4>Third Platform Requirements for SAN</h4>
+    <p>The "Third Platform" (cloud + mobile + social + big data) demands SANs that are faster, more scalable, and more automated than traditional infrastructure. This is the business driver behind all of FC-SAN, IP-SAN, and SDN.</p>
+  </div>
+</div>
+
+<!-- ─── SDN ─── -->
+<div class="section" id="sdnw">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">🧠</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>Software-Defined Networking (SDN)</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-title">🧩 Big Picture Analogy <span class="tag tag-analogy">Analogy</span></div>
+    <div class="analogy-box">
+      A traditional network switch is like a traffic cop who is permanently stationed at an intersection with hardwired instructions baked into his brain. SDN is like replacing that cop with a remote-controlled robot — now a central controller (a smart dispatcher downtown) can reprogram all the robots across the entire city instantly, without physically going to each intersection.
+    </div>
+
+    <div class="concept-title">⚙️ Technical Explanation <span class="tag tag-tech">Technical</span></div>
+    <p>Every traditional switch/router has two planes:</p>
+    <ul style="margin-top:8px;">
+      <li><strong>Data Plane</strong> — physically moves traffic from port to port, following rules.</li>
+      <li><strong>Control Plane</strong> — the "brain" that decides the rules. Normally hardcoded in firmware.</li>
+    </ul>
+    <p style="margin-top:10px;"><strong>SDN separates the control plane from the data plane.</strong> The control logic moves out of each individual switch and into an external software <strong>Network Controller</strong> running on a compute system or dedicated device.</p>
+    <div class="chain" style="margin-top:12px;">
+      Application requirement changes <span class="arrow">→</span> Admin updates policy in Network Controller <span class="arrow">→</span> Controller pushes rules to all switches simultaneously <span class="arrow">→</span> Fabric reconfigures automatically
+    </div>
+
+    <h4>SDN Benefits in SAN</h4>
+    <table>
+      <tr><th>Benefit</th><th>What it means</th></tr>
+      <tr><td><strong>Centralized Control</strong></td><td>One point to manage the entire fabric, even across multiple data centers</td></tr>
+      <tr><td><strong>Policy-Based Automation</strong></td><td>Operations like zoning can be automated based on business rules — no manual, error-prone changes</td></tr>
+      <tr><td><strong>Simplified, Agile Management</strong></td><td>Standardized management interface, less operational complexity, faster response to application needs</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ─── FC COMPONENTS ─── -->
+<div class="section" id="fc-components">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">🔌</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>FC SAN — Components, Cables &amp; Interconnecting Devices</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-title">🧩 Big Picture Analogy <span class="tag tag-analogy">Analogy</span></div>
+    <div class="analogy-box">
+      Think of FC SAN infrastructure like a high-speed train network. The HBA is the ticket machine at each station (compute system) that converts passengers (SCSI data) into a format compatible with the train. The cables are the tracks — multimode is the local metro with limited range, single-mode is the intercity express. The FC switch is the junction station that routes trains toward their destination. The director is the major hub station with full redundancy and massive capacity.
+    </div>
+
+    <div class="concept-title">⚙️ What is Fibre Channel? <span class="tag tag-tech">Technical</span></div>
+    <p>Fibre Channel (FC) is a high-speed network technology that combines the <strong>performance of a channel</strong> (low overhead, fast, deterministic) with the <strong>flexibility of a network</strong> (scalable, long distance). It transports SCSI commands, data, and status over optical fiber or copper.</p>
+
+    <div class="nums-box" style="margin-top:12px;">
+      <strong style="color:var(--accent5);">Key FC Speed Numbers 🔢</strong>
+      <ul style="margin-top:8px;">
+        <li>Ultra640 SCSI (old DAS): <code>640 MB/s</code></li>
+        <li>16 GFC (current): <code>3,200 MB/s throughput</code> (raw: 16 Gb/s)</li>
+        <li>32 GFC (projected 2016): <code>6,400 MB/s</code></li>
+        <li>128 GFC (projected 2016): <code>25,600 MB/s</code></li>
+        <li>Theoretical max devices on one FC SAN: <code>~15 million</code></li>
+      </ul>
+    </div>
+
+    <h3>Network Adapters</h3>
+    <ul>
+      <li><strong>FC HBA (Host Bus Adapter)</strong> — installed in a compute system. Has <strong>SCSI-to-FC processing capability</strong>. It takes SCSI I/Os from the OS/hypervisor and encapsulates them into FC frames before sending them to the SAN.</li>
+      <li><strong>Storage system front-end adapters</strong> — on the storage side, same idea.</li>
+    </ul>
+
+    <h3>Cables</h3>
+    <table>
+      <tr><th>Type</th><th>How it works</th><th>Use case</th><th>Max distance</th></tr>
+      <tr><td><strong>Copper</strong></td><td>Electrical signal</td><td>Very short runs only</td><td><strong>Up to 30 meters</strong></td></tr>
+      <tr><td><strong>Multimode Fiber (MMF)</strong></td><td>Multiple light beams at different angles → causes <em>modal dispersion</em> (beams collide, weaken signal)</td><td>Short distance, within a data center</td><td>Hundreds of meters typically</td></tr>
+      <tr><td><strong>Single-Mode Fiber (SMF)</strong></td><td>Single ray of light at the center → minimal modal dispersion → minimal attenuation</td><td>Long-distance runs between data centers</td><td><strong>Up to 10 km</strong></td></tr>
+    </table>
+    <p><strong>Connectors:</strong> SC (Standard Connector) and LC (Lucent Connector) are the two common fiber connectors.</p>
+
+    <h3>Interconnecting Devices</h3>
+    <table>
+      <tr><th>Device</th><th>Intelligence</th><th>Key feature</th></tr>
+      <tr><td><strong>FC Hub</strong></td><td>Low</td><td>Used in FC-AL loop; all nodes share the loop; rarely used today</td></tr>
+      <tr><td><strong>FC Switch</strong></td><td>High</td><td>Routes data directly port-to-port; each node gets a dedicated path; fixed port count; hot-swappable power supplies &amp; fans</td></tr>
+      <tr><td><strong>FC Director</strong></td><td>Highest</td><td>High-end switch; modular chassis; add port blades; fully redundant (controllers, blades, power, fans); hot-swappable everything; for mission-critical environments</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ─── INTERCONNECTIVITY & PORTS ─── -->
+<div class="section" id="fc-topology-inter">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">🔗</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>FC Interconnectivity Options &amp; Port Types</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-title">🧩 Big Picture Analogy <span class="tag tag-analogy">Analogy</span></div>
+    <div class="analogy-box">
+      Point-to-Point is like a direct phone call between two people. FC-AL is like a walkie-talkie channel where only one person can talk at a time — everyone has to wait their turn. FC-SW (switched fabric) is like a telephone exchange — everyone gets their own dedicated call, no waiting, no sharing.
+    </div>
+
+    <h3>Three FC Interconnectivity Options</h3>
+    <table>
+      <tr><th>Option</th><th>How it works</th><th>Pros</th><th>Cons</th></tr>
+      <tr><td><strong>Point-to-Point</strong></td><td>Two nodes connected directly</td><td>Dedicated connection, simple</td><td>No scalability; limited to DAS-like use</td></tr>
+      <tr><td><strong>FC-AL (Arbitrated Loop)</strong></td><td>Devices share a loop; must "arbitrate" for access; only one device transmits at a time</td><td>No switch needed (cables only)</td><td>Low performance; adding/removing a device causes loop re-initialization (brief traffic pause)</td></tr>
+      <tr><td><strong>FC-SW (Switched Fabric)</strong></td><td>Nodes connect through FC switches; dedicated path between any two nodes; fabric = logical space where all nodes communicate</td><td>High performance, high scalability; adding/removing nodes is minimally disruptive</td><td>Cost of switches required</td></tr>
+    </table>
+
+    <div class="callout"><strong>ISL (Inter-Switch Link):</strong> In FC-SW, the link between two switches is called an ISL. ISLs carry both storage traffic and fabric management traffic, and allow multiple switches to form one large fabric.</div>
+
+    <h3>FC Port Types (Exam Favourite!)</h3>
+    <table>
+      <tr><th>Port</th><th>Full Name</th><th>Where it lives</th><th>What it does</th></tr>
+      <tr><td><code>N_Port</code></td><td>Node Port</td><td>Compute system HBA or storage system</td><td>End point in the fabric — where data originates/terminates</td></tr>
+      <tr><td><code>F_Port</code></td><td>Fabric Port</td><td>On the switch</td><td>Connects to an N_Port (switch side of node connection)</td></tr>
+      <tr><td><code>E_Port</code></td><td>Expansion Port</td><td>On the switch</td><td>Connects to another switch's E_Port — forms ISL</td></tr>
+      <tr><td><code>G_Port</code></td><td>Generic Port</td><td>On the switch</td><td>Auto-determines if it should be E_Port or F_Port during initialization</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ─── FC PROTOCOL STACK ─── -->
+<div class="section" id="fc-protocol">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">📚</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>FC Protocol Stack (FC-0 to FC-4)</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="concept-title">🧩 Big Picture Analogy <span class="tag tag-analogy">Analogy</span></div>
+    <div class="analogy-box">
+      The FC protocol stack is like mailing a package. FC-4 is you writing the letter (application commands). FC-2 is the envelope with the address and contents organized. FC-1 is the post office encoding it into bar codes for the machine to read. FC-0 is the physical truck and road that physically moves the package.
+    </div>
+
+    <h3>The Five Layers</h3>
+    <table>
+      <tr><th>Layer</th><th>Name</th><th>Function</th></tr>
+      <tr><td><strong>FC-4</strong></td><td>Protocol Mappings (Top)</td><td>Maps Upper Layer Protocols (ULPs) to FC — e.g., SCSI, IP, ATM, ESCON, HIPPI. This is where SCSI commands live.</td></tr>
+      <tr><td><strong>FC-3</strong></td><td>(Not implemented)</td><td>Originally reserved for common services — skipped in practice</td></tr>
+      <tr><td><strong>FC-2</strong></td><td>Framing &amp; Signaling</td><td>FC addressing, frame structure (frames/sequences/exchanges), fabric services, classes of service, flow control, routing</td></tr>
+      <tr><td><strong>FC-1</strong></td><td>Encoding/Decoding</td><td>Encodes 8-bit → 10-bit for transmission (or 64-bit → 66-bit for 10 Gbps+). Defines frame delimiters, primitive signals, link initialization, error recovery.</td></tr>
+      <tr><td><strong>FC-0</strong></td><td>Physical Interface (Bottom)</td><td>Cables, connectors, optical/electrical specs, bit transmission. Defines what you can physically plug in.</td></tr>
+    </table>
+
+    <div class="callout"><strong>Key insight:</strong> FC is a channel+network hybrid. Channels (like SCSI) are fast but limited in distance/scalability. Networks (like IP) are flexible but have overhead. FC gives you channel speed <em>and</em> network scalability. SCSI data is wrapped (encapsulated) in FC frames — so storage devices on the SAN look like locally attached disks to the OS.</div>
+  </div>
+</div>
+
+<!-- ─── ADDRESSING ─── -->
+<div class="section" id="addressing">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">🏷️</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>FC Addressing &amp; WWN</h2></div>
+  </div>
+
+  <div class="concept">
+    <h3>FC Address (Dynamic)</h3>
+    <p>Every node port that logs into the fabric gets a <strong>24-bit FC address</strong> dynamically assigned. Structure:</p>
+    <table>
+      <tr><th>Field</th><th>Bits</th><th>Meaning</th><th>Values</th></tr>
+      <tr><td><strong>Domain ID</strong></td><td>8</td><td>Identifies the switch</td><td>239 usable (some reserved for fabric services)</td></tr>
+      <tr><td><strong>Area ID</strong></td><td>8</td><td>Identifies a group of ports on the switch (e.g. a port blade)</td><td>256 possible</td></tr>
+      <tr><td><strong>Port ID</strong></td><td>8</td><td>Identifies the specific port within the area</td><td>256 possible</td></tr>
+    </table>
+    <div class="nums-box">
+      <strong style="color:var(--accent5);">Max FC fabric size:</strong> <code>239 × 256 × 256 = 15,663,104 node ports</code>
+    </div>
+    <p><strong>Reserved FC addresses:</strong></p>
+    <ul>
+      <li><code>FFFFFC</code> — Name Server</li>
+      <li><code>FFFFFD</code> — Fabric Controller</li>
+      <li><code>FFFFFE</code> — Fabric Login Server</li>
+      <li><code>FFFFFA</code> — Management Server</li>
+    </ul>
+
+    <h3>WWN — World Wide Name (Static)</h3>
+    <p>Like a MAC address in IP networking. A <strong>64-bit, globally unique, permanent identifier</strong> burned into hardware (or assigned via software).</p>
+    <table>
+      <tr><th>Type</th><th>What it identifies</th></tr>
+      <tr><td><strong>WWNN</strong> (World Wide Node Name)</td><td>Identifies the FC adapter itself (e.g., the HBA card)</td></tr>
+      <tr><td><strong>WWPN</strong> (World Wide Port Name)</td><td>Identifies each port on that adapter</td></tr>
+    </table>
+    <div class="callout">Example: A <strong>dual-port FC HBA</strong> has <strong>1 WWNN</strong> (one card) and <strong>2 WWPNs</strong> (two ports). WWNs are used in zoning and LUN masking configurations. The Name Server keeps a live mapping of WWN ↔ FC address.</div>
+
+    <div class="why-box">
+      <strong>FC address vs. WWN:</strong> FC address = like your seat number at a restaurant (changes each visit). WWN = like your national ID number (permanent, always yours).
+    </div>
+  </div>
+</div>
+
+<!-- ─── FRAMES / SEQUENCES / EXCHANGES ─── -->
+<div class="section" id="frames">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">📦</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>Frames, Sequences &amp; Exchanges</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Data transport in FC is like a conversation: a <strong>frame</strong> = a single word. A <strong>sequence</strong> = a sentence (group of related words). An <strong>exchange</strong> = a full conversation (one or more sentences that form a complete interaction).
+    </div>
+
+    <table>
+      <tr><th>Unit</th><th>Definition</th><th>Key detail</th></tr>
+      <tr><td><strong>Exchange</strong></td><td>A complete operation between two ports (e.g., a full read or write I/O)</td><td>Composed of one or more sequences</td></tr>
+      <tr><td><strong>Sequence</strong></td><td>A contiguous set of frames from one port to another</td><td>Corresponds to one Information Unit (IU) as defined by the ULP</td></tr>
+      <tr><td><strong>Frame</strong></td><td>The fundamental unit of data transfer at FC-2</td><td>5 parts: SOF, Header (24 bytes), Data Field (up to 2,112 bytes), CRC, EOF</td></tr>
+    </table>
+
+    <h3>FC Frame Anatomy</h3>
+    <table>
+      <tr><th>Part</th><th>Purpose</th><th>Size</th></tr>
+      <tr><td><strong>SOF (Start of Frame)</strong></td><td>Delimiter — marks beginning of frame</td><td>—</td></tr>
+      <tr><td><strong>Frame Header</strong></td><td>Contains addressing info (source, destination, sequence ID, etc.)</td><td><strong>24 bytes</strong></td></tr>
+      <tr><td><strong>Data Field</strong></td><td>The actual payload — usually SCSI data</td><td><strong>Up to 2,112 bytes</strong></td></tr>
+      <tr><td><strong>CRC</strong></td><td>Cyclic Redundancy Check — error detection. Calculated by sender before FC-1 encoding; verified by receiver after decoding.</td><td>—</td></tr>
+      <tr><td><strong>EOF (End of Frame)</strong></td><td>Delimiter — marks end of frame</td><td>—</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ─── FABRIC SERVICES & LOGIN ─── -->
+<div class="section" id="fabric-services">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">🌐</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>Fabric Services &amp; Login Types</h2></div>
+  </div>
+
+  <div class="concept">
+    <h3>Fabric Services (built into every FC switch)</h3>
+    <table>
+      <tr><th>Service</th><th>FC Address</th><th>Function</th></tr>
+      <tr><td><strong>Fabric Login Server</strong></td><td><code>FFFFFE</code></td><td>Used during initial node login (FLOGI). Assigns FC addresses.</td></tr>
+      <tr><td><strong>Name Server</strong></td><td><code>FFFFFC</code></td><td>Registers and manages all logged-in node ports; maps WWNs to FC addresses; distributed across all switches (synchronized)</td></tr>
+      <tr><td><strong>Fabric Controller</strong></td><td><code>FFFFFD</code></td><td>Manages and distributes RSCNs (Registered State Change Notifications). When something changes in the fabric, this service notifies affected nodes. Also generates SW-RSCNs between switches.</td></tr>
+      <tr><td><strong>Management Server</strong></td><td><code>FFFFFA</code></td><td>Lets SAN management software retrieve information and administer the fabric</td></tr>
+    </table>
+
+    <h3>Three Login Types</h3>
+    <table>
+      <tr><th>Login</th><th>Acronym</th><th>Between</th><th>Purpose</th></tr>
+      <tr><td><strong>Fabric Login</strong></td><td>FLOGI</td><td>N_Port → F_Port (switch)</td><td>Node joins the fabric. Sends WWNN &amp; WWPN to <code>FFFFFE</code>. Gets FC address back. Then registers with local Name Server.</td></tr>
+      <tr><td><strong>Port Login</strong></td><td>PLOGI</td><td>N_Port ↔ N_Port</td><td>Two nodes establish a session with each other. Exchange service parameters.</td></tr>
+      <tr><td><strong>Process Login</strong></td><td>PRLI</td><td>N_Port ↔ N_Port</td><td>FC-4 protocol-level login. If using SCSI (FCP), nodes exchange SCSI-specific service parameters.</td></tr>
+    </table>
+    <div class="chain">
+      Node powers on <span class="arrow">→</span> Sends FLOGI to FFFFFE <span class="arrow">→</span> Gets FC address <span class="arrow">→</span> Registers with Name Server <span class="arrow">→</span> Queries Name Server for available targets <span class="arrow">→</span> Sends PLOGI to a specific target <span class="arrow">→</span> Sends PRLI to establish SCSI session <span class="arrow">→</span> I/O begins
+    </div>
+  </div>
+</div>
+
+<!-- ─── FLOW CONTROL ─── -->
+<div class="section" id="flow-control">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">🚦</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>Flow Control — BB_Credit</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Imagine a warehouse with a loading dock. The dock has 5 parking bays (receive buffers). Each time a truck (frame) arrives and parks, that's 1 bay used. When the truck unloads and leaves, the dock sends a "bay free" signal (R_RDY) back to the sender. The sender keeps a count of free bays — if it's 0, it parks its trucks (holds frames) until a bay opens. This prevents trucks from crashing into a full dock (no dropped frames).
+    </div>
+
+    <p><strong>BB_Credit (Buffer-to-Buffer Credit)</strong> is FC's flow control mechanism. It ensures a transmitter never floods a receiver that can't keep up.</p>
+
+    <div class="chain">
+      During port login, transmitter and receiver agree on credit count (# of receive buffers) <span class="arrow">→</span> Transmitter sends a frame <span class="arrow">→</span> Credit count decrements by 1 <span class="arrow">→</span> Receiver processes frame, frees buffer <span class="arrow">→</span> Receiver sends R_RDY back <span class="arrow">→</span> Transmitter credit increments by 1 <span class="arrow">→</span> Transmission continues
+    </div>
+    <div class="why-box" style="margin-top:12px;">
+      If credit reaches 0 → <strong>transmission is suspended</strong> until R_RDY is received. No frames are ever dropped due to buffer overflow. This is why FC is deterministic and reliable for storage traffic.
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOPOLOGIES ─── -->
+<div class="section" id="topologies">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">🗺️</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>FC Fabric Topologies</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Single-switch = one big hub airport, every flight lands here. Full mesh = every airport has direct flights to every other airport. Partial mesh = some airports connect directly, others need a connection. Core-edge = a few major hub airports (core directors) with many small regional airports (edge switches) feeding into them.
+    </div>
+
+    <table>
+      <tr><th>Topology</th><th>Structure</th><th>Pros</th><th>Cons</th></tr>
+      <tr><td><strong>Single-Switch</strong></td><td>One switch (typically a director); all compute and storage connect to it</td><td>No ISLs needed → all ports available for nodes; zero ISL delays</td><td>Limited by port count of one switch; not infinitely scalable</td></tr>
+      <tr><td><strong>Full Mesh</strong></td><td>Every switch connects to every other switch</td><td>Max 1 ISL hop between any two nodes; low latency</td><td>ISL port count grows rapidly with number of switches; best for ≤4 switches</td></tr>
+      <tr><td><strong>Partial Mesh</strong></td><td>Not all switches are interconnected</td><td>More scalable than full mesh</td><td>Multiple hops possible; ISL overload risk if traffic poorly distributed</td></tr>
+      <tr><td><strong>Core-Edge</strong></td><td>Two tiers: Edge (switches, cheap) + Core (directors, redundant); storage on core; compute on edge or core</td><td>Scales well; compute-to-storage crosses only 1 ISL; conserves ports; easy expansion</td><td>More complex design; core must be highly available</td></tr>
+    </table>
+
+    <div class="callout"><strong>Core-Edge detail:</strong> Edge switches connect to core directors via ISLs but NOT to each other. All storage is on the core. High-performance compute can connect directly to core to avoid ISL delay. To expand: add edge switches to existing core, or add more core switches (single-core → dual-core).</div>
+  </div>
+</div>
+
+<!-- ─── LINK AGG ─── -->
+<div class="section" id="link-agg">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">⚡</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>Link Aggregation</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Instead of one busy highway lane, link aggregation creates a multi-lane expressway by combining several lanes (ISLs) into one logical road (port-channel). All cars (traffic flows) distribute across all lanes — no single lane gets jammed.
+    </div>
+
+    <p><strong>Link aggregation</strong> bundles two or more parallel ISLs into a single logical ISL called a <strong>port-channel</strong>.</p>
+    <ul>
+      <li>Traffic is <strong>distributed across all ISLs</strong> in the port-channel — prevents any single ISL from becoming a bottleneck.</li>
+      <li>Port-channel count scales with application demand.</li>
+    </ul>
+
+    <div class="nums-box">
+      <strong style="color:var(--accent5);">Example:</strong> 10 ISLs × 16 Gb/s each = <code>160 Gb/s</code> port-channel throughput
+    </div>
+
+    <p>Without link aggregation: traffic is assigned to ISLs in round-robin → some ISLs become overloaded while others are idle. With link aggregation: traffic for any node pair distributes across all ISLs → even utilization.</p>
+  </div>
+</div>
+
+<!-- ─── ZONING ─── -->
+<div class="section" id="zoning">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">🔒</div>
+    <div><span class="badge badge-fc">FC-SAN</span><h2>Zoning</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Zoning is like creating private rooms in a large open-plan office. Only people in the same room can talk directly to each other. Even though everyone is in the same building (same SAN fabric), a developer in Room A cannot see or talk to the accounting data in Room B. The building manager (fabric controller) only sends building-wide announcements to the rooms they actually affect.
+    </div>
+
+    <p>Zoning is an <strong>FC switch function</strong> that logically segments node ports into groups. Only members within the same zone can communicate.</p>
+
+    <h3>Why Zoning Matters</h3>
+    <ul>
+      <li><strong>Access Control:</strong> Prevents unauthorized compute systems from accessing storage systems they shouldn't see. Works alongside LUN masking for layered security.</li>
+      <li><strong>RSCN Reduction:</strong> Without zoning, when anything changes in the fabric, the Fabric Controller sends RSCNs (state change notifications) to <em>every single node</em> — lots of unnecessary management traffic. With zoning, RSCNs only go to nodes within the affected zone. Critical for large fabrics.</li>
+    </ul>
+
+    <h3>Zoning Hierarchy</h3>
+    <table>
+      <tr><th>Level</th><th>What it is</th></tr>
+      <tr><td><strong>Zone Set</strong></td><td>A group of zones activated/deactivated together as one entity. Only ONE zone set can be active at a time, but multiple sets can exist.</td></tr>
+      <tr><td><strong>Zone</strong></td><td>A group of members that can communicate with each other</td></tr>
+      <tr><td><strong>Member</strong></td><td>A port/node in the zone (switch ports, HBA ports, storage ports). A port can belong to multiple zones.</td></tr>
+    </table>
+
+    <h3>Types of Zoning</h3>
+    <table>
+      <tr><th>Type</th><th>Based on</th><th>Advantage</th><th>Disadvantage</th></tr>
+      <tr><td><strong>WWN Zoning</strong></td><td>World Wide Names (static)</td><td>Flexible: move HBA to another switch port — zone config unchanged. The WWN travels with the hardware.</td><td>If someone swaps in a new HBA with same WWN (spoofed), security risk</td></tr>
+      <tr><td><strong>Port Zoning</strong></td><td>Switch Port ID (domain + port number)</td><td>If HBA fails and is replaced, just replace it — zone config unchanged (port stays same)</td><td>If node moves to another port, must update zone config</td></tr>
+      <tr><td><strong>Mixed Zoning</strong></td><td>Combination of WWN + Port</td><td>Ties a specific port location to a specific WWN — most restrictive, most secure</td><td>Most complex to manage</td></tr>
+    </table>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--                  PART 2: IP-SAN                     -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<div class="section" id="ipsan-intro">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e3025;">🌍</div>
+    <div><span class="badge badge-ip">IP-SAN</span><h2>IP SAN Overview — Why Use IP for Storage?</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      FC SAN is like a dedicated private toll highway — extremely fast, but expensive to build and limited to where you lay the tracks. IP SAN is like using the existing public road network — already everywhere, connected to everything, no distance limit, and you already paid for it through your internet bill.
+    </div>
+
+    <p>IP SAN uses <strong>Internet Protocol (IP)</strong> to transport block storage traffic. Two main protocols:</p>
+    <ul>
+      <li><strong>iSCSI</strong> — transports SCSI commands over IP/TCP. Native IP storage networking.</li>
+      <li><strong>FCIP</strong> — tunnels existing FC frames over IP. Used to connect distant FC SANs.</li>
+    </ul>
+
+    <h3>Why IP SAN?</h3>
+    <table>
+      <tr><th>Reason</th><th>Explanation</th></tr>
+      <tr><td><strong>Existing infrastructure</strong></td><td>Most organizations already have IP networks — reuse them for storage, avoiding cost of new FC infrastructure</td></tr>
+      <tr><td><strong>No distance limitation</strong></td><td>IP has no inherent distance constraint — extend storage networking globally</td></tr>
+      <tr><td><strong>Disaster Recovery</strong></td><td>Many DR solutions already use IP; mature security options available for IP networks</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ─── iSCSI COMPONENTS ─── -->
+<div class="section" id="iscsi-components">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e3025;">🔧</div>
+    <div><span class="badge badge-ip">IP-SAN</span><h2>iSCSI — What It Is &amp; Components</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      iSCSI is like putting a parcel (SCSI commands/data) into a standard postal envelope (TCP/IP packet) and mailing it through the existing post office network (IP network). The parcel arrives, gets unwrapped, and the storage system handles it just like any normal storage command.
+    </div>
+
+    <p><strong>iSCSI (Internet SCSI)</strong> encapsulates SCSI commands and data into TCP/IP packets and transports them over a standard IP network. The storage system on the other end unwraps the IP packet and processes the SCSI command as normal.</p>
+
+    <h3>Key iSCSI Components</h3>
+    <table>
+      <tr><th>Component</th><th>What it is</th><th>Example</th></tr>
+      <tr><td><strong>iSCSI Initiator</strong></td><td>Sends SCSI commands; lives on compute side</td><td>iSCSI HBA, or software initiator on a NIC</td></tr>
+      <tr><td><strong>iSCSI Target</strong></td><td>Receives commands; lives on storage side</td><td>Storage system with iSCSI port</td></tr>
+      <tr><td><strong>IP Network</strong></td><td>The transport medium between them</td><td>Gigabit Ethernet LAN</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ─── iSCSI INITIATOR TYPES ─── -->
+<div class="section" id="iscsi-initiators">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e3025;">💻</div>
+    <div><span class="badge badge-ip">IP-SAN</span><h2>iSCSI Initiator Types</h2></div>
+  </div>
+
+  <div class="concept">
+    <table>
+      <tr><th>Initiator Type</th><th>How it works</th><th>CPU load</th><th>Cost</th></tr>
+      <tr><td><strong>Standard NIC + Software iSCSI Adapter</strong></td><td>OS/hypervisor kernel software uses an existing NIC. CPU handles ALL TCP/IP processing AND SCSI encapsulation.</td><td>Highest — CPU bottleneck under heavy I/O</td><td>Lowest — just software, hardware already exists</td></tr>
+      <tr><td><strong>TOE NIC + Software iSCSI Adapter</strong></td><td>TOE (TCP Offload Engine) NIC handles TCP/IP in hardware. CPU only handles iSCSI-layer functionality.</td><td>Medium — TCP offloaded, iSCSI still on CPU</td><td>Medium</td></tr>
+      <tr><td><strong>iSCSI HBA</strong></td><td>Dedicated hardware adapter with full iSCSI AND TCP/IP processing built in. CPU handles nothing storage-related.</td><td>Lowest — fully offloaded</td><td>Highest — but best performance</td></tr>
+    </table>
+
+    <div class="chain">
+      Standard NIC: SCSI data <span class="arrow">→</span> CPU encapsulates into iSCSI <span class="arrow">→</span> CPU wraps in TCP/IP <span class="arrow">→</span> NIC transmits<br>
+      iSCSI HBA: SCSI data <span class="arrow">→</span> HBA handles everything in hardware <span class="arrow">→</span> HBA transmits
+    </div>
+  </div>
+</div>
+
+<!-- ─── iSCSI CONNECTIVITY ─── -->
+<div class="section" id="iscsi-connectivity">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e3025;">🔀</div>
+    <div><span class="badge badge-ip">IP-SAN</span><h2>iSCSI Connectivity Types</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4 style="color:var(--accent3);">Native iSCSI</h4>
+        <ul>
+          <li>Compute connects directly to iSCSI storage over IP</li>
+          <li>Storage system has iSCSI ports</li>
+          <li>No FC components needed</li>
+          <li>Initiator logs on to IP network → accesses LUNs directly</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <h4 style="color:var(--accent4);">Bridged iSCSI</h4>
+        <ul>
+          <li>Compute is on IP network, storage is on FC SAN</li>
+          <li>A <strong>gateway / multiprotocol router</strong> bridges between the two worlds</li>
+          <li>Gateway has both Ethernet and FC ports</li>
+          <li>Initiator targets the gateway's IP address. Gateway converts IP ↔ FC frames.</li>
+          <li>Gateway acts as an FC initiator toward the storage system</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout">Most modern storage systems have <em>both</em> FC and iSCSI ports, so they can serve both FC clients and iSCSI clients simultaneously.</div>
+  </div>
+</div>
+
+<!-- ─── iSCSI PROTOCOL STACK ─── -->
+<div class="section" id="iscsi-protocol">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e3025;">📋</div>
+    <div><span class="badge badge-ip">IP-SAN</span><h2>iSCSI Protocol Stack</h2></div>
+  </div>
+
+  <div class="concept">
+    <table>
+      <tr><th>OSI Layer</th><th>Protocol</th><th>Function</th></tr>
+      <tr><td><strong>Application</strong></td><td>SCSI</td><td>The command protocol — Read, Write, etc. Initiator and target talk in SCSI commands.</td></tr>
+      <tr><td><strong>Session</strong></td><td>iSCSI</td><td>Manages login, authentication, target discovery, and session management between initiator and target</td></tr>
+      <tr><td><strong>Transport</strong></td><td>TCP</td><td>Provides <em>reliable</em> transmission — message flow control, windowing, error recovery, retransmission</td></tr>
+      <tr><td><strong>Network</strong></td><td>IP</td><td>Global addressing and routing across networks</td></tr>
+      <tr><td><strong>Data Link</strong></td><td>Ethernet</td><td>Node-to-node communication through the physical network</td></tr>
+    </table>
+
+    <div class="chain">
+      Application generates SCSI command <span class="arrow">→</span> iSCSI wraps it in an iSCSI PDU <span class="arrow">→</span> TCP ensures reliable delivery <span class="arrow">→</span> IP routes packet across network <span class="arrow">→</span> Ethernet physically carries it
+    </div>
+  </div>
+</div>
+
+<!-- ─── iSCSI NAMES & ADDRESSING ─── -->
+<div class="section" id="iscsi-names">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e3025;">🏷️</div>
+    <div><span class="badge badge-ip">IP-SAN</span><h2>iSCSI Addressing &amp; Naming</h2></div>
+  </div>
+
+  <div class="concept">
+    <h3>iSCSI Address</h3>
+    <p>An iSCSI address = <strong>location + iSCSI name</strong></p>
+    <ul>
+      <li><strong>Location</strong> = IP address (or hostname) + TCP port number. For initiators, TCP port is omitted.</li>
+      <li><strong>iSCSI Name</strong> = unique worldwide identifier for each iSCSI node.</li>
+    </ul>
+
+    <h3>Three iSCSI Name Formats</h3>
+    <table>
+      <tr><th>Format</th><th>Prefix</th><th>Example</th><th>Key fact</th></tr>
+      <tr><td><strong>IQN</strong> (iSCSI Qualified Name)</td><td><code>iqn.</code></td><td><code>iqn.2015-04.com.example:optional_string</code></td><td>Based on a registered domain name + date (date prevents conflicts when domain changes ownership). Most common. Admin-friendly.</td></tr>
+      <tr><td><strong>EUI</strong> (Extended Unique Identifier)</td><td><code>eui.</code></td><td><code>eui.0300732A32598D26</code></td><td>Based on IEEE EUI-64 standard. 16 hex characters after prefix.</td></tr>
+      <tr><td><strong>NAA</strong> (Network Address Authority)</td><td><code>naa.</code></td><td><code>naa.52004567BA64678D</code></td><td>Defined by INCITS T11 (same body as FC). Used for devices with both iSCSI and SAS ports — same name works for both. Up to 32 hex chars (128-bit).</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ─── iSCSI DISCOVERY ─── -->
+<div class="section" id="iscsi-discovery">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e3025;">🔍</div>
+    <div><span class="badge badge-ip">IP-SAN</span><h2>iSCSI Discovery</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Before an initiator can talk to a storage target, it needs to find it — like looking up a phone number before making a call. There are two ways: either you manually look it up (SendTargets) or you use a directory service (iSNS) that automatically keeps a list.
+    </div>
+
+    <table>
+      <tr><th>Method</th><th>How it works</th><th>FC equivalent</th></tr>
+      <tr><td><strong>SendTargets Discovery</strong></td><td>Admin manually configures the initiator with the target's IP address + TCP port. Initiator sends a "SendTargets" command. Target responds with its name and location.</td><td>Manual configuration (no FC equivalent)</td></tr>
+      <tr><td><strong>iSNS (Internet Storage Name Service)</strong></td><td>Devices auto-register with an iSNS server. Initiator queries iSNS for available targets. Automatic, like DHCP for storage discovery.</td><td><strong>Name Server</strong> (FFFFFC)</td></tr>
+    </table>
+
+    <h3>iSNS Discovery Domains = FC Zones</h3>
+    <p>Just like FC zoning groups nodes into access-controlled zones, <strong>iSNS discovery domains</strong> group iSCSI initiators and targets. Devices must be in the same discovery domain to communicate. The iSNS server sends <strong>SCNs (State Change Notifications)</strong> when devices are added/removed — equivalent to FC's RSCNs.</p>
+
+    <table>
+      <tr><th>FC Concept</th><th>iSCSI Equivalent</th></tr>
+      <tr><td>Name Server (FFFFFC)</td><td>iSNS Server</td></tr>
+      <tr><td>Zone</td><td>Discovery Domain</td></tr>
+      <tr><td>RSCN (Registered State Change Notification)</td><td>SCN (State Change Notification)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ─── FCIP ─── -->
+<div class="section" id="fcip">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e3025;">🌐</div>
+    <div><span class="badge badge-ip">IP-SAN</span><h2>FCIP — Fibre Channel over IP</h2></div>
+  </div>
+
+  <div class="concept">
+    <div class="analogy-box">
+      Imagine two private FC train networks (SANs) separated by a vast ocean. FCIP is like building a ship container (IP tunnel) that loads the FC trains onto it, sails across the ocean (IP network), and delivers them to the other train network — without changing the trains at all. The trains don't even know they crossed an ocean.
+    </div>
+
+    <p><strong>FCIP (Fibre Channel over IP)</strong> is a <strong>tunneling protocol</strong> that encapsulates entire FC frames inside IP packets to connect geographically separated FC SANs over an existing IP network.</p>
+
+    <ul>
+      <li>FC frames are <strong>not altered</strong> — they are just wrapped in IP.</li>
+      <li>Creates <strong>virtual FC links over IP</strong> — the fabrics on each end see FCIP gateways as if they were regular FC switches.</li>
+      <li>The nodes in each fabric are <strong>unaware</strong> of the IP network in between.</li>
+      <li>Primary use case: <strong>disaster recovery</strong> (replicating data to a remote site), long-distance data sharing.</li>
+    </ul>
+
+    <h3>How FCIP Works</h3>
+    <div class="chain">
+      FC SAN Site A <span class="arrow">→</span> FCIP Gateway A (encapsulates FC frames into IP packets) <span class="arrow">→</span> IP Network <span class="arrow">→</span> FCIP Gateway B (strips IP wrapper, passes FC frames) <span class="arrow">→</span> FC SAN Site B
+    </div>
+    <div class="callout">An IP address is assigned to the FCIP gateway's IP-facing port. The gateway's FC-facing port connects to the local FC fabric via a standard FC connection. Gateways appear as fabric switches to the FC fabric.</div>
+  </div>
+</div>
+
+<!-- ─── FCIP TUNNELS ─── -->
+<div class="section" id="fcip-tunnels">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e3025;">🚇</div>
+    <div><span class="badge badge-ip">IP-SAN</span><h2>FCIP Tunnel Configuration</h2></div>
+  </div>
+
+  <div class="concept">
+    <p>An <strong>FCIP tunnel</strong> consists of one or more independent TCP/IP connections between two FCIP gateway ports (tunnel endpoints). Multiple tunnels can exist between the same two fabrics. Tunnels can be aggregated for throughput and redundancy.</p>
+
+    <h3>Two Tunnel Modes</h3>
+    <table>
+      <tr><th>Mode</th><th>Ports used</th><th>Effect</th><th>When to use</th></tr>
+      <tr><td><strong>Merged Fabric</strong></td><td>E_Port + VE_Port on gateway</td><td>The two FC SANs merge into ONE large logical fabric. Fabric services are shared across the IP link.</td><td>When you want transparent fabric extension</td></tr>
+      <tr><td><strong>FC-FC Routing (Non-Merged)</strong></td><td>EX_Port + VE_Port on gateway</td><td>Fabrics stay <em>separate</em>. Only selected nodes can communicate across the tunnel. EX_Port allows routing but doesn't propagate fabric services to the other fabric.</td><td>When only a subset of nodes need cross-site access; better isolation</td></tr>
+    </table>
+
+    <div class="callout"><strong>VE_Port</strong> (Virtual E_Port) = behaves like an E_Port but exclusively used for FCIP tunnel endpoints. <strong>EX_Port</strong> = like E_Port but doesn't share fabric services between fabrics — used for FC-FC routing without merging.</div>
+  </div>
+</div>
+
+<!-- ─── FCIP STACK ─── -->
+<div class="section" id="fcip-stack">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e3025;">📋</div>
+    <div><span class="badge badge-ip">IP-SAN</span><h2>FCIP Protocol Stack</h2></div>
+  </div>
+
+  <div class="concept">
+    <table>
+      <tr><th>Layer</th><th>Protocol</th><th>Function</th></tr>
+      <tr><td><strong>Application</strong></td><td>SCSI (FCP)</td><td>Original storage commands; SCSI packaged as FC frames (FCP = SCSI over FC)</td></tr>
+      <tr><td><strong>FC</strong></td><td>FC Protocol</td><td>FC frames whose payload is SCSI data</td></tr>
+      <tr><td><strong>FCIP Layer</strong></td><td>FCIP</td><td>Encapsulates FC frames onto IP payload</td></tr>
+      <tr><td><strong>Transport</strong></td><td>TCP</td><td>Reliable transmission; handles re-sequencing if IP packets are fragmented</td></tr>
+      <tr><td><strong>Network/Data Link</strong></td><td>IP / Ethernet, WiFi, etc.</td><td>Routes packets across any IP-capable medium</td></tr>
+    </table>
+
+    <div class="callout"><strong>MTU fragmentation:</strong> When an FC frame is encapsulated in an IP packet, the resulting packet may exceed the MTU (Maximum Transmission Unit) of the data link. This causes IP packet fragmentation. TCP handles re-sequencing these fragments before passing to FC processing. This is a known overhead of FCIP.</div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--             MASTER COMPARISON TABLES                -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<div class="section" id="big-table">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e1a30;">📊</div>
+    <h2>Master Comparison Tables</h2>
+  </div>
+
+  <h3>FC-SAN vs. iSCSI vs. FCIP</h3>
+  <table>
+    <tr><th>Feature</th><th>FC-SAN</th><th>iSCSI (IP-SAN)</th><th>FCIP</th></tr>
+    <tr><td>Protocol</td><td>Fibre Channel (FCP)</td><td>SCSI over TCP/IP</td><td>FC frames over TCP/IP</td></tr>
+    <tr><td>Purpose</td><td>Primary SAN fabric</td><td>IP-based storage access</td><td>Connect FC SANs over distance</td></tr>
+    <tr><td>Transport</td><td>FC</td><td>TCP/IP (Ethernet)</td><td>TCP/IP (tunneling)</td></tr>
+    <tr><td>Hardware needed</td><td>FC HBA, FC switches</td><td>NIC/TOE/iSCSI HBA, IP switch</td><td>FCIP gateway + existing FC + IP</td></tr>
+    <tr><td>Distance limit</td><td>Limited (up to ~10km SMF)</td><td>None (IP)</td><td>None (IP)</td></tr>
+    <tr><td>Performance</td><td>Highest</td><td>Good (depends on NIC type)</td><td>FC performance, IP latency</td></tr>
+    <tr><td>Cost</td><td>Higher (FC components)</td><td>Lower (reuse IP infra)</td><td>Moderate (gateways needed)</td></tr>
+    <tr><td>Discovery</td><td>FLOGI → Name Server</td><td>SendTargets or iSNS</td><td>FC fabric services (via tunnel)</td></tr>
+    <tr><td>Addressing</td><td>FC address (dynamic) + WWN (static)</td><td>IP address + iSCSI name (IQN/EUI/NAA)</td><td>FC addresses within tunnel</td></tr>
+  </table>
+
+  <h3>All Fabric Services Summary</h3>
+  <table>
+    <tr><th>Service</th><th>Address</th><th>Role</th></tr>
+    <tr><td>Fabric Login Server</td><td><code>FFFFFE</code></td><td>Assigns FC addresses during FLOGI</td></tr>
+    <tr><td>Name Server</td><td><code>FFFFFC</code></td><td>Registers ports; maps WWN ↔ FC address; distributed across fabric</td></tr>
+    <tr><td>Fabric Controller</td><td><code>FFFFFD</code></td><td>Distributes RSCNs; sends SW-RSCNs between switches</td></tr>
+    <tr><td>Management Server</td><td><code>FFFFFA</code></td><td>SAN management software interface</td></tr>
+  </table>
+
+  <h3>FC Port Types at a Glance</h3>
+  <table>
+    <tr><th>Port</th><th>On</th><th>Connects to</th><th>Use</th></tr>
+    <tr><td>N_Port</td><td>Node (compute/storage)</td><td>F_Port on switch</td><td>End device port in switched fabric</td></tr>
+    <tr><td>F_Port</td><td>Switch</td><td>N_Port on node</td><td>Switch port facing nodes</td></tr>
+    <tr><td>E_Port</td><td>Switch</td><td>E_Port on another switch</td><td>ISL — switch-to-switch</td></tr>
+    <tr><td>G_Port</td><td>Switch</td><td>Either</td><td>Auto-determines F or E during init</td></tr>
+    <tr><td>VE_Port</td><td>FCIP Gateway</td><td>VE_Port (other gateway)</td><td>Virtual E_Port for FCIP tunnels</td></tr>
+    <tr><td>EX_Port</td><td>FCIP Gateway</td><td>E_Port on FC switch</td><td>FC-FC routing without merging fabrics</td></tr>
+  </table>
+
+  <h3>Zoning Types Comparison</h3>
+  <table>
+    <tr><th></th><th>WWN Zoning</th><th>Port Zoning</th><th>Mixed Zoning</th></tr>
+    <tr><td>Based on</td><td>World Wide Name</td><td>Switch Port ID</td><td>Both</td></tr>
+    <tr><td>Node moves ports?</td><td>✅ No reconfiguration needed</td><td>❌ Must update zone config</td><td>Depends</td></tr>
+    <tr><td>HBA replaced?</td><td>❌ Must update zone config (new WWN)</td><td>✅ No reconfiguration needed (same port)</td><td>Depends</td></tr>
+    <tr><td>Security level</td><td>Medium</td><td>Medium</td><td>High (most restrictive)</td></tr>
+  </table>
+
+  <h3>iSCSI Initiator Types Comparison</h3>
+  <table>
+    <tr><th>Type</th><th>TCP/IP Processing</th><th>iSCSI Processing</th><th>CPU Load</th></tr>
+    <tr><td>Standard NIC + Software</td><td>CPU</td><td>CPU</td><td>Highest</td></tr>
+    <tr><td>TOE NIC + Software</td><td>TOE NIC hardware</td><td>CPU</td><td>Medium</td></tr>
+    <tr><td>iSCSI HBA</td><td>HBA hardware</td><td>HBA hardware</td><td>Lowest</td></tr>
+  </table>
+
+  <h3>Key Numbers Cheat Sheet</h3>
+  <table>
+    <tr><th>Item</th><th>Value</th></tr>
+    <tr><td>FC max throughput (16 GFC)</td><td>3,200 MB/s (16 Gb/s raw)</td></tr>
+    <tr><td>Ultra640 SCSI throughput (DAS)</td><td>640 MB/s</td></tr>
+    <tr><td>Copper cable max distance (FC)</td><td>30 meters</td></tr>
+    <tr><td>Single-mode fiber max distance</td><td>10 km</td></tr>
+    <tr><td>FC domain IDs available</td><td>239 (out of 256)</td></tr>
+    <tr><td>Max FC fabric node ports</td><td>239 × 256 × 256 = 15,663,104</td></tr>
+    <tr><td>FC frame header size</td><td>24 bytes</td></tr>
+    <tr><td>FC frame data field max</td><td>2,112 bytes</td></tr>
+    <tr><td>Link aggregation example</td><td>10 ISLs × 16 Gb/s = 160 Gb/s port-channel</td></tr>
+    <tr><td>FC-4 upper layer: SCSI, IP, ATM, ESCON, HIPPI</td><td>FC-4 protocols</td></tr>
+    <tr><td>FC-1 encoding (low speed)</td><td>8-bit → 10-bit</td></tr>
+    <tr><td>FC-1 encoding (10 Gbps+)</td><td>64-bit → 66-bit</td></tr>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--                     EXAM Q&A                        -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<div class="section" id="quiz">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e1a30;">🎯</div>
+    <h2>Exam Q&amp;A — Test Yourself</h2>
+  </div>
+
+  <div class="quiz">
+    <div class="quiz-header">🧪 FC-SAN Questions</div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q1: What is the difference between a WWN and an FC address?</div>
+      <div class="quiz-a"><strong>A:</strong> WWN is a static, permanent 64-bit identifier burned into hardware (like a MAC address). FC address is dynamically assigned when a node logs into the fabric — it can change. WWN is used for identity; FC address is used for routing within the fabric.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q2: A dual-port FC HBA has how many WWNNs and WWPNs?</div>
+      <div class="quiz-a"><strong>A:</strong> 1 WWNN (identifies the adapter/card) and 2 WWPNs (one per port).</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q3: What is the maximum number of node ports in a single FC switched fabric, and how is it calculated?</div>
+      <div class="quiz-a"><strong>A:</strong> 239 domain IDs × 256 areas × 256 ports = <strong>15,663,104 ports</strong>. (239 because some domain IDs are reserved for fabric services like name server at FFFFFC.)</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q4: What is BB_Credit and why does FC use it?</div>
+      <div class="quiz-a"><strong>A:</strong> BB_Credit (Buffer-to-Buffer Credit) is FC's flow control mechanism. It ensures the transmitting port never sends more frames than the receiving port has buffer space for. When credit = 0, transmission pauses. This prevents frame drops without requiring TCP-style retransmission. When the receiver frees a buffer, it sends R_RDY back to increment the sender's credit.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q5: What are the three types of zoning and which is most flexible when nodes move between switch ports?</div>
+      <div class="quiz-a"><strong>A:</strong> WWN zoning, Port zoning, Mixed zoning. WWN zoning is most flexible for node moves — since WWN is tied to the hardware (not the port), the zone config needs no change when a node moves to a different switch port.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q6: In core-edge topology, where are storage systems connected, and why?</div>
+      <div class="quiz-a"><strong>A:</strong> Storage systems are connected to the <strong>core tier</strong> (directors). This ensures compute-to-storage traffic only crosses <strong>one ISL</strong> (from edge switch to core director) regardless of where the compute system is, minimizing latency and ISL hops.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q7: What is the sequence of login events when a compute system connects to an FC SAN?</div>
+      <div class="quiz-a"><strong>A:</strong> (1) FLOGI — node logs into fabric, gets FC address from Fabric Login Server (FFFFFE). (2) Node registers with Name Server (FFFFFC). (3) Node queries Name Server for targets. (4) PLOGI — node establishes session with specific target. (5) PRLI — nodes exchange SCSI-specific parameters to begin I/O.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q8: What is the purpose of RSCNs and how does zoning reduce their impact?</div>
+      <div class="quiz-a"><strong>A:</strong> RSCNs (Registered State Change Notifications) are sent by the Fabric Controller when something changes in the name server database (e.g., a node joins or leaves). Without zoning, RSCNs go to every node — unnecessary traffic for nodes that don't care about the change. With zoning, RSCNs only go to nodes within the affected zone, significantly reducing management traffic in large fabrics.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q9: Why is multimode fiber limited to shorter distances than single-mode fiber?</div>
+      <div class="quiz-a"><strong>A:</strong> MMF sends multiple light beams at different angles. These beams travel different path lengths inside the cable and arrive at slightly different times — called <strong>modal dispersion</strong>. The overlapping and collision of beams weakens the signal. SMF sends a single ray of light through the center of a much smaller core, eliminating modal dispersion and allowing distances up to 10 km.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q10: What does SDN (Software-Defined Networking) do to the traditional switch architecture?</div>
+      <div class="quiz-a"><strong>A:</strong> SDN separates the control plane from the data plane. Normally, each switch has its own control logic hardwired in firmware. SDN moves the control logic to an external Network Controller software. The controller manages all switches centrally, enabling policy-based automation, faster reconfiguration, and simplified management across the entire fabric.</div>
+    </div>
+  </div>
+
+  <div class="quiz" style="margin-top:24px;">
+    <div class="quiz-header">🧪 IP-SAN Questions</div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q11: What is the key difference between iSCSI and FCIP?</div>
+      <div class="quiz-a"><strong>A:</strong> iSCSI is a native IP storage protocol — it encapsulates SCSI commands into TCP/IP to provide IP-based storage access to compute systems (replacing or supplementing FC). FCIP is a tunneling protocol — it wraps existing FC frames inside IP to extend FC SAN connectivity over long distances. iSCSI talks to storage directly; FCIP connects FC fabrics to each other.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q12: An iSCSI HBA vs. a standard NIC — what's the critical difference?</div>
+      <div class="quiz-a"><strong>A:</strong> A standard NIC with software iSCSI adapter makes the CPU handle all TCP/IP processing AND iSCSI encapsulation — CPU becomes a bottleneck under heavy storage I/O. An iSCSI HBA handles all of this in dedicated hardware, offloading the entire TCP/IP + iSCSI stack from the CPU, giving much better performance.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q13: What is bridged iSCSI and when is it used?</div>
+      <div class="quiz-a"><strong>A:</strong> Bridged iSCSI is used when the compute systems are on an IP network but the storage systems are on an FC SAN (without iSCSI ports). A gateway device with both Ethernet and FC ports bridges the two. The initiator targets the gateway's IP address; the gateway converts IP packets ↔ FC frames and acts as an FC initiator toward the storage system.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q14: What is the iSCSI equivalent of the FC Name Server?</div>
+      <div class="quiz-a"><strong>A:</strong> <strong>iSNS (Internet Storage Name Service)</strong>. Both are discovery services — the Name Server registers FC node ports and maps WWNs to FC addresses; iSNS registers iSCSI initiators and targets and allows initiators to find available targets automatically.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q15: What is the difference between a merged fabric and FC-FC routing in FCIP?</div>
+      <div class="quiz-a"><strong>A:</strong> In merged fabric, two FC SANs join into one large logical fabric — fabric services are shared across the FCIP tunnel using VE_Ports (virtual E_Ports on both gateways). In FC-FC routing (non-merged), the fabrics remain separate and only specific nodes can communicate across the tunnel — achieved using EX_Ports, which allow routing without propagating fabric services between the two fabrics. Use FC-FC routing when you want isolation and only partial cross-site access.</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q16: What is an IQN and what are its three parts?</div>
+      <div class="quiz-a"><strong>A:</strong> IQN = iSCSI Qualified Name. Format: <code>iqn.YYYY-MM.reverse-domain:optional_string</code>. Three parts: (1) <code>iqn.</code> prefix, (2) date (year-month) to prevent conflicts when domains change ownership, (3) reversed registered domain name, followed by an optional string (serial number, asset tag, etc.).</div>
+    </div>
+
+    <div class="quiz-item">
+      <div class="quiz-q">Q17: Why does FCIP potentially cause IP packet fragmentation, and how is it handled?</div>
+      <div class="quiz-a"><strong>A:</strong> FC frames can be large. When encapsulated inside an IP packet, the resulting IP packet may exceed the MTU (Maximum Transmission Unit) of the underlying data link (Ethernet). This causes the IP packet to be fragmented into smaller pieces. TCP handles receiving and re-sequencing these fragments before passing the reconstructed data to the FC processing layer.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer note -->
+<div style="margin-top:48px; padding:20px; background:var(--surface); border-radius:12px; border:1px solid var(--border); font-size:13px; color:var(--muted);">
+  <strong style="color:var(--accent);">What these notes cover:</strong> ~95% of Module 9 (FC-SAN) and Module 10 (IP-SAN) content.
+  <br><br>
+  <strong style="color:var(--accent2);">Concepts requiring deeper thinking (not just table cells):</strong>
+  <ul style="margin-top:8px;">
+    <li>The full login sequence (FLOGI → Name Server registration → PLOGI → PRLI) — understand it as a process, not just three acronyms</li>
+    <li>BB_Credit flow — trace a credit going to 0 and recovering; understand <em>why</em> it prevents drops</li>
+    <li>Core-edge topology — know which tier everything connects to and why</li>
+    <li>FCIP merged vs. non-merged — know which port types (VE_Port vs. EX_Port) and what they prevent/allow</li>
+    <li>iSCSI initiator progression — understand the tradeoff between cost, CPU load, and performance across all 3 types</li>
+  </ul>
+</div>
+
+</main>
+
+<script>
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Auto-highlight active nav on scroll
+const sections = document.querySelectorAll('.section[id]');
+const links = document.querySelectorAll('.nav-link');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) current = s.id;
+  });
+  links.forEach(l => {
+    l.classList.remove('active');
+    if (l.getAttribute('onclick') && l.getAttribute('onclick').includes(current)) {
+      l.classList.add('active');
+    }
+  });
+});
+</script>
+</body>
+</html>
