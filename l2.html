@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L2 Routing & Congestion Control — Exam Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f11;
+    --surface: #17171a;
+    --surface2: #1e1e22;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8e8ec;
+    --muted: #8b8b99;
+    --accent: #7c6df5;
+    --accent2: #4ec9b0;
+    --accent3: #f4a261;
+    --accent4: #e87070;
+    --accent5: #6bcfb0;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* grid bg */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,109,245,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,109,245,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+
+  /* header */
+  header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 2rem;
+  }
+
+  .course-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    margin-bottom: .75rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .course-tag::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.15;
+    color: #fff;
+    margin-bottom: .75rem;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  /* topic nav */
+  .topic-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 3rem;
+  }
+
+  .topic-pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 12px;
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all .15s;
+    cursor: pointer;
+  }
+  .topic-pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(124,109,245,.06);
+  }
+
+  /* sections */
+  .section {
+    margin-bottom: 2.5rem;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label span {
+    background: rgba(124,109,245,.12);
+    padding: 2px 8px;
+    border-radius: 3px;
+    color: var(--accent);
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: .75rem;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: var(--border2); }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: .5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .card p {
+    color: #b0b0be;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: .5rem;
+  }
+  .card p:last-child { margin-bottom: 0; }
+
+  ul.points {
+    list-style: none;
+    padding: 0;
+    margin-top: .4rem;
+  }
+  ul.points li {
+    font-size: 13.5px;
+    color: #a0a0b0;
+    line-height: 1.6;
+    padding: .2rem 0 .2rem 1.1rem;
+    position: relative;
+  }
+  ul.points li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--border2);
+  }
+
+  /* highlight box */
+  .note {
+    background: rgba(124,109,245,.07);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: .6rem 1rem;
+    margin: .75rem 0 0;
+    font-size: 13px;
+    color: #b0b0cc;
+  }
+  .note.warn {
+    background: rgba(244,162,97,.07);
+    border-left-color: var(--accent3);
+    color: #c8b08a;
+  }
+  .note.good {
+    background: rgba(78,201,176,.07);
+    border-left-color: var(--accent2);
+    color: #8acfbe;
+  }
+
+  /* flow diagram */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: .75rem 0 0;
+  }
+  .fbox {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .fbox.hi { border-color: var(--accent); color: #c4b8ff; background: rgba(124,109,245,.08); }
+  .arrow { color: var(--muted); font-size: 13px; }
+
+  /* two-col grid */
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+    margin-top: .75rem;
+  }
+  @media(max-width:580px) { .grid2 { grid-template-columns: 1fr; } }
+
+  .mini-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .9rem 1rem;
+  }
+  .mini-card h3 {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #ddd;
+    margin-bottom: .4rem;
+  }
+  .mini-card p, .mini-card li {
+    font-size: 12.5px;
+    color: #8e8ea0;
+    line-height: 1.6;
+  }
+  .mini-card ul { padding-left: .9rem; margin-top: .25rem; }
+
+  /* code inline */
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent2);
+  }
+
+  /* comparison table */
+  .compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: .75rem;
+  }
+  .compare th {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: .5rem .75rem;
+    border-bottom: 1px solid var(--border2);
+  }
+  .compare td {
+    padding: .55rem .75rem;
+    color: #a8a8b8;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .compare tr:last-child td { border-bottom: none; }
+  .compare tr:hover td { background: rgba(255,255,255,.02); }
+  .compare td:first-child {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent2);
+    white-space: nowrap;
+  }
+
+  /* tag badges */
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 4px;
+    margin-top: 4px;
+  }
+  .b-purple { background: rgba(124,109,245,.15); color: #a99cf5; border: 1px solid rgba(124,109,245,.25); }
+  .b-teal { background: rgba(78,201,176,.1); color: #5dd4ba; border: 1px solid rgba(78,201,176,.2); }
+  .b-orange { background: rgba(244,162,97,.1); color: #d4a06a; border: 1px solid rgba(244,162,97,.2); }
+  .b-red { background: rgba(232,112,112,.1); color: #cc8080; border: 1px solid rgba(232,112,112,.2); }
+
+  /* section num */
+  .sec-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+
+  /* sub-label */
+  .sub-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin: 1rem 0 .4rem;
+  }
+
+  /* footer */
+  footer {
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* anchor offset for nav */
+  [id] { scroll-margin-top: 1.5rem; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="course-tag">NIT452 · Cloud Computing · Week 11</div>
+    <h1>L2 Routing &amp; Congestion Control</h1>
+    <div class="subtitle">exam review — complete condensed notes</div>
+  </header>
+
+  <nav class="topic-nav" aria-label="Jump to section">
+    <a class="topic-pill" href="#stp">Why STP fails</a>
+    <a class="topic-pill" href="#etherchannel">EtherChannel</a>
+    <a class="topic-pill" href="#vpc">vPC / StackWise</a>
+    <a class="topic-pill" href="#l2mp">L2 Multipathing</a>
+    <a class="topic-pill" href="#trill">TRILL</a>
+    <a class="topic-pill" href="#fabricpath">FabricPath</a>
+    <a class="topic-pill" href="#ospf">OSPF / BGP</a>
+    <a class="topic-pill" href="#ecmp">ECMP</a>
+    <a class="topic-pill" href="#congestion">Congestion Control</a>
+    <a class="topic-pill" href="#dctcp">DCTCP</a>
+    <a class="topic-pill" href="#summary">Quick Reference</a>
+  </nav>
+
+  <!-- 1. STP -->
+  <div class="section" id="stp">
+    <div class="section-label"><span class="sec-num">01</span> Why STP is the problem</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#e87070"></span>Spanning Tree Protocol (STP)</div>
+      <p>STP prevents Layer 2 loops by <strong>blocking all redundant links</strong> — only one active path is kept between any two switches. Every blocked link is wasted capacity.</p>
+      <p>In a data center, you build many parallel links for redundancy and throughput. STP throws most of them away by design.</p>
+      <div class="note warn">The entire rest of this topic is techniques that either fool STP into thinking fewer links exist, or replace STP entirely so all links can forward traffic simultaneously.</div>
+    </div>
+  </div>
+
+  <!-- 2. EtherChannel -->
+  <div class="section" id="etherchannel">
+    <div class="section-label"><span class="sec-num">02</span> Link Aggregation — EtherChannel</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#7c6df5"></span>IEEE 802.3ad (2000) — fooling STP with one logical link</div>
+      <p>Bundle multiple physical cables between two switches into a single <strong>PortChannel</strong> (logical interface). STP sees only one link — nothing to block. Traffic is load-balanced across all physical cables inside the bundle.</p>
+      <div class="flow">
+        <div class="fbox">4 physical cables</div>
+        <div class="arrow">→</div>
+        <div class="fbox hi">STP sees: 1 PortChannel</div>
+        <div class="arrow">→</div>
+        <div class="fbox">all 4 carry traffic</div>
+      </div>
+      <div class="sub-label" style="margin-top:1rem">Requirements for the bundle</div>
+      <ul class="points">
+        <li>All cables must have identical speed, duplex, and native VLAN config.</li>
+        <li>The bundle must not flood unknown unicast back into itself.</li>
+      </ul>
+      <div class="note good">Servers do the same thing with NIC Teaming — bundle multiple NICs into one logical interface. Both Windows and Linux support this natively via 802.3ad.</div>
+    </div>
+  </div>
+
+  <!-- 3. vPC / StackWise -->
+  <div class="section" id="vpc">
+    <div class="section-label"><span class="sec-num">03</span> Cross-Switch PortChannels</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#4ec9b0"></span>Bundle links across different physical switches</div>
+      <p>Normal EtherChannel requires both ends of the bundle to connect to one switch. Cross-switch PortChannels let you aggregate links that connect to <em>different</em> physical switches — STP still sees one logical link.</p>
+      <div class="grid2">
+        <div class="mini-card">
+          <h3>StackWise — Cisco Catalyst 3750</h3>
+          <ul>
+            <li>Physically stack multiple switches together via a ring cable.</li>
+            <li>They share one switch identity — STP, spanning tree, VLANs all unified.</li>
+            <li>Up to 64 Gbps on the stack ring.</li>
+            <li>If a member fails, its ports drop from the EtherChannel; remaining ports continue.</li>
+            <li>New member added → receives running config from stack master automatically.</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h3>vPC — Nexus switches</h3>
+          <ul>
+            <li>Two separate Nexus switches act as one logical switch for link aggregation purposes.</li>
+            <li>A dedicated peer-link syncs control-plane state between the two.</li>
+            <li>STP sees one logical device; downstream switch sees one PortChannel.</li>
+            <li>Traffic load-balances across both switches.</li>
+            <li>Constraint: topology must be pairs of devices (can't do arbitrary mesh).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. L2MP -->
+  <div class="section" id="l2mp">
+    <div class="section-label"><span class="sec-num">04</span> Layer 2 Multipathing (L2MP)</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#f4a261"></span>Going further — routing-like behavior at Layer 2</div>
+      <p>vPC is still limited to pairs of devices. L2MP takes the Layer 3 routing idea — ECMP, flexible topologies, traffic control — and applies it to Layer 2 switching, while still handling Ethernet unicast, multicast, and broadcast transparently.</p>
+      <p>Two implementations:</p>
+      <div style="margin-top:.5rem">
+        <span class="badge b-teal">TRILL — IEEE standard (2009)</span>
+        <span class="badge b-purple">Cisco FabricPath — proprietary</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. TRILL -->
+  <div class="section" id="trill">
+    <div class="section-label"><span class="sec-num">05</span> TRILL — Transparent Interconnection of Lots of Links</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#4ec9b0"></span>IS-IS routing at Layer 2</div>
+      <p>TRILL uses the <strong>IS-IS link-state routing protocol</strong> — but to route Layer 2 frames, not IP packets. Every switch (called an <strong>RBridge — Routing Bridge</strong>) learns the full network topology and computes shortest paths to every other RBridge. All links active, ECMP works natively.</p>
+      <div class="note good">Think of it as giving Layer 2 switches a router brain — without needing IP addresses on anything.</div>
+
+      <div class="sub-label">How a frame travels through TRILL</div>
+      <div class="flow">
+        <div class="fbox">Host sends normal Ethernet frame</div>
+        <div class="arrow">→</div>
+        <div class="fbox hi">Ingress RBridge adds TRILL header</div>
+        <div class="arrow">→</div>
+        <div class="fbox">Transit hops decrement TTL</div>
+        <div class="arrow">→</div>
+        <div class="fbox hi">Egress RBridge strips header</div>
+        <div class="arrow">→</div>
+        <div class="fbox">Delivers original frame to host</div>
+      </div>
+
+      <div class="sub-label">TRILL header fields — know what each does</div>
+      <ul class="points">
+        <li><code>Hop Count</code> (6-bit) — decremented at every switch; drops frame when it hits zero. Prevents loops.</li>
+        <li><code>Egress Nickname</code> (16-bit) — ID of the destination RBridge (where frame exits the fabric).</li>
+        <li><code>Ingress Nickname</code> (16-bit) — ID of the source RBridge (where frame entered the fabric).</li>
+        <li><code>M bit</code> — set for multi-destination frames (broadcast / multicast).</li>
+        <li><code>Op-Lng</code> (5-bit) — options length field.</li>
+        <li><code>V</code> (2-bit) — TRILL version.</li>
+      </ul>
+
+      <div class="sub-label">Host location learning</div>
+      <p>IS-IS handles switch-to-switch routing. A separate protocol still floods which hosts are attached to each RBridge — this information can be flooded through the fabric.</p>
+    </div>
+  </div>
+
+  <!-- 6. FabricPath -->
+  <div class="section" id="fabricpath">
+    <div class="section-label"><span class="sec-num">06</span> Cisco FabricPath</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#7c6df5"></span>Cisco's proprietary L2MP — similar logic to TRILL, not interoperable</div>
+      <p>Supported only on Nexus 7K (F1/F3 linecards) and Nexus 5500. Uses IS-IS as its control plane. Frames are encapsulated with a FabricPath header — not Ethernet.</p>
+
+      <div class="grid2">
+        <div class="mini-card">
+          <h3>Leaf switch</h3>
+          <p>Connects Classical Ethernet (CE) hosts to the FabricPath fabric. Has both CE edge ports and FabricPath core ports. Must be STP root for its CE domain (use priority 4096). If it's not root, ports go Root Inconsistent via RootGuard.</p>
+        </div>
+        <div class="mini-card">
+          <h3>Spine switch</h3>
+          <p>Pure backbone — all ports are FabricPath mode. No STP, no classical Ethernet. Routes frames between leaf switches using Switch IDs. Multiple spines provide ECMP paths.</p>
+        </div>
+      </div>
+
+      <div class="sub-label">Forwarding walkthrough (step by step)</div>
+      <div class="flow">
+        <div class="fbox">Frame arrives at leaf S100 on CE port</div>
+        <div class="arrow">→</div>
+        <div class="fbox">MAC table lookup: dest MAC → Switch ID 200</div>
+        <div class="arrow">→</div>
+        <div class="fbox hi">Add FabricPath header</div>
+        <div class="arrow">→</div>
+        <div class="fbox">FabricPath table: SID 200 → interfaces e1/1–e1/16 (load balance)</div>
+        <div class="arrow">→</div>
+        <div class="fbox">S200 strips FP header, delivers to host</div>
+      </div>
+
+      <div class="sub-label">FabricPath header — key fields</div>
+      <ul class="points">
+        <li><code>Switch ID</code> (12-bit) — unique per switch; used for forwarding. Populates both MAC table and FabricPath table on leaf switches.</li>
+        <li><code>Subswitch ID</code> (3-bit) — identifies a group of hosts/devices within a switch.</li>
+        <li><code>LID</code> (6-bit) — Local ID; identifies the specific destination/source interface.</li>
+        <li><code>Ethertype 0x8903</code> — marks all FabricPath frames.</li>
+        <li><code>TTL</code> (6-bit) — decremented at each hop; prevents loops.</li>
+        <li><code>FTag</code> (10-bit) — Forwarding Tag; identifies the spanning tree used for multicast/broadcast distribution.</li>
+        <li><code>U/L bit</code> — set on all unicast frames; MAC addresses are locally significant.</li>
+        <li><code>I/G bit</code> — individual (unicast) vs group (multicast/broadcast) frame.</li>
+      </ul>
+
+      <div class="sub-label">MAC learning — "conversational"</div>
+      <ul class="points">
+        <li>Local MACs learned normally on CE ports.</li>
+        <li>Remote MACs (from other edge switches) are only learned if the <em>destination</em> MAC in the received frame is already in the local MAC table. This prevents flooding remote MACs unnecessarily.</li>
+        <li>Broadcast frames from the FabricPath network do not populate the MAC table.</li>
+      </ul>
+
+      <div class="sub-label">Control plane</div>
+      <p style="font-size:14px;color:#a0a0b0;margin-top:.25rem">IS-IS runs in the FabricPath core. Goal: compute Shortest Path Trees (SPTs) between all FabricPath nodes. IS-IS is not used for MAC address advertisement — only for switch-level topology. Advantages of IS-IS: doesn't need IP (uses own L3 transport), natively supports ECMP → Layer 2 load balancing without STP, Port Channels, or vPC.</p>
+
+      <div class="sub-label">STP interaction rules</div>
+      <ul class="points">
+        <li>FabricPath leaf switches must be STP root for their Classical Ethernet domain.</li>
+        <li>All leaf switches should share the same (lowest) STP priority — e.g. 4096.</li>
+        <li>If a leaf is not root, RootGuard puts those ports into Root Inconsistent state.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 7. OSPF / BGP -->
+  <div class="section" id="ospf">
+    <div class="section-label"><span class="sec-num">07</span> Other routing options</div>
+    <div class="card">
+      <div class="grid2" style="margin-top:0">
+        <div class="mini-card">
+          <h3>OSPF over IP</h3>
+          <ul>
+            <li>Layer 3 link-state protocol — same advantages as TRILL (ECMP, flexible topology, traffic control).</li>
+            <li>Well-established and widely understood — no new protocol to learn.</li>
+            <li style="color:#cc8080">Needs IP addresses and subnet config on every link — more overhead.</li>
+            <li style="color:#cc8080">Broadcast traffic scales with topology size — can get noisy in large DCs.</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h3>BGP (large-scale DCs)</h3>
+          <ul>
+            <li>Divide groups of switches and servers into Autonomous Systems (ASes).</li>
+            <li>Use BGP between ASes.</li>
+            <li>Highly scalable — used by hyperscalers (Facebook, Google) in their data centers.</li>
+            <li>More complex config than OSPF but handles massive scale.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. ECMP -->
+  <div class="section" id="ecmp">
+    <div class="section-label"><span class="sec-num">08</span> Multipath Routing & ECMP</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#4ec9b0"></span>Equal Cost Multi Path — using all available paths</div>
+      <p>When multiple routes to the same destination have equal cost, ECMP distributes traffic across all of them simultaneously. Provides both load balancing and fault tolerance.</p>
+
+      <div class="sub-label">Hash-based load balancing</div>
+      <p style="font-size:14px;color:#a0a0b0">Hash selected header fields (typically src IP + dst IP + src port + dst port) to produce a number → number selects which path this flow takes. All packets in the same flow always take the same path, preserving order.</p>
+      <div class="flow" style="margin-top:.6rem">
+        <div class="fbox">5-tuple header fields</div>
+        <div class="arrow">→</div>
+        <div class="fbox hi">hash function</div>
+        <div class="arrow">→</div>
+        <div class="fbox">selects path N</div>
+        <div class="arrow">→</div>
+        <div class="fbox">consistent per flow</div>
+      </div>
+
+      <div class="note warn">Decisions are made locally — if a link fails, an upstream switch may still forward onto it until it learns of the failure. TCP handles recovery from dropped packets.</div>
+    </div>
+  </div>
+
+  <!-- 9. Congestion Control -->
+  <div class="section" id="congestion">
+    <div class="section-label"><span class="sec-num">09</span> Congestion Control — the problem</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#e87070"></span>Why standard TCP struggles in data centers</div>
+      <ul class="points">
+        <li><strong>Too aggressive:</strong> Standard TCP halves its window on any packet loss (multiplicative decrease). In a DC with tiny RTTs, this is a huge overreaction.</li>
+        <li><strong>False congestion signals:</strong> Switch buffers create queuing delay → inflated RTT → TCP thinks there's more congestion than there actually is.</li>
+        <li><strong>TCP Incast:</strong> A client queries many servers simultaneously; they all respond at the same time → switch port overloaded → buffer overflow → mass packet loss → all TCP connections back off and retransmit together → throughput collapses drastically.</li>
+      </ul>
+      <div class="sub-label">The buffer tradeoff</div>
+      <div class="grid2" style="margin-top:0">
+        <div class="note good" style="border-radius:6px;border-left-width:2px">Larger buffers → absorb bursts → higher throughput</div>
+        <div class="note warn" style="border-radius:6px;border-left-width:2px">Larger buffers → longer queuing delay → higher latency</div>
+      </div>
+      <p style="margin-top:.75rem;font-size:13.5px;color:#a0a0b0">You cannot have both. This tension motivates DCTCP.</p>
+    </div>
+  </div>
+
+  <!-- 10. DCTCP -->
+  <div class="section" id="dctcp">
+    <div class="section-label"><span class="sec-num">10</span> DCTCP — Data Center TCP</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#7c6df5"></span>React to congestion early and proportionally using ECN</div>
+      <p>Instead of waiting for packet loss, use <strong>ECN (Explicit Congestion Notification)</strong> to signal congestion early — before the buffer is full.</p>
+
+      <div class="sub-label">How it works</div>
+      <div class="flow">
+        <div class="fbox">Buffer occupancy exceeds threshold K</div>
+        <div class="arrow">→</div>
+        <div class="fbox hi">Switch marks packets with CE (Congestion Experienced) bit</div>
+        <div class="arrow">→</div>
+        <div class="fbox">Receiver reflects marks in ACKs</div>
+        <div class="arrow">→</div>
+        <div class="fbox hi">Sender reduces window proportionally to fraction of marked ACKs</div>
+      </div>
+
+      <p style="margin-top:.75rem;font-size:14px;color:#b0b0be">Example: if 33% of ACKs are marked → reduce rate by ~33% (not the standard 50%). Gentler, more precise, keeps buffers small and latency low.</p>
+
+      <div class="sub-label">Limitations of DCTCP</div>
+      <ul class="points">
+        <li><strong>Not TCP-friendly:</strong> mixed with standard TCP, DCTCP loses bandwidth — they don't play well together.</li>
+        <li><strong>Still uses slow-start:</strong> the slow-start problem from regular TCP is not solved.</li>
+        <li><strong>No flow prioritization:</strong> DCTCP treats all flows equally — latency-sensitive short flows aren't prioritized over long bulk transfers.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 11. Summary table -->
+  <div class="section" id="summary">
+    <div class="section-label"><span class="sec-num">11</span> Quick reference — everything in one table</div>
+    <div class="card">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Technique</th>
+            <th>What problem it solves</th>
+            <th>Key mechanism</th>
+            <th>Limitation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>EtherChannel</td>
+            <td>STP blocks parallel links</td>
+            <td>Bundle cables → one logical PortChannel; STP sees one link</td>
+            <td>Both ends must be same switch (or StackWise/vPC)</td>
+          </tr>
+          <tr>
+            <td>NIC Teaming</td>
+            <td>Server single-link bottleneck</td>
+            <td>Same idea on the server side; multiple NICs → one logical NIC</td>
+            <td>Server doesn't run STP — uses 802.3ad directly</td>
+          </tr>
+          <tr>
+            <td>StackWise</td>
+            <td>EtherChannel limited to one switch</td>
+            <td>Physically stack switches; they share one identity</td>
+            <td>Physical co-location required; limited scale</td>
+          </tr>
+          <tr>
+            <td>vPC</td>
+            <td>Same as StackWise without physical stacking</td>
+            <td>Two Nexus switches act as one logical switch via peer-link</td>
+            <td>Topology limited to device pairs</td>
+          </tr>
+          <tr>
+            <td>TRILL</td>
+            <td>STP blocking all but one path</td>
+            <td>IS-IS routing at L2; RBridges; ECMP; TTL-based loop prevention</td>
+            <td>Needs separate protocol for host location learning</td>
+          </tr>
+          <tr>
+            <td>FabricPath</td>
+            <td>Same as TRILL (Cisco-only)</td>
+            <td>IS-IS + Switch ID forwarding; conversational MAC learning</td>
+            <td>Not interoperable with TRILL; limited hardware support</td>
+          </tr>
+          <tr>
+            <td>OSPF</td>
+            <td>Need routing-like L2/L3 multipathing</td>
+            <td>Layer 3 link-state with ECMP; well-established</td>
+            <td>Requires IP config; more broadcast overhead at scale</td>
+          </tr>
+          <tr>
+            <td>BGP</td>
+            <td>Massive DC scale routing</td>
+            <td>Divide into ASes; BGP between them</td>
+            <td>Complex configuration</td>
+          </tr>
+          <tr>
+            <td>ECMP</td>
+            <td>Underutilized parallel paths</td>
+            <td>Hash 5-tuple → select path; per-flow not per-packet</td>
+            <td>Local decisions; may route to failed links temporarily</td>
+          </tr>
+          <tr>
+            <td>DCTCP</td>
+            <td>TCP incast; aggressive backoff; high latency</td>
+            <td>ECN marks → proportional window reduction; keep buffers small</td>
+            <td>Not TCP-friendly; no slow-start fix; no flow priority</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>NIT452 · L2 Routing &amp; Congestion Control · Exam Review Sheet &nbsp;·&nbsp; All content from lecture slides by Shaimaa M. Mohamed</footer>
+
+</div>
+</body>
+</html>
