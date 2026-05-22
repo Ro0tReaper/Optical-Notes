@@ -1,100 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Optical Notes</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Optical Notes</title>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: #f8fafc;
-      padding: 40px;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-      font-size: 3rem;
-    }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
 
-    p {
-      text-align: center;
-      color: #94a3b8;
-      margin-bottom: 40px;
-    }
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            margin-bottom: 40px;
+        }
 
-    .card {
-      background: #1e293b;
-      border-radius: 16px;
-      padding: 20px;
-      transition: 0.2s ease;
-      border: 1px solid #334155;
-    }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
 
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: #60a5fa;
-    }
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 18px;
+            padding: 22px;
+            transition: 0.25s ease;
+        }
 
-    .card a {
-      text-decoration: none;
-      color: #f8fafc;
-      font-size: 1.1rem;
-      font-weight: bold;
-    }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #60a5fa;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
 
-    .card span {
-      display: block;
-      margin-top: 10px;
-      color: #94a3b8;
-      font-size: 0.9rem;
-    }
-  </style>
+        .card a {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <h1>Optical Notes</h1>
-  <p>Quick access to all summary pages</p>
+    <div class="container">
 
-  <div class="grid">
+        <h1>Optical Notes</h1>
+        <p class="subtitle">
+            Centralized access to all networking and optical summaries
+        </p>
 
-    <div class="card">
-      <a href="./SUMMARY1.html">SUMMARY1</a>
-      <span>Open notes</span>
+        <div class="grid">
+
+            <div class="card">
+                <a href="4_5796473135238749872.html">
+                    FC - IP SAN Summary
+                </a>
+                <p>
+                    Fibre Channel over IP SAN study summary and notes.
+                </p>
+            </div>
+
+            <div class="card">
+                <a href="CloudNetworking_StudyGuide.html">
+                    Cloud Networking Study Guide
+                </a>
+                <p>
+                    Comprehensive cloud networking review and architecture notes.
+                </p>
+            </div>
+
+            <div class="card">
+                <a href="FCoE_StudyGuide.html">
+                    FCoE Study Guide
+                </a>
+                <p>
+                    Fibre Channel over Ethernet concepts and SAN integration.
+                </p>
+            </div>
+
+            <div class="card">
+                <a href="NWVT.html">
+                    NWVT
+                </a>
+                <p>
+                    Networking and virtualization technology notes.
+                </p>
+            </div>
+
+            <div class="card">
+                <a href="bc.html">
+                    BC Summary
+                </a>
+                <p>
+                    Additional networking and systems review notes.
+                </p>
+            </div>
+
+            <div class="card">
+                <a href="controlLayer.html">
+                    Control Layer
+                </a>
+                <p>
+                    Control Layer exam review and architecture concepts.
+                </p>
+            </div>
+
+            <div class="card">
+                <a href="l2.html">
+                    L2 Routing & Congestion Control
+                </a>
+                <p>
+                    Layer 2 routing, switching, and congestion control review.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            Optical Notes Repository • HTML Summary Index
+        </div>
+
     </div>
-
-    <div class="card">
-      <a href="./SUMMARY2.html">SUMMARY2</a>
-      <span>Open notes</span>
-    </div>
-
-    <div class="card">
-      <a href="./NETWORKING.html">NETWORKING</a>
-      <span>Open notes</span>
-    </div>
-
-    <div class="card">
-      <a href="./SECURITY.html">SECURITY</a>
-      <span>Open notes</span>
-    </div>
-
-  </div>
 
 </body>
 </html>
