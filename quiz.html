@@ -1,520 +1,1361 @@
-# Quiz.html
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Optical Notes Quiz Portal</title>
-
+<title>Complete Quiz - Optical Notes Study Guide</title>
 <style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #222635;
+  --border: #2e3347;
+  --accent: #6c8ef7;
+  --accent2: #a78bfa;
+  --accent3: #34d399;
+  --accent4: #f59e0b;
+  --accent5: #f472b6;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --correct: #22c55e;
+  --incorrect: #ef4444;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-    font-family: Arial, sans-serif;
-    background: #0f172a;
-    color: white;
-    margin: 0;
-    padding: 20px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+}
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: 280px; height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  overflow-y: auto; padding: 20px 0;
+  z-index: 100;
+}
+.sidebar-logo {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+.sidebar-logo h2 { font-size: 14px; color: var(--accent); letter-spacing: .05em; text-transform: uppercase; }
+.sidebar-logo p { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.nav-section { padding: 6px 20px; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; margin-top: 12px; }
+.nav-link {
+  display: block; padding: 8px 20px; font-size: 13px;
+  color: var(--muted); text-decoration: none; cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all .15s;
+}
+.nav-link:hover, .nav-link.active { color: var(--text); background: var(--surface2); border-left-color: var(--accent); }
+.nav-score {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--accent3);
+  margin-left: 8px;
+}
+.main { margin-left: 280px; padding: 40px 48px; max-width: 1000px; }
+
+.page-header { margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.page-header h1 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.page-header p { color: var(--muted); margin-top: 6px; }
+
+.section { margin-bottom: 60px; }
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border);
+}
+.section-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.section-header h2 { font-size: 22px; font-weight: 700; }
+.section-header .score-display {
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--accent3);
+  font-weight: 600;
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 10px;
+.question-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.question-header {
+  background: var(--surface2);
+  padding: 14px 20px;
+  font-size: 13px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.question-type {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+.type-mcq { background: rgba(108,142,247,0.15); color: var(--accent); }
+.type-reasoning { background: rgba(167,139,250,0.15); color: var(--accent2); }
+
+.question-body { padding: 20px; }
+.question-text {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  line-height: 1.6;
 }
 
-.subtitle {
-    text-align: center;
-    color: #94a3b8;
-    margin-bottom: 40px;
+/* MCQ Options */
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--surface2);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .2s;
+  text-align: left;
+  width: 100%;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
 }
-
-.section {
-    background: #1e293b;
-    margin-bottom: 40px;
-    border-radius: 16px;
-    padding: 25px;
-    border: 1px solid #334155;
+.option-btn:hover:not(.disabled) { border-color: var(--accent); background: rgba(108,142,247,0.05); }
+.option-letter {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: all .2s;
 }
-
-.section h2 {
-    margin-bottom: 20px;
-    color: #60a5fa;
+.option-btn.correct {
+  border-color: var(--correct);
+  background: rgba(34,197,94,0.1);
 }
-
-.question {
-    margin-bottom: 25px;
-    background: #111827;
-    padding: 18px;
-    border-radius: 12px;
+.option-btn.correct .option-letter { background: var(--correct); color: #fff; }
+.option-btn.incorrect {
+  border-color: var(--incorrect);
+  background: rgba(239,68,68,0.1);
 }
+.option-btn.incorrect .option-letter { background: var(--incorrect); color: #fff; }
+.option-btn.disabled { cursor: default; opacity: 0.7; }
+.option-btn.correct.disabled, .option-btn.incorrect.disabled { opacity: 1; }
 
-.option {
-    display: block;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 8px;
-    background: #1f2937;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.option:hover {
-    background: #374151;
-}
-
-.correct {
-    background: #166534 !important;
-}
-
-.wrong {
-    background: #991b1b !important;
-}
-
+/* Explanation */
 .explanation {
-    margin-top: 10px;
-    color: #cbd5e1;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  display: none;
 }
-
-textarea {
-    width: 100%;
-    min-height: 120px;
-    margin-top: 10px;
-    border-radius: 8px;
-    border: none;
-    padding: 12px;
-    font-size: 15px;
+.explanation.show { display: block; }
+.explanation.correct-exp {
+  background: rgba(34,197,94,0.1);
+  border-left: 3px solid var(--correct);
+  color: #86efac;
 }
-
-button {
-    margin-top: 12px;
-    background: #2563eb;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    cursor: pointer;
+.explanation.incorrect-exp {
+  background: rgba(239,68,68,0.1);
+  border-left: 3px solid var(--incorrect);
+  color: #fca5a5;
 }
+.explanation strong { color: #fff; }
 
-.answer-box {
-    margin-top: 12px;
-    background: #0f172a;
-    padding: 12px;
-    border-radius: 8px;
-    display: none;
+/* Reasoning */
+.reasoning-answer {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  display: none;
+}
+.reasoning-answer.show { display: block; }
+.reasoning-answer strong { color: var(--accent3); }
+
+.submit-btn {
+  margin-top: 12px;
+  padding: 10px 24px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+.submit-btn:hover { background: #5a7de6; transform: translateY(-1px); }
+.submit-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+/* Results banner */
+.results-banner {
+  background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,197,94,0.05));
+  border: 1px solid rgba(34,197,94,0.3);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-top: 24px;
+  display: none;
+}
+.results-banner.show { display: block; }
+.results-banner h3 { color: var(--correct); margin-bottom: 8px; }
+.results-banner p { color: var(--muted); font-size: 14px; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 20px; }
 }
 </style>
 </head>
 <body>
 
-<h1>Optical Notes Mega Quiz</h1>
-<p class="subtitle">
-Covers all HTML summaries in the repository — MCQ + reasoning questions.
-</p>
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h2>Complete Quiz</h2>
+    <p>Optical Notes Study Guide</p>
+  </div>
 
-<div id="quizContainer"></div>
+  <div class="nav-section">FC-SAN & IP-SAN</div>
+  <a class="nav-link" onclick="scrollToSection('fcsan')">FC-SAN & IP-SAN<span class="nav-score" id="score-fcsan"></span></a>
 
-<script>
-const quizData = [
+  <div class="nav-section">Cloud Networking</div>
+  <a class="nav-link" onclick="scrollToSection('cloud')">Cloud Networking<span class="nav-score" id="score-cloud"></span></a>
 
-{
-    title: "Business Continuity (bc.html)",
-    questions: [
+  <div class="nav-section">NFV</div>
+  <a class="nav-link" onclick="scrollToSection('nfv')">Network Virtualization<span class="nav-score" id="score-nfv"></span></a>
 
-        {
-            type: "mcq",
-            q: "What is the main goal of Business Continuity?",
-            options: [
-                "Increase CPU speed",
-                "Ensure uninterrupted services",
-                "Reduce switch ports",
-                "Create VLANs"
-            ],
-            answer: 1,
-            explanation: "Business Continuity focuses on maintaining uninterrupted cloud and network services."
-        },
+  <div class="nav-section">Business Continuity</div>
+  <a class="nav-link" onclick="scrollToSection('bc')">Business Continuity<span class="nav-score" id="score-bc"></span></a>
 
-        {
-            type: "mcq",
-            q: "Which concept duplicates data to another site in real time?",
-            options: [
-                "Backup",
-                "Replication",
-                "QoS",
-                "EtherChannel"
-            ],
-            answer: 1,
-            explanation: "Replication continuously copies data for high availability."
-        },
+  <div class="nav-section">Control Layer</div>
+  <a class="nav-link" onclick="scrollToSection('control')">Control Layer<span class="nav-score" id="score-control"></span></a>
 
-        {
-            type: "mcq",
-            q: "What does RTO stand for?",
-            options: [
-                "Recovery Time Objective",
-                "Routing Transfer Operation",
-                "Real Time Optimization",
-                "Recovery Topology Order"
-            ],
-            answer: 0,
-            explanation: "RTO is the acceptable downtime duration after a failure."
-        },
+  <div class="nav-section">L2 Routing</div>
+  <a class="nav-link" onclick="scrollToSection('l2')">L2 & Congestion<span class="nav-score" id="score-l2"></span></a>
+</nav>
 
-        {
-            type: "reason",
-            q: "Explain the difference between backup and replication.",
-            answerText: "Backup stores point-in-time copies for recovery later, while replication continuously mirrors data for immediate failover and high availability."
-        },
+<main class="main">
+<div class="page-header">
+  <h1>📚 Complete Quiz — All Modules</h1>
+  <p>180 questions across 6 sections • 15 MCQ + 15 Reasoning per section</p>
+</div>
 
-        {
-            type: "reason",
-            q: "Why are resilient cloud applications important in Business Continuity?",
-            answerText: "They allow services to remain operational during failures through redundancy, failover, scaling, and automated recovery."
-        }
-    ]
-},
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: FC-SAN & IP-SAN -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="fcsan">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1e2a50;">🗄️</div>
+    <div><h2>FC-SAN & IP-SAN</h2></div>
+    <div class="score-display" id="display-fcsan">0/30</div>
+  </div>
 
-{
-    title: "Control Layer (controlLayer.html)",
-    questions: [
-        {
-            type: "mcq",
-            q: "What is the role of the Control Layer?",
-            options: [
-                "Directly storing files",
-                "Managing and provisioning resources",
-                "Replacing hypervisors",
-                "Encrypting VLANs"
-            ],
-            answer: 1,
-            explanation: "The Control Layer coordinates resource discovery, allocation, and provisioning."
-        },
+  <!-- MCQ 1 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q1</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is a Storage Area Network (SAN)?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 1, false)"><span class="option-letter">A</span><span>A file-based storage system using NAS protocols</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 1, true)"><span class="option-letter">B</span><span>A dedicated high-speed network connecting compute systems to storage for block-based access</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 1, false)"><span class="option-letter">C</span><span>A network protocol for internet connectivity</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 1, false)"><span class="option-letter">D</span><span>Direct-attached storage within a single server</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-1-correct"><strong>Correct!</strong> A SAN is a dedicated, high-speed network whose primary purpose is to connect compute systems to storage systems, providing block-based storage access. Unlike NAS (file-based), SAN enables multiple compute systems to share and access the same storage resources simultaneously.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-1-incorrect"><strong>Incorrect.</strong> A SAN is a dedicated, high-speed network whose primary purpose is to connect compute systems to storage systems, providing block-based storage access. Unlike NAS (file-based), SAN enables multiple compute systems to share and access the same storage resources simultaneously.</div>
+    </div>
+  </div>
 
-        {
-            type: "mcq",
-            q: "Which manager controls specific devices directly?",
-            options: [
-                "Unified Manager",
-                "Element Manager",
-                "Cloud Broker",
-                "Hypervisor"
-            ],
-            answer: 1,
-            explanation: "Element Managers manage individual devices and hardware."
-        },
+  <!-- MCQ 2 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q2</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What does SDN (Software-Defined Networking) separate?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 2, false)"><span class="option-letter">A</span><span>Data Plane from Physical Layer</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 2, true)"><span class="option-letter">B</span><span>Control Plane from Data Plane</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 2, false)"><span class="option-letter">C</span><span>Application Layer from Transport Layer</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 2, false)"><span class="option-letter">D</span><span>Network Layer from Data Link Layer</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-2-correct"><strong>Correct!</strong> SDN separates the Control Plane (the "brain" that decides routing rules) from the Data Plane (physically moves traffic). The control logic moves out of each switch into an external Network Controller, enabling centralized management and policy-based automation.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-2-incorrect"><strong>Incorrect.</strong> SDN separates the Control Plane (the "brain" that decides routing rules) from the Data Plane (physically moves traffic). The control logic moves out of each switch into an external Network Controller, enabling centralized management and policy-based automation.</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Explain resource provisioning in cloud environments.",
-            answerText: "Provisioning allocates compute, storage, and networking resources dynamically based on service templates and requests."
-        },
+  <!-- MCQ 3 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q3</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is the maximum distance for Single-Mode Fiber (SMF) in FC-SAN?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 3, false)"><span class="option-letter">A</span><span>30 meters</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 3, false)"><span class="option-letter">B</span><span>Hundreds of meters</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 3, true)"><span class="option-letter">C</span><span>Up to 10 km</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 3, false)"><span class="option-letter">D</span><span>100 km</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-3-correct"><strong>Correct!</strong> Single-Mode Fiber (SMF) sends a single ray of light through the center of a much smaller core, eliminating modal dispersion and allowing distances up to 10 km. This makes it ideal for long-distance runs between data centers.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-3-incorrect"><strong>Incorrect.</strong> Single-Mode Fiber (SMF) sends a single ray of light through the center of a much smaller core, eliminating modal dispersion and allowing distances up to 10 km. This makes it ideal for long-distance runs between data centers.</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Why is resource grading important?",
-            answerText: "It helps classify resources by performance and capability so workloads can be assigned efficiently."
-        }
-    ]
-},
+  <!-- MCQ 4 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q4</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is an N_Port in Fibre Channel?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 4, true)"><span class="option-letter">A</span><span>A Node Port on a compute system or storage system</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 4, false)"><span class="option-letter">B</span><span>A Fabric Port on the switch</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 4, false)"><span class="option-letter">C</span><span>An Expansion Port connecting switches</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 4, false)"><span class="option-letter">D</span><span>A Generic Port that auto-determines type</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-4-correct"><strong>Correct!</strong> N_Port (Node Port) is located on compute system HBAs or storage systems. It serves as the end point in the fabric where data originates or terminates. F_Port is on the switch side connecting to N_Ports, E_Port connects switches together.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-4-incorrect"><strong>Incorrect.</strong> N_Port (Node Port) is located on compute system HBAs or storage systems. It serves as the end point in the fabric where data originates or terminates. F_Port is on the switch side connecting to N_Ports, E_Port connects switches together.</div>
+    </div>
+  </div>
 
-{
-    title: "L2 Routing & Congestion Control (l2.html)",
-    questions: [
-        {
-            type: "mcq",
-            q: "Why is STP inefficient in modern data centers?",
-            options: [
-                "It blocks redundant links",
-                "It disables VLANs",
-                "It removes IP routing",
-                "It breaks TCP"
-            ],
-            answer: 0,
-            explanation: "STP wastes bandwidth by disabling redundant paths."
-        },
+  <!-- MCQ 5 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q5</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is the FC-4 layer responsible for?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 5, false)"><span class="option-letter">A</span><span>Physical cable transmission</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 5, false)"><span class="option-letter">B</span><span>8-bit to 10-bit encoding</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 5, true)"><span class="option-letter">C</span><span>Protocol Mappings (e.g., SCSI, IP, ATM)</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 5, false)"><span class="option-letter">D</span><span>Frame structure and addressing</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-5-correct"><strong>Correct!</strong> FC-4 is the Protocol Mappings layer (top layer). It maps Upper Layer Protocols (ULPs) to FC — including SCSI, IP, ATM, ESCON, and HIPPI. This is where SCSI commands live when transported over FC.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-5-incorrect"><strong>Incorrect.</strong> FC-4 is the Protocol Mappings layer (top layer). It maps Upper Layer Protocols (ULPs) to FC — including SCSI, IP, ATM, ESCON, and HIPPI. This is where SCSI commands live when transported over FC.</div>
+    </div>
+  </div>
 
-        {
-            type: "mcq",
-            q: "What does ECMP stand for?",
-            options: [
-                "Enhanced Control Management Protocol",
-                "Equal Cost Multi Path",
-                "Ethernet Congestion Multi Path",
-                "Encapsulation Core Mapping Protocol"
-            ],
-            answer: 1,
-            explanation: "ECMP balances traffic across multiple equal-cost routes."
-        },
+  <!-- MCQ 6 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q6</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is the maximum number of node ports in an FC fabric?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 6, false)"><span class="option-letter">A</span><span>256</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 6, false)"><span class="option-letter">B</span><span>65,536</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 6, true)"><span class="option-letter">C</span><span>15,663,104</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 6, false)"><span class="option-letter">D</span><span>~15 million (theoretical max)</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-6-correct"><strong>Correct!</strong> Max FC fabric size = 239 usable Domain IDs × 256 Area IDs × 256 Port IDs = 15,663,104 node ports. Some Domain IDs are reserved for fabric services (FFFFFA-FFFFFE).</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-6-incorrect"><strong>Incorrect.</strong> Max FC fabric size = 239 usable Domain IDs × 256 Area IDs × 256 Port IDs = 15,663,104 node ports. Some Domain IDs are reserved for fabric services (FFFFFA-FFFFFE).</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Explain how DCTCP improves congestion handling.",
-            answerText: "DCTCP reacts early to congestion using ECN markings, reducing queue buildup and latency."
-        },
+  <!-- MCQ 7 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q7</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is BB_Credit used for in Fibre Channel?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 7, false)"><span class="option-letter">A</span><span>Authentication between nodes</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 7, true)"><span class="option-letter">B</span><span>Flow control to prevent buffer overflow</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 7, false)"><span class="option-letter">C</span><span>Error detection in frames</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 7, false)"><span class="option-letter">D</span><span>Address assignment during FLOGI</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-7-correct"><strong>Correct!</strong> BB_Credit (Buffer-to-Buffer Credit) is FC's flow control mechanism. It ensures a transmitter never sends more frames than the receiver has buffer space for. When credit reaches 0, transmission pauses until R_RDY is received, preventing frame drops.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-7-incorrect"><strong>Incorrect.</strong> BB_Credit (Buffer-to-Buffer Credit) is FC's flow control mechanism. It ensures a transmitter never sends more frames than the receiver has buffer space for. When credit reaches 0, transmission pauses until R_RDY is received, preventing frame drops.</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Why are technologies like TRILL and FabricPath preferred over STP?",
-            answerText: "They support active multipathing and better bandwidth utilization without blocking redundant links."
-        }
-    ]
-},
+  <!-- MCQ 8 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q8</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">In Core-Edge topology, where should storage systems be connected?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 8, false)"><span class="option-letter">A</span><span>Edge switches only</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 8, true)"><span class="option-letter">B</span><span>Core directors</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 8, false)"><span class="option-letter">C</span><span>Both edge and core equally</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 8, false)"><span class="option-letter">D</span><span>Directly to servers without switches</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-8-correct"><strong>Correct!</strong> In Core-Edge topology, storage systems connect to the core tier (directors). This ensures compute-to-storage traffic crosses only 1 ISL (from edge to core) regardless of compute location, minimizing latency and ISL hops.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-8-incorrect"><strong>Incorrect.</strong> In Core-Edge topology, storage systems connect to the core tier (directors). This ensures compute-to-storage traffic crosses only 1 ISL (from edge to core) regardless of compute location, minimizing latency and ISL hops.</div>
+    </div>
+  </div>
 
-{
-    title: "FC-SAN & IP-SAN",
-    questions: [
-        {
-            type: "mcq",
-            q: "What does SAN stand for?",
-            options: [
-                "Storage Area Network",
-                "Service Access Node",
-                "Switch Array Network",
-                "Storage Access Node"
-            ],
-            answer: 0,
-            explanation: "SAN stands for Storage Area Network."
-        },
+  <!-- MCQ 9 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q9</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Which zoning type is most flexible when nodes move between switch ports?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 9, true)"><span class="option-letter">A</span><span>WWN Zoning</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 9, false)"><span class="option-letter">B</span><span>Port Zoning</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 9, false)"><span class="option-letter">C</span><span>Mixed Zoning</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 9, false)"><span class="option-letter">D</span><span>They are all equally flexible</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-9-correct"><strong>Correct!</strong> WWN Zoning is most flexible for node moves because WWN is tied to the hardware (not the port). When a node moves to a different switch port, the zone configuration needs no change — the WWN travels with the hardware.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-9-incorrect"><strong>Incorrect.</strong> WWN Zoning is most flexible for node moves because WWN is tied to the hardware (not the port). When a node moves to a different switch port, the zone configuration needs no change — the WWN travels with the hardware.</div>
+    </div>
+  </div>
 
-        {
-            type: "mcq",
-            q: "Which protocol is commonly used in IP SANs?",
-            options: [
-                "BGP",
-                "TRILL",
-                "iSCSI",
-                "STP"
-            ],
-            answer: 2,
-            explanation: "iSCSI transports SCSI commands over IP networks."
-        },
+  <!-- MCQ 10 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q10</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is the main purpose of iSCSI?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 10, false)"><span class="option-letter">A</span><span>Tunnel FC frames over IP</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 10, true)"><span class="option-letter">B</span><span>Transport SCSI commands over TCP/IP</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 10, false)"><span class="option-letter">C</span><span>Provide file-based storage access</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 10, false)"><span class="option-letter">D</span><span>Replace Ethernet with Fibre Channel</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-10-correct"><strong>Correct!</strong> iSCSI (Internet SCSI) encapsulates SCSI commands and data into TCP/IP packets and transports them over a standard IP network. It provides native IP-based block storage access, unlike FCIP which tunnels existing FC frames.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-10-incorrect"><strong>Incorrect.</strong> iSCSI (Internet SCSI) encapsulates SCSI commands and data into TCP/IP packets and transports them over a standard IP network. It provides native IP-based block storage access, unlike FCIP which tunnels existing FC frames.</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Explain the role of zoning in Fibre Channel SANs.",
-            answerText: "Zoning restricts device communication to improve security, traffic isolation, and management."
-        },
+  <!-- MCQ 11 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q11</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Which iSCSI initiator type has the lowest CPU load?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 11, false)"><span class="option-letter">A</span><span>Standard NIC with Software iSCSI</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 11, false)"><span class="option-letter">B</span><span>TOE NIC with Software iSCSI</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 11, true)"><span class="option-letter">C</span><span>iSCSI HBA</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 11, false)"><span class="option-letter">D</span><span>All have equal CPU load</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-11-correct"><strong>Correct!</strong> iSCSI HBA handles all TCP/IP processing AND iSCSI processing in dedicated hardware. The CPU handles nothing storage-related, resulting in the lowest CPU load. Standard NIC has highest (CPU does everything), TOE is medium (TCP offloaded).</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-11-incorrect"><strong>Incorrect.</strong> iSCSI HBA handles all TCP/IP processing AND iSCSI processing in dedicated hardware. The CPU handles nothing storage-related, resulting in the lowest CPU load. Standard NIC has highest (CPU does everything), TOE is medium (TCP offloaded).</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Why is flow control important in FC networks?",
-            answerText: "It prevents frame loss by ensuring buffers are available before transmitting data."
-        }
-    ]
-},
+  <!-- MCQ 12 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q12</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is the iSCSI equivalent of the FC Name Server?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 12, false)"><span class="option-letter">A</span><span>SendTargets</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 12, true)"><span class="option-letter">B</span><span>iSNS (Internet Storage Name Service)</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 12, false)"><span class="option-letter">C</span><span>IQN (iSCSI Qualified Name)</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 12, false)"><span class="option-letter">D</span><span>TCP Port 4789</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-12-correct"><strong>Correct!</strong> iSNS (Internet Storage Name Service) is the iSCSI equivalent of the FC Name Server. Both are discovery services that register devices and allow initiators to find available targets. SendTargets is manual configuration, not automatic discovery.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-12-incorrect"><strong>Incorrect.</strong> iSNS (Internet Storage Name Service) is the iSCSI equivalent of the FC Name Server. Both are discovery services that register devices and allow initiators to find available targets. SendTargets is manual configuration, not automatic discovery.</div>
+    </div>
+  </div>
 
-{
-    title: "Cloud Networking",
-    questions: [
-        {
-            type: "mcq",
-            q: "What is east-west traffic?",
-            options: [
-                "Traffic leaving the data center",
-                "Traffic between internal servers",
-                "Traffic to the ISP",
-                "Traffic between routers only"
-            ],
-            answer: 1,
-            explanation: "East-west traffic occurs between servers inside the data center."
-        },
+  <!-- MCQ 13 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q13</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is FCIP primarily used for?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 13, false)"><span class="option-letter">A</span><span>Native IP storage access for servers</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 13, true)"><span class="option-letter">B</span><span>Connecting geographically separated FC SANs</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 13, false)"><span class="option-letter">C</span><span>Replacing FC HBAs with NICs</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 13, false)"><span class="option-letter">D</span><span>File-level storage replication</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-13-correct"><strong>Correct!</strong> FCIP (Fibre Channel over IP) is a tunneling protocol that encapsulates entire FC frames inside IP packets to connect geographically separated FC SANs over an existing IP network. Primary use case is disaster recovery and long-distance data sharing.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-13-incorrect"><strong>Incorrect.</strong> FCIP (Fibre Channel over IP) is a tunneling protocol that encapsulates entire FC frames inside IP packets to connect geographically separated FC SANs over an existing IP network. Primary use case is disaster recovery and long-distance data sharing.</div>
+    </div>
+  </div>
 
-        {
-            type: "mcq",
-            q: "What is the purpose of ToR switching?",
-            options: [
-                "Provide routing to ISPs",
-                "Reduce cabling complexity per rack",
-                "Replace hypervisors",
-                "Create WAN links"
-            ],
-            answer: 1,
-            explanation: "Top-of-Rack switches simplify rack connectivity and reduce cable lengths."
-        },
+  <!-- MCQ 14 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q14</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">In FCIP, what is the difference between Merged Fabric and FC-FC Routing?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 14, false)"><span class="option-letter">A</span><span>Merged uses EX_Port, FC-FC uses VE_Port</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 14, false)"><span class="option-letter">B</span><span>They are the same thing</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 14, true)"><span class="option-letter">C</span><span>Merged joins fabrics into one; FC-FC keeps them separate with selective routing</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 14, false)"><span class="option-letter">D</span><span>FC-FC is faster than Merged</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-14-correct"><strong>Correct!</strong> Merged Fabric: two FC SANs become ONE logical fabric, fabric services shared via VE_Ports. FC-FC Routing (Non-Merged): fabrics stay separate, only selected nodes communicate via EX_Ports which don't propagate fabric services between fabrics.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-14-incorrect"><strong>Incorrect.</strong> Merged Fabric: two FC SANs become ONE logical fabric, fabric services shared via VE_Ports. FC-FC Routing (Non-Merged): fabrics stay separate, only selected nodes communicate via EX_Ports which don't propagate fabric services between fabrics.</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Explain TCP incast in cloud networking.",
-            answerText: "TCP incast happens when many servers simultaneously send traffic to one receiver, causing congestion and packet loss."
-        },
+  <!-- MCQ 15 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q15</span>
+      <span class="question-type type-mcq">MCQ</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is the FC address of the Name Server?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 15, true)"><span class="option-letter">A</span><span>FFFFFC</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 15, false)"><span class="option-letter">B</span><span>FFFFFD</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 15, false)"><span class="option-letter">C</span><span>FFFFFE</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'fcsan', 15, false)"><span class="option-letter">D</span><span>FFFFFA</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-fcsan-15-correct"><strong>Correct!</strong> FFFFFC = Name Server (registers ports, maps WWN ↔ FC address). FFFFFD = Fabric Controller (distributes RSCNs). FFFFFE = Fabric Login Server (assigns FC addresses during FLOGI). FFFFFA = Management Server.</div>
+      <div class="explanation incorrect-exp" id="exp-fcsan-15-incorrect"><strong>Incorrect.</strong> FFFFFC = Name Server (registers ports, maps WWN ↔ FC address). FFFFFD = Fabric Controller (distributes RSCNs). FFFFFE = Fabric Login Server (assigns FC addresses during FLOGI). FFFFFA = Management Server.</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Why are Clos topologies preferred in modern data centers?",
-            answerText: "Clos fabrics provide scalable bandwidth, redundancy, and predictable latency using multipath designs."
-        }
-    ]
-},
+  <!-- Reasoning 1-15 -->
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q16</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Explain the difference between a WWN and an FC address, including why both are needed.</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 16)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-16"><strong>Answer:</strong> WWN (World Wide Name) is a static, permanent 64-bit identifier burned into hardware (like a MAC address). It identifies the adapter (WWNN) or each port on that adapter (WWPN). FC address is a dynamic 24-bit address assigned when a node logs into the fabric via FLOGI. Both are needed because: WWN provides permanent identity for zoning and LUN masking (survives fabric changes), while FC address enables efficient routing within the fabric (changes based on where the node connects). The Name Server maintains the live mapping between WWN and FC address.</div>
+    </div>
+  </div>
 
-{
-    title: "FCoE",
-    questions: [
-        {
-            type: "mcq",
-            q: "What does FCoE stand for?",
-            options: [
-                "Fibre Channel over Ethernet",
-                "Fast Channel over Ethernet",
-                "Frame Control over Ethernet",
-                "Fabric Core over Ethernet"
-            ],
-            answer: 0,
-            explanation: "FCoE encapsulates Fibre Channel frames over Ethernet."
-        },
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q17</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">A dual-port FC HBA has how many WWNNs and WWPNs? Explain why.</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 17)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-17"><strong>Answer:</strong> A dual-port FC HBA has 1 WWNN (World Wide Node Name) and 2 WWPNs (World Wide Port Names). The WWNN identifies the adapter card itself (one physical piece of hardware). Each port on that adapter gets its own WWPN because each port is a separate communication endpoint that may connect to different fabrics or switches.</div>
+    </div>
+  </div>
 
-        {
-            type: "mcq",
-            q: "Which technology prevents packet loss in FCoE networks?",
-            options: [
-                "PFC",
-                "STP",
-                "OSPF",
-                "NAT"
-            ],
-            answer: 0,
-            explanation: "Priority Flow Control enables lossless Ethernet transport."
-        },
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q18</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Why does multimode fiber have shorter distance limitations than single-mode fiber?</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 18)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-18"><strong>Answer:</strong> Multimode fiber (MMF) sends multiple light beams at different angles through the core. These beams travel different path lengths and arrive at slightly different times — a phenomenon called modal dispersion. The overlapping and collision of beams weakens the signal over distance. Single-mode fiber (SMF) sends a single ray of light through the center of a much smaller core, eliminating modal dispersion and allowing distances up to 10 km.</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Explain the role of DCBX in FCoE.",
-            answerText: "DCBX exchanges Data Center Bridging configuration parameters between devices automatically."
-        },
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q19</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Describe the complete login sequence when a compute system connects to an FC SAN.</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 19)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-19"><strong>Answer:</strong> The sequence is: (1) FLOGI — node sends Fabric Login to FFFFFE with its WWNN and WWPN, receives FC address back. (2) Node registers with Name Server (FFFFFC). (3) Node queries Name Server for available targets. (4) PLOGI — node establishes session with a specific target, exchanging service parameters. (5) PRLI — FC-4 protocol-level login where nodes exchange SCSI-specific parameters. After PRLI completes, I/O can begin.</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Why is lossless Ethernet necessary for FCoE?",
-            answerText: "Fibre Channel protocols expect zero frame loss, so Ethernet must provide reliable delivery."
-        }
-    ]
-},
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q20</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Explain the purpose of RSCNs and how zoning reduces their impact in large fabrics.</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 20)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-20"><strong>Answer:</strong> RSCNs (Registered State Change Notifications) are sent by the Fabric Controller when something changes in the name server database (e.g., a node joins or leaves). Without zoning, RSCNs go to every single node in the fabric — generating massive unnecessary management traffic in large fabrics. With zoning, RSCNs only go to nodes within the affected zone, significantly reducing management traffic. This is one of the key reasons zoning is essential in large FC fabrics.</div>
+    </div>
+  </div>
 
-{
-    title: "NFV / NWVT",
-    questions: [
-        {
-            type: "mcq",
-            q: "What is NFV?",
-            options: [
-                "Network Function Virtualization",
-                "Node Fabric Virtualization",
-                "New Frame VLAN",
-                "Network Fabric Validation"
-            ],
-            answer: 0,
-            explanation: "NFV virtualizes network services previously tied to hardware appliances."
-        },
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q21</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is link aggregation and how does it improve upon traditional ISL handling?</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 21)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-21"><strong>Answer:</strong> Link aggregation bundles two or more parallel ISLs into a single logical port-channel. Without link aggregation, traffic is assigned to ISLs in round-robin, causing some ISLs to become overloaded while others sit idle. With link aggregation, traffic for any node pair distributes across all ISLs in the port-channel, ensuring even utilization. Example: 10 ISLs × 16 Gb/s each = 160 Gb/s port-channel throughput with balanced load.</div>
+    </div>
+  </div>
 
-        {
-            type: "mcq",
-            q: "What is Open vSwitch mainly used for?",
-            options: [
-                "Wireless routing",
-                "Virtual switching",
-                "Storage replication",
-                "SAN zoning"
-            ],
-            answer: 1,
-            explanation: "Open vSwitch is a software-based virtual switch for virtualized environments."
-        },
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q22</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Compare the three FC interconnectivity options (Point-to-Point, FC-AL, FC-SW) in terms of scalability and performance.</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 22)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-22"><strong>Answer:</strong> Point-to-Point: Dedicated connection between two nodes only. Simple but no scalability — limited to DAS-like use. FC-AL (Arbitrated Loop): Devices share a loop, must arbitrate for access, only one transmits at a time. No switch needed but low performance, and adding/removing devices causes loop re-initialization (brief traffic pause). FC-SW (Switched Fabric): Nodes connect through switches with dedicated paths. Highest performance, highest scalability, adding/removing nodes minimally disruptive. Cost is switches required.</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Explain the benefit of virtual network functions.",
-            answerText: "VNFs reduce dependency on dedicated hardware and improve scalability, flexibility, and automation."
-        },
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q23</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Explain what happens during BB_Credit flow control when credit reaches zero.</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 23)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-23"><strong>Answer:</strong> During port login, transmitter and receiver agree on a credit count (number of receive buffers). Each time a frame is sent, credit decrements by 1. When the receiver processes a frame and frees a buffer, it sends R_RDY back, incrementing the sender's credit by 1. If credit reaches 0, transmission is suspended — the sender cannot send more frames until R_RDY is received. This prevents frames from being dropped due to buffer overflow, making FC deterministic and reliable for storage traffic without requiring TCP-style retransmission.</div>
+    </div>
+  </div>
 
-        {
-            type: "reason",
-            q: "Why are VLANs important in virtualization?",
-            answerText: "VLANs isolate traffic and separate tenants or services securely within shared infrastructure."
-        }
-    ]
-}
-];
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q24</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is bridged iSCSI and when would you use it?</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 24)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-24"><strong>Answer:</strong> Bridged iSCSI is used when compute systems are on an IP network but storage systems are on an FC SAN (without native iSCSI ports). A gateway device with both Ethernet and FC ports bridges the two worlds. The initiator targets the gateway's IP address, and the gateway converts IP packets ↔ FC frames. The gateway acts as an FC initiator toward the storage system. Use it when you have existing FC storage that needs to serve IP-based clients without replacing the storage system.</div>
+    </div>
+  </div>
 
-const container = document.getElementById('quizContainer');
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q25</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Explain the three parts of an IQN (iSCSI Qualified Name) format.</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 25)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-25"><strong>Answer:</strong> IQN format: iqn.YYYY-MM.reverse-domain:optional_string. The three parts are: (1) "iqn." prefix — identifies this as an IQN format name. (2) Date (year-month) — prevents conflicts when domain ownership changes hands; based on when the domain was registered. (3) Reversed registered domain name — ensures global uniqueness, followed by an optional string (serial number, asset tag, etc.) for additional uniqueness within the organization. Example: iqn.2015-04.com.example:server01.</div>
+    </div>
+  </div>
 
-quizData.forEach(section => {
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q26</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Why does FCIP potentially cause IP packet fragmentation, and how is this handled?</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 26)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-26"><strong>Answer:</strong> FC frames can be large (up to 2,112 bytes payload). When encapsulated inside an IP packet with additional headers, the resulting packet may exceed the MTU (Maximum Transmission Unit) of the underlying data link (typically 1500 bytes for Ethernet). This causes IP packet fragmentation into smaller pieces. TCP handles receiving and re-sequencing these fragments before passing the reconstructed data to the FC processing layer. This fragmentation is a known overhead of FCIP.</div>
+    </div>
+  </div>
 
-    const div = document.createElement('div');
-    div.className = 'section';
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q27</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Compare the advantages of Port Zoning versus WWN Zoning when an HBA fails and is replaced.</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 27)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-27"><strong>Answer:</strong> When an HBA fails and is replaced: Port Zoning requires no reconfiguration because the zone is based on the switch port ID, which stays the same. The new HBA simply plugs into the same port and inherits the existing zone membership. WWN Zoning requires updating the zone configuration because the new HBA has a different WWN than the failed one. The old WWN must be removed and the new WWN added to the zone. This is why some environments prefer Port Zoning for operational simplicity in hardware replacement scenarios.</div>
+    </div>
+  </div>
 
-    let html = `<h2>${section.title}</h2>`;
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q28</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">What is the structure of an FC frame, and what is the purpose of the CRC field?</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 28)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-28"><strong>Answer:</strong> An FC frame consists of 5 parts: SOF (Start of Frame delimiter), Frame Header (24 bytes containing addressing info like source/destination/sequence ID), Data Field (up to 2,112 bytes of actual payload, usually SCSI data), CRC (Cyclic Redundancy Check), and EOF (End of Frame delimiter). The CRC is calculated by the sender before FC-1 encoding and verified by the receiver after decoding. Its purpose is error detection — ensuring the frame arrived intact without corruption during transmission.</div>
+    </div>
+  </div>
 
-    section.questions.forEach((q, index) => {
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q29</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Explain the relationship between Exchange, Sequence, and Frame in FC data transport.</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 29)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-29"><strong>Answer:</strong> These form a hierarchical structure: An Exchange is a complete operation between two ports (e.g., a full read or write I/O). Each Exchange is composed of one or more Sequences. A Sequence is a contiguous set of frames from one port to another, corresponding to one Information Unit (IU) as defined by the Upper Layer Protocol. Each Sequence is composed of one or more Frames, which are the fundamental unit of data transfer at FC-2. Think of it as: Frame = single word, Sequence = sentence, Exchange = full conversation.</div>
+    </div>
+  </div>
 
-        if(q.type === 'mcq') {
+  <div class="question-card">
+    <div class="question-header">
+      <span>Q30</span>
+      <span class="question-type type-reasoning">Reasoning</span>
+    </div>
+    <div class="question-body">
+      <div class="question-text">Compare FC-SAN, iSCSI, and FCIP in terms of transport protocol, distance limitation, and primary use case.</div>
+      <button class="submit-btn" onclick="showReasoning('fcsan', 30)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-fcsan-30"><strong>Answer:</strong> FC-SAN: Transport = Fibre Channel (FCP). Distance = Limited (~10 km max with SMF). Use = Primary SAN fabric within data centers. iSCSI: Transport = TCP/IP over Ethernet. Distance = None (IP has no inherent limit). Use = IP-based block storage access, replacing or supplementing FC. FCIP: Transport = FC frames tunneled over TCP/IP. Distance = None (IP). Use = Connecting distant FC SANs over IP for disaster recovery and data replication. FCIP doesn't replace FC — it extends it over IP networks.</div>
+    </div>
+  </div>
 
-            html += `
-            <div class="question">
-                <h3>Q${index+1}. ${q.q}</h3>
-            `;
+  <div class="results-banner" id="results-fcsan">
+    <h3>✅ Section Complete: FC-SAN & IP-SAN</h3>
+    <p id="results-text-fcsan"></p>
+  </div>
+</div>
 
-            q.options.forEach((opt, i) => {
-                html += `
-                    <div class="option" onclick="checkAnswer(this, ${i}, ${q.answer}, '${q.explanation.replace(/'/g, "\\'")}')">
-                        ${String.fromCharCode(65+i)}. ${opt}
-                    </div>
-                `;
-            });
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: CLOUD NETWORKING -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="cloud">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0e2020;">☁️</div>
+    <div><h2>Cloud Networking</h2></div>
+    <div class="score-display" id="display-cloud">0/30</div>
+  </div>
 
-            html += `
-                <div class="explanation"></div>
-            </div>
-            `;
+  <!-- MCQ 1-15 -->
+  <div class="question-card">
+    <div class="question-header"><span>Q1</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the scatter-gather traffic pattern?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 1, false)"><span class="option-letter">A</span><span>Sequential processing of requests</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 1, true)"><span class="option-letter">B</span><span>Fanning out one request to many servers, then gathering results back</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 1, false)"><span class="option-letter">C</span><span>Load balancing across servers</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 1, false)"><span class="option-letter">D</span><span>Backing up data across locations</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-1-correct"><strong>Correct!</strong> Scatter-gather is the pattern where one request is fanned out (scattered) to many servers simultaneously, each processes a portion in parallel, then all send results back to the originator (gathered). It dominates cloud workloads like search, recommendation, and distributed computation.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-1-incorrect"><strong>Incorrect.</strong> Scatter-gather is the pattern where one request is fanned out (scattered) to many servers simultaneously, each processes a portion in parallel, then all send results back to the originator (gathered). It dominates cloud workloads like search, recommendation, and distributed computation.</div>
+    </div>
+  </div>
 
-        } else {
+  <div class="question-card">
+    <div class="question-header"><span>Q2</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">According to Facebook data, what percentage of traffic stays within one data center?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 2, false)"><span class="option-letter">A</span><span>57.5%</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 2, false)"><span class="option-letter">B</span><span>76%</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 2, true)"><span class="option-letter">C</span><span>82.3%</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 2, false)"><span class="option-letter">D</span><span>17.7%</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-2-correct"><strong>Correct!</strong> 82.3% of traffic stays within one data center (12.9% same rack + 57.5% same cluster + 11.9% same DC but different clusters). Only 17.7% goes between data centers. This proves internal network design is more important than inter-DC connectivity.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-2-incorrect"><strong>Incorrect.</strong> 82.3% of traffic stays within one data center (12.9% same rack + 57.5% same cluster + 11.9% same DC but different clusters). Only 17.7% goes between data centers. This proves internal network design is more important than inter-DC connectivity.</div>
+    </div>
+  </div>
 
-            html += `
-            <div class="question">
-                <h3>Q${index+1}. ${q.q}</h3>
-                <textarea placeholder="Write your answer here..."></textarea>
-                <br>
-                <button onclick="revealAnswer(this)">Reveal Answer</button>
-                <div class="answer-box">${q.answerText}</div>
-            </div>
-            `;
-        }
+  <div class="question-card">
+    <div class="question-header"><span>Q3</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is TCP incast?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 3, false)"><span class="option-letter">A</span><span>A new TCP protocol for data centers</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 3, true)"><span class="option-letter">B</span><span>Performance collapse when many servers respond simultaneously to one receiver</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 3, false)"><span class="option-letter">C</span><span>TCP optimization for long-distance links</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 3, false)"><span class="option-letter">D</span><span>Congestion control for multicast traffic</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-3-correct"><strong>Correct!</strong> TCP incast occurs in scatter-gather when many servers respond simultaneously to one receiver. All these flows converge on the same switch port, overwhelming its buffer and causing packet drops. This triggers TCP timeout/retransmit storms, causing throughput to collapse dramatically.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-3-incorrect"><strong>Incorrect.</strong> TCP incast occurs in scatter-gather when many servers respond simultaneously to one receiver. All these flows converge on the same switch port, overwhelming its buffer and causing packet drops. This triggers TCP timeout/retransmit storms, causing throughput to collapse dramatically.</div>
+    </div>
+  </div>
 
-    });
+  <div class="question-card">
+    <div class="question-header"><span>Q4</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the main advantage of ToR (Top of Rack) over EoR (End of Row)?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 4, false)"><span class="option-letter">A</span><span>Fewer switches to manage</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 4, true)"><span class="option-letter">B</span><span>Copper stays in-rack (short cables), better east-west support</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 4, false)"><span class="option-letter">C</span><span>Lower switch costs</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 4, false)"><span class="option-letter">D</span><span>Fewer STP instances</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-4-correct"><strong>Correct!</strong> ToR advantages: copper stays in-rack (1-3m short cables), lower cabling costs, cleaner management, modular per-rack architecture, excellent east-west traffic support, easier per-rack speed migration (1G→10G), easier troubleshooting. Disadvantages include more switches to manage and higher aggregate switch costs.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-4-incorrect"><strong>Incorrect.</strong> ToR advantages: copper stays in-rack (1-3m short cables), lower cabling costs, cleaner management, modular per-rack architecture, excellent east-west traffic support, easier per-rack speed migration (1G→10G), easier troubleshooting. Disadvantages include more switches to manage and higher aggregate switch costs.</div>
+    </div>
+  </div>
 
-    div.innerHTML = html;
-    container.appendChild(div);
-});
+  <div class="question-card">
+    <div class="question-header"><span>Q5</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What problem does a Clos (Fat-Tree) network solve?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 5, true)"><span class="option-letter">B</span><span>Single bottleneck, single point of failure, and N² cost scaling</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 5, false)"><span class="option-letter">A</span><span>Security isolation between tenants</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 5, false)"><span class="option-letter">C</span><span>Power consumption in data centers</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 5, false)"><span class="option-letter">D</span><span>Storage I/O bottlenecks</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-5-correct"><strong>Correct!</strong> Clos networks solve three problems: (1) No bottleneck — multiple equal-cost paths via ECMP spread load across all core switches. (2) No single point of failure — losing one core switch just reduces bandwidth, others continue. (3) Cost-effective — uses many small commodity switches instead of one expensive behemoth; cost scales linearly, not quadratically.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-5-incorrect"><strong>Incorrect.</strong> Clos networks solve three problems: (1) No bottleneck — multiple equal-cost paths via ECMP spread load across all core switches. (2) No single point of failure — losing one core switch just reduces bandwidth, others continue. (3) Cost-effective — uses many small commodity switches instead of one expensive behemoth; cost scales linearly, not quadratically.</div>
+    </div>
+  </div>
 
-function checkAnswer(element, selected, correct, explanation) {
+  <div class="question-card">
+    <div class="question-header"><span>Q6</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the difference between North-South and East-West traffic?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 6, true)"><span class="option-letter">A</span><span>North-South: DC to outside world; East-West: server-to-server within DC</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 6, false)"><span class="option-letter">B</span><span>North-South: within same rack; East-West: across racks</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 6, false)"><span class="option-letter">C</span><span>North-South: database traffic; East-West: web traffic</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 6, false)"><span class="option-letter">D</span><span>They are the same thing</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-6-correct"><strong>Correct!</strong> North-South traffic flows between the data center and the outside world (user requests in, responses out). East-West traffic flows between servers within the data center (server-to-server communication). In cloud DCs, east-west dominates (~80%), which is why traditional north-south optimized networks needed redesign.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-6-incorrect"><strong>Incorrect.</strong> North-South traffic flows between the data center and the outside world (user requests in, responses out). East-West traffic flows between servers within the data center (server-to-server communication). In cloud DCs, east-west dominates (~80%), which is why traditional north-south optimized networks needed redesign.</div>
+    </div>
+  </div>
 
-    const parent = element.parentElement;
-    const options = parent.querySelectorAll('.option');
-    const exp = parent.querySelector('.explanation');
+  <div class="question-card">
+    <div class="question-header"><span>Q7</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is a Fabric Extender (FEX)?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 7, false)"><span class="option-letter">A</span><span>A full switch at the top of each rack</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 7, true)"><span class="option-letter">B</span><span>A dumb port multiplier connected to a Controlling Bridge</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 7, false)"><span class="option-letter">C</span><span>A type of fiber optic cable</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 7, false)"><span class="option-letter">D</span><span>A server virtualization technology</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-7-correct"><strong>Correct!</strong> A Fabric Extender is a dumb port multiplier (not a full switch). It sits at the top of each rack, provides copper ports to servers, and connects via fiber to a Controlling Bridge. All switching intelligence resides in the controlling bridge. From the network's view, all FEX ports appear directly on the controlling bridge.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-7-incorrect"><strong>Incorrect.</strong> A Fabric Extender is a dumb port multiplier (not a full switch). It sits at the top of each rack, provides copper ports to servers, and connects via fiber to a Controlling Bridge. All switching intelligence resides in the controlling bridge. From the network's view, all FEX ports appear directly on the controlling bridge.</div>
+    </div>
+  </div>
 
-    options.forEach(opt => opt.style.pointerEvents = 'none');
+  <div class="question-card">
+    <div class="question-header"><span>Q8</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">According to Google's Jupiter Rising paper, how much did internal DC traffic grow from 2008 to 2014?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 8, false)"><span class="option-letter">A</span><span>5x</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 8, false)"><span class="option-letter">B</span><span>10x</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 8, true)"><span class="option-letter">C</span><span>50x</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 8, false)"><span class="option-letter">D</span><span>100x</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-8-correct"><strong>Correct!</strong> Google's Jupiter Rising paper (SIGCOMM 2015) shows internal data center traffic grew 50x from 2008 to 2014. This growth was faster than any individual server's speed and several orders of magnitude larger than internet traffic leaving the data center.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-8-incorrect"><strong>Incorrect.</strong> Google's Jupiter Rising paper (SIGCOMM 2015) shows internal data center traffic grew 50x from 2008 to 2014. This growth was faster than any individual server's speed and several orders of magnitude larger than internet traffic leaving the data center.</div>
+    </div>
+  </div>
 
-    if(selected === correct) {
-        element.classList.add('correct');
-        exp.innerHTML = `✅ Correct!<br>${explanation}`;
-    } else {
-        element.classList.add('wrong');
-        options[correct].classList.add('correct');
-        exp.innerHTML = `❌ Wrong.<br>Correct answer highlighted in green.<br>${explanation}`;
-    }
-}
+  <div class="question-card">
+    <div class="question-header"><span>Q9</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the "tail latency amplification" problem?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 9, false)"><span class="option-letter">A</span><span>Network cables causing signal degradation</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 9, true)"><span class="option-letter">B</span><span>1% slow per-server becomes 63% slow with 100 servers in scatter-gather</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 9, false)"><span class="option-letter">C</span><span>Storage I/O queue depths increasing</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 9, false)"><span class="option-letter">D</span><span>CPU throttling under load</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-9-correct"><strong>Correct!</strong> If each server has a 1% chance of being slow (≥1s), with 100 servers: probability that at least one is slow = 1 - (0.99)^100 ≈ 63%. Since scatter-gather response time equals the slowest server, what was a 1% problem per-server becomes a 63% problem for the aggregate query.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-9-incorrect"><strong>Incorrect.</strong> If each server has a 1% chance of being slow (≥1s), with 100 servers: probability that at least one is slow = 1 - (0.99)^100 ≈ 63%. Since scatter-gather response time equals the slowest server, what was a 1% problem per-server becomes a 63% problem for the aggregate query.</div>
+    </div>
+  </div>
 
-function revealAnswer(button) {
-    const box = button.nextElementSibling;
-    box.style.display = 'block';
-}
+  <div class="question-card">
+    <div class="question-header"><span>Q10</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the median flow inter-arrival time according to Facebook data?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 10, false)"><span class="option-letter">A</span><span>0.1 ms</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 10, false)"><span class="option-letter">B</span><span>10 ms</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 10, true)"><span class="option-letter">C</span><span>~2 ms</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 10, false)"><span class="option-letter">D</span><span>100 ms</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-10-correct"><strong>Correct!</strong> Facebook data shows median inter-arrival time of approximately 2ms — meaning a new connection is established every 2 milliseconds per server. This makes centralized flow-level control very difficult, as flows arrive faster than a central controller can react.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-10-incorrect"><strong>Incorrect.</strong> Facebook data shows median inter-arrival time of approximately 2ms — meaning a new connection is established every 2 milliseconds per server. This makes centralized flow-level control very difficult, as flows arrive faster than a central controller can react.</div>
+    </div>
+  </div>
 
-</script>
+  <div class="question-card">
+    <div class="question-header"><span>Q11</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the "N² problem" in traditional data center networks?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 11, true)"><span class="option-letter">A</span><span>Core switch cost grows quadratically with number of racks</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 11, false)"><span class="option-letter">B</span><span>Number of servers grows as N²</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 11, false)"><span class="option-letter">C</span><span>Network latency doubles with each hop</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 11, false)"><span class="option-letter">D</span><span>Cable length grows quadratically</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-11-correct"><strong>Correct!</strong> As more racks are added, the core switch must handle all cross-rack traffic. Bandwidth requirement grows as N² (N racks × N-1 other racks). This forces expensive "big crossbar" switches that cost millions, are hard to configure, and eventually hit physical port limits — making traditional models unscalable.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-11-incorrect"><strong>Incorrect.</strong> As more racks are added, the core switch must handle all cross-rack traffic. Bandwidth requirement grows as N² (N racks × N-1 other racks). This forces expensive "big crossbar" switches that cost millions, are hard to configure, and eventually hit physical port limits — making traditional models unscalable.</div>
+    </div>
+  </div>
 
-</body>
-</html>
-```
+  <div class="question-card">
+    <div class="question-header"><span>Q12</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What impact does server virtualization have on data center networking?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 12, false)"><span class="option-letter">A</span><span>Reduces the number of network endpoints</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 12, true)"><span class="option-letter">B</span><span>Multiplies network endpoints (1 server = 10 VMs = 10 MAC addresses)</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 12, false)"><span class="option-letter">C</span><span>Has no impact on networking</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 12, false)"><span class="option-letter">D</span><span>Only affects storage networking</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-12-correct"><strong>Correct!</strong> Virtualization multiplies endpoints: 1 physical server with 10 VMs = 10 virtual network devices, each with its own MAC and IP address. This increases flows, requires isolation between VMs, and demands VM migration support (network identity must follow the VM when it moves).</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-12-incorrect"><strong>Incorrect.</strong> Virtualization multiplies endpoints: 1 physical server with 10 VMs = 10 virtual network devices, each with its own MAC and IP address. This increases flows, requires isolation between VMs, and demands VM migration support (network identity must follow the VM when it moves).</div>
+    </div>
+  </div>
 
-To fully satisfy your requirement of 30 questions per section:
+  <div class="question-card">
+    <div class="question-header"><span>Q13</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What are the three problems with tree network topologies?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 13, true)"><span class="option-letter">A</span><span>Reduced capacity at top, congestion at root, failure partitions network</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 13, false)"><span class="option-letter">B</span><span>Too many cables, high cost, complex configuration</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 13, false)"><span class="option-letter">C</span><span>Security vulnerabilities, latency, packet loss</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 13, false)"><span class="option-letter">D</span><span>No problems — tree networks are optimal</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-13-correct"><strong>Correct!</strong> Tree networks have: (1) Reduced capacity at higher levels — uplinks don't scale with leaves added. (2) Congestion at the root — all inter-pod traffic converges on root switches. (3) Failure can partition the network — root or aggregation switch failure splits the tree with no built-in redundancy.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-13-incorrect"><strong>Incorrect.</strong> Tree networks have: (1) Reduced capacity at higher levels — uplinks don't scale with leaves added. (2) Congestion at the root — all inter-pod traffic converges on root switches. (3) Failure can partition the network — root or aggregation switch failure splits the tree with no built-in redundancy.</div>
+    </div>
+  </div>
 
-* Add 15 MCQs and 15 reasoning questions inside each section.
-* The current structure already supports unlimited questions.
-* You only need to continue inserting objects into each `questions` array.
-* Every HTML summary in the repository already has its own quiz section.
-* README.md is ignored.
+  <div class="question-card">
+    <div class="question-header"><span>Q14</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">According to Cisco Global Cloud Index, what percentage of cloud DC traffic is internal?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 14, false)"><span class="option-letter">A</span><span>50%</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 14, false)"><span class="option-letter">B</span><span>66%</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 14, true)"><span class="option-letter">C</span><span>76%</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 14, false)"><span class="option-letter">D</span><span>90%</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-14-correct"><strong>Correct!</strong> According to Cisco Global Cloud Index (2012-2017), 76% of cloud data center traffic flows between devices within the cloud data center — confirming that internal (east-west) traffic dominates and the internal network design is the priority.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-14-incorrect"><strong>Incorrect.</strong> According to Cisco Global Cloud Index (2012-2017), 76% of cloud data center traffic flows between devices within the cloud data center — confirming that internal (east-west) traffic dominates and the internal network design is the priority.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q15</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">Why is centralized control at the flow level difficult in large data centers?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 15, true)"><span class="option-letter">A</span><span>Flows arrive every 2ms — faster than controller can react</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 15, false)"><span class="option-letter">B</span><span>Controllers are too expensive</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 15, false)"><span class="option-letter">C</span><span>Flows are too large to process</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'cloud', 15, false)"><span class="option-letter">D</span><span>Network bandwidth is insufficient for control traffic</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-cloud-15-correct"><strong>Correct!</strong> Flows arrive every 2ms per server. For a central controller to manage each flow, it must receive notification, make routing decision, and program switches — all within 2ms. Round-trip latency plus processing often exceeds the flow's lifetime. SDN can help at policy/aggregate level but per-flow centralized control is impractical at scale.</div>
+      <div class="explanation incorrect-exp" id="exp-cloud-15-incorrect"><strong>Incorrect.</strong> Flows arrive every 2ms per server. For a central controller to manage each flow, it must receive notification, make routing decision, and program switches — all within 2ms. Round-trip latency plus processing often exceeds the flow's lifetime. SDN can help at policy/aggregate level but per-flow centralized control is impractical at scale.</div>
+    </div>
+  </div>
+
+  <!-- Reasoning 16-30 -->
+  <div class="question-card">
+    <div class="question-header"><span>Q16</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">Explain why scatter-gather traffic pattern is the dominant driver for data center network redesign.</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 16)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-16"><strong>Answer:</strong> Scatter-gather creates intense, simultaneous bursts of traffic flowing in many directions at once between servers across different racks — called east-west traffic. Traditional networks were designed for north-south (client-to-server) traffic with limited internal bandwidth. Cloud applications (search, recommendation, distributed computation) all use scatter-gather, generating enormous internal traffic for every user request. This mismatch between traffic pattern and network design drove all topology innovations (ToR, Clos) to handle massive east-west bursts efficiently.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q17</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">Compare ToR and EoR layouts with at least 3 advantages and 3 disadvantages of each.</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 17)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-17"><strong>Answer:</strong> ToR Pros: Copper stays in-rack (short), lower cabling costs, cleaner management, modular per-rack, excellent east-west support, easier per-rack speed migration. ToR Cons: More switches to manage, higher switch costs/power, more aggregation ports needed, more STP instances. EoR Pros: Fewer switches to manage, lower switch/maintenance costs, fewer aggregation ports, accommodates mixed speeds. EoR Cons: Expensive long copper runs (10-30m), cable management nightmare, more patching infrastructure, limits high-speed I/O adoption (long copper can't support 25G/100G).</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q18</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">Explain how a Clos network provides multiple equal-cost paths between any two servers.</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 18)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-18"><strong>Answer:</strong> A Clos has three tiers: server access (ToR) → aggregation (per pod) → multiple core switches. Each aggregation switch connects to all ToRs in its pod AND to all core switches. Each core switch connects to one aggregation switch in every pod. This means traffic from Pod 0 to Pod 2 can take multiple routes through different core switches — all with equal cost. ECMP (Equal-Cost Multi-Path) distributes flows across all available paths using hash-based load balancing.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q19</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">What are the "mice and elephants" in data center flow sizes, and why is this a problem?</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 19)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-19"><strong>Answer:</strong> "Mice" are the vast majority of flows — tiny and short-lived (Facebook Hadoop median <1KB, >80% of flows last <10sec). "Elephants" are a small number of large flows carrying disproportionate data. This mix creates challenges: treating both the same means elephants block mice; prioritizing differently needs complex management. Network design must handle both simultaneously — small latency-sensitive flows AND large bandwidth-hungry flows — without them interfering.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q20</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">List the 5 networking implications identified in the lecture and briefly explain each.</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 20)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-20"><strong>Answer:</strong> (1) Big internal traffic — 50x growth, need high-bandwidth fabrics. (2) Tight network I/O deadline — scatter-gather means slowest server = total latency; need low/predictable latency. (3) TCP incast congestion — many simultaneous responses overwhelm switch port, causing timeout storms. (4) Application isolation needed — multiple tenants share network; need VLANs/QoS/virtual networks. (5) Centralized flow control difficult — flows arrive every 2ms, too fast for per-flow central decisions.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q21</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">Explain how a Fabric Extender combines benefits of both ToR and EoR approaches.</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 21)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-21"><strong>Answer:</strong> FEX combines: From ToR — short copper stays in-rack, lower cabling costs, cleaner management, modular per-rack architecture. From EoR — fewer switches to manage (FEX is not a switch, no control plane), fewer STP instances (all FEX ports appear on one controlling bridge), one control plane per hundreds of ports. The FEX is a dumb port multiplier; all intelligence lives in the Controlling Bridge. Lower skill set needed to replace a FEX (just hot-swap).</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q22</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the 10:1 oversubscription problem in the Google Jupiter example?</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 22)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-22"><strong>Answer:</strong> In Google's 512-rack example: 40 servers per rack × 1G each = 40G server capacity per rack. But each ToR only has 4 × 1G uplink ports = 4G upward capacity. This means ToR can only deliver 4G out of 40G possible = 10:1 oversubscription ratio. At the cluster router level, it got worse: 512G in, only 20G out = 25:1 oversubscription. This meant traffic had to stay mostly local to avoid congestion.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q23</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">Explain why Clos networks use commodity switches instead of large crossbar switches.</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 23)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-23"><strong>Answer:</strong> Cost scaling: Traditional big crossbar follows N² cost curve — becomes impossibly expensive. Clos uses many small commodity switches, each only large enough for local connections. Example: 16 core switches × $50K each = $800K total, providing 16× bandwidth of a single $1M+ behemoth. Commodity switches are cheaper, more reliable, and easily replaceable. If one fails, others continue — no single point of failure like a monolithic core switch.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q24</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">What does Facebook's traffic locality data tell us about where to invest in network infrastructure?</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 24)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-24"><strong>Answer:</strong> The data (12.9% same rack, 57.5% same cluster, 11.9% same DC, 17.7% inter-DC, 82.3% internal total) tells us: The largest single bucket is cluster-level (57.5%), so intra-cluster bandwidth must be highest priority. Same-rack traffic (12.9%) is handled by ToR switches alone — no investment needed beyond ToR. Inter-DC is smallest (17.7%), so WAN links are lower priority than internal fabric. Investment should focus on high-bandwidth connectivity between racks within clusters.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q25</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">Explain the difference between concurrent flows and flow arrival rate, and why both matter.</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 25)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-25"><strong>Answer:</strong> Concurrent flows: how many simultaneous connections exist at any moment (web/cache servers have 100s-1000s). Flow arrival rate: how quickly new connections are established (Facebook: ~2ms median inter-arrival). Both matter because: high concurrency means network must handle millions of simultaneous flows needing paths. High arrival rate (2ms) means new flows arrive faster than centralized control can react — requiring distributed or hardware-level forwarding for individual flows.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q26</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">Why do traditional enterprise network designs fail for cloud data centers?</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 26)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-26"><strong>Answer:</strong> Traditional enterprise networks were optimized for north-south traffic (client-server model) with limited internal bandwidth. Cloud DCs have: (1) East-west traffic dominates (~80%) — need high bandwidth between any pair of racks, not just to internet gateway. (2) Massive scale — thousands of servers require networks that scale linearly, not with N² cost. (3) Dynamic workloads — VM migration, elastic scaling require flexible, non-blocking fabrics. Traditional 3-tier with single core creates bottlenecks and single points of failure.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q27</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">What is "full bisection bandwidth" and why is it important in Clos networks?</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 27)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-27"><strong>Answer:</strong> Full bisection bandwidth means the bandwidth available when you cut the network in half equals the total bandwidth of all servers on one side. In a Clos, this means no oversubscription — any server can communicate with any other server at full line rate simultaneously. This is important because it eliminates congestion regardless of traffic pattern. Traditional topologies have oversubscribed uplinks, forcing traffic to stay local. Clos with full bisection allows any-to-any communication without bandwidth constraints.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q28</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">Explain what ECMP is and how it works in a Clos network.</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 28)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-28"><strong>Answer:</strong> ECMP (Equal-Cost Multi-Path) distributes traffic across all available paths of equal cost. It works by hashing header fields (src IP, dst IP, src port, dst port) to produce a number that selects which path the flow takes. All packets in the same flow always take the same path, preserving packet order. In a Clos network with multiple core switches, ECMP spreads flows across all cores automatically — no manual configuration needed. This provides both load balancing and fault tolerance (if one path fails, others continue).</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q29</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">What are the key components of a modern data center facility beyond networking equipment?</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 29)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-29"><strong>Answer:</strong> A data center includes: Power Backup Systems (UPS, diesel generators for 24/7 operation), Cooling Systems (HVAC, chillers, hot/cold aisle containment to prevent thermal damage), Entrance Room (security checkpoint, carrier interconnect where external cables enter), Telecommunications Room (houses equipment for carrier connection), Equipment Cabinets/Racks (42U standard height, ~40 servers per rack), Raised Floor (allows cables and cold air to flow beneath equipment), Structured Cabling (organized cable system), plus the Network Devices, Servers, and Storage.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q30</span><span class="question-type type-reasoning">Reasoning</span></div>
+    <div class="question-body">
+      <div class="question-text">Compare the Microsoft and Facebook flow data: what are the key differences and what do they indicate?</div>
+      <button class="submit-btn" onclick="showReasoning('cloud', 30)">Reveal Answer</button>
+      <div class="reasoning-answer" id="reason-cloud-30"><strong>Answer:</strong> Facebook: median flow inter-arrival ~2ms, Hadoop median flow <1KB, caching flows long-lived but bursty. Microsoft (1500-server cluster): flow arrival rate <0.1× Facebook's, median server talks to 2 servers in-rack and 4 outside rack, >80% flows <10sec, >50% bytes in flows <25sec. Key difference: Facebook sees 10× faster flow arrivals, reflecting larger scale. Both show most flows are short (mice), but carry significant data (elephants). This indicates different scales but similar fundamental patterns — networks must handle rapid flow setup and mixed flow sizes.</div>
+    </div>
+  </div>
+
+  <div class="results-banner" id="results-cloud">
+    <h3>✅ Section Complete: Cloud Networking</h3>
+    <p id="results-text-cloud"></p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: NFV -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" id="nfv">
+  <div class="section-header">
+    <div class="section-icon" style="background:#1a1030;">🔌</div>
+    <div><h2>Network Function Virtualization</h2></div>
+    <div class="score-display" id="display-nfv">0/30</div>
+  </div>
+
+  <!-- MCQ 1-15 -->
+  <div class="question-card">
+    <div class="question-header"><span>Q1</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the key difference between VMDq and SR-IOV?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 1, false)"><span class="option-letter">A</span><span>VMDq bypasses hypervisor, SR-IOV does not</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 1, true)"><span class="option-letter">B</span><span>VMDq uses separate queues but hypervisor still involved; SR-IOV creates separate VFs bypassing hypervisor</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 1, false)"><span class="option-letter">C</span><span>They are the same technology</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 1, false)"><span class="option-letter">D</span><span>SR-IOV uses CPU for processing</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-1-correct"><strong>Correct!</strong> VMDq: NIC pre-sorts packets into per-VM queues, but hypervisor still delivers via VMBus and vSwitch is still in the path. SR-IOV: Physical NIC presents as multiple Virtual Functions (VFs), each VM gets its own VF, communicates directly via DMA — completely bypasses the vSwitch and hypervisor.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-1-incorrect"><strong>Incorrect.</strong> VMDq: NIC pre-sorts packets into per-VM queues, but hypervisor still delivers via VMBus and vSwitch is still in the path. SR-IOV: Physical NIC presents as multiple Virtual Functions (VFs), each VM gets its own VF, communicates directly via DMA — completely bypasses the vSwitch and hypervisor.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q2</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What are the three components of Open vSwitch (OVS)?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 2, false)"><span class="option-letter">A</span><span>Controller, Agent, Database</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 2, true)"><span class="option-letter">B</span><span>ovs-vswitchd, ovsdb-server, Kernel Module</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 2, false)"><span class="option-letter">C</span><span>Forwarding Plane, Control Plane, Management Plane</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 2, false)"><span class="option-letter">D</span><span>CLI, API, Daemon</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-2-correct"><strong>Correct!</strong> OVS has three components: (1) ovs-vswitchd (userspace daemon) handles slow-path processing and switch config, communicates with kernel via Netlink. (2) ovsdb-server stores persistent config (bridges, ports, flow rules) on port 6632/TCP. (3) Kernel Module (openvswitch.ko) handles fast-path forwarding with cached flow rules.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-2-incorrect"><strong>Incorrect.</strong> OVS has three components: (1) ovs-vswitchd (userspace daemon) handles slow-path processing and switch config, communicates with kernel via Netlink. (2) ovsdb-server stores persistent config (bridges, ports, flow rules) on port 6632/TCP. (3) Kernel Module (openvswitch.ko) handles fast-path forwarding with cached flow rules.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q3</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the maximum number of VLANs possible with IEEE 802.1Q?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 3, false)"><span class="option-letter">A</span><span>1,024</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 3, false)"><span class="option-letter">B</span><span>2,048</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 3, true)"><span class="option-letter">C</span><span>4,096</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 3, false)"><span class="option-letter">D</span><span>16 million</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-3-correct"><strong>Correct!</strong> 802.1Q uses a 12-bit VLAN ID field, allowing up to 4,096 VLANs (0-4095). VLAN 0 is reserved, VLAN 1 is typically the default/native VLAN. This limitation is why VXLAN (24-bit VNI = 16 million networks) was created for large cloud environments.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-3-incorrect"><strong>Incorrect.</strong> 802.1Q uses a 12-bit VLAN ID field, allowing up to 4,096 VLANs (0-4095). VLAN 0 is reserved, VLAN 1 is typically the default/native VLAN. This limitation is why VXLAN (24-bit VNI = 16 million networks) was created for large cloud environments.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q4</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">In PVLAN, which port type can communicate with ALL other ports?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 4, true)"><span class="option-letter">A</span><span>Promiscuous Port</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 4, false)"><span class="option-letter">B</span><span>Isolated Port</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 4, false)"><span class="option-letter">C</span><span>Community Port</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 4, false)"><span class="option-letter">D</span><span>Access Port</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-4-correct"><strong>Correct!</strong> Promiscuous Port can talk to ALL ports in the PVLAN (isolated, community, and other promiscuous). Typically the router/gateway/firewall. Isolated Port can ONLY talk to promiscuous ports. Community Port talks to other ports in same community + promiscuous ports, but not to isolated or other communities.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-4-incorrect"><strong>Incorrect.</strong> Promiscuous Port can talk to ALL ports in the PVLAN (isolated, community, and other promiscuous). Typically the router/gateway/firewall. Isolated Port can ONLY talk to promiscuous ports. Community Port talks to other ports in same community + promiscuous ports, but not to isolated or other communities.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q5</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is VXLAN's UDP destination port?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 5, false)"><span class="option-letter">A</span><span>4790</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 5, true)"><span class="option-letter">B</span><span>4789</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 5, false)"><span class="option-letter">C</span><span>6633</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 5, false)"><span class="option-letter">D</span><span>6632</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-5-correct"><strong>Correct!</strong> VXLAN uses UDP destination port 4789. The encapsulation is: Outer Ethernet → Outer IP + UDP (port 4789) → VXLAN Header (8 bytes with 24-bit VNI) → Inner Ethernet → Original Payload. Port 6633 is OpenFlow, 6632 is OVS management.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-5-incorrect"><strong>Incorrect.</strong> VXLAN uses UDP destination port 4789. The encapsulation is: Outer Ethernet → Outer IP + UDP (port 4789) → VXLAN Header (8 bytes with 24-bit VNI) → Inner Ethernet → Original Payload. Port 6633 is OpenFlow, 6632 is OVS management.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q6</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">When is an SVI (Switch Virtual Interface) in the UP state?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 6, false)"><span class="option-letter">A</span><span>When IP address is configured</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 6, false)"><span class="option-letter">B</span><span>When no shutdown is issued</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 6, true)"><span class="option-letter">C</span><span>When VLAN exists AND at least one active port belongs to it</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 6, false)"><span class="option-letter">D</span><span>Always, once created</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-6-correct"><strong>Correct!</strong> SVI is UP only when BOTH conditions are true simultaneously: (1) Its associated VLAN exists in the switch database, AND (2) At least one active port (access or trunk) belongs to that VLAN. If you create SVI before VLAN exists → DOWN. Create VLAN but no active port → still DOWN. Add active access port → UP.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-6-incorrect"><strong>Incorrect.</strong> SVI is UP only when BOTH conditions are true simultaneously: (1) Its associated VLAN exists in the switch database, AND (2) At least one active port (access or trunk) belongs to that VLAN. If you create SVI before VLAN exists → DOWN. Create VLAN but no active port → still DOWN. Add active access port → UP.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q7</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the purpose of the Native VLAN security fix?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 7, false)"><span class="option-letter">A</span><span>Encrypt traffic on native VLAN</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 7, true)"><span class="option-letter">B</span><span>Force all VLANs including native to be tagged on trunks</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 7, false)"><span class="option-letter">C</span><span>Disable native VLAN entirely</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 7, false)"><span class="option-letter">D</span><span>Change native VLAN to VLAN 999</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-7-correct"><strong>Correct!</strong> Untagged frames go to native VLAN (usually VLAN 1), creating a security risk where VLAN 100 frames can leak into VLAN 1. The fix is: "vlan dot1Q tag native" (Cisco Nexus command) — forces ALL VLANs including native to be tagged on trunks, eliminating the untagged frame vulnerability.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-7-incorrect"><strong>Incorrect.</strong> Untagged frames go to native VLAN (usually VLAN 1), creating a security risk where VLAN 100 frames can leak into VLAN 1. The fix is: "vlan dot1Q tag native" (Cisco Nexus command) — forces ALL VLANs including native to be tagged on trunks, eliminating the untagged frame vulnerability.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q8</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is Q-in-Q (IEEE 802.1ad)?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 8, true)"><span class="option-letter">A</span><span>Double VLAN tagging — outer SP tag wraps customer's inner tag</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 8, false)"><span class="option-letter">B</span><span>VLAN prioritization mechanism</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 8, false)"><span class="option-letter">C</span><span>IP-based tunneling protocol</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 8, false)"><span class="option-letter">D</span><span>MAC address translation</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-8-correct"><strong>Correct!</strong> Q-in-Q adds an outer VLAN tag (Service Provider's VLAN) around the customer's inner 802.1Q tag. Customer VLANs pass transparently across the SP network. Outer 12-bit VLAN ID = customer identifier. Limited to 4,096 customers max. Used in Metro Ethernet and Transparent Firewall/IPS setups.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-8-incorrect"><strong>Incorrect.</strong> Q-in-Q adds an outer VLAN tag (Service Provider's VLAN) around the customer's inner 802.1Q tag. Customer VLANs pass transparently across the SP network. Outer 12-bit VLAN ID = customer identifier. Limited to 4,096 customers max. Used in Metro Ethernet and Transparent Firewall/IPS setups.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q9</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is a VTEP in VXLAN?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 9, true)"><span class="option-letter">A</span><span>Virtual Tunnel Endpoint that encapsulates/decapsulates VXLAN frames</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 9, false)"><span class="option-letter">B</span><span>A type of virtual switch</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 9, false)"><span class="option-letter">C</span><span>A physical router interface</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 9, false)"><span class="option-letter">D</span><span>A VLAN identifier</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-9-correct"><strong>Correct!</strong> VTEP (Virtual Tunnel Endpoint) maintains a table mapping inner VM MAC → outer server IP. It encapsulates L2 frames by wrapping in VXLAN header + UDP + outer IP, sends over L3 network. Destination VTEP strips VXLAN header and delivers original L2 frame. Can live in vSwitch, NIC, or ToR switch.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-9-incorrect"><strong>Incorrect.</strong> VTEP (Virtual Tunnel Endpoint) maintains a table mapping inner VM MAC → outer server IP. It encapsulates L2 frames by wrapping in VXLAN header + UDP + outer IP, sends over L3 network. Destination VTEP strips VXLAN header and delivers original L2 frame. Can live in vSwitch, NIC, or ToR switch.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q10</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the difference between MPLS LER and LSR?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 10, true)"><span class="option-letter">A</span><span>LER enters/exits MPLS network and pushes/pops labels; LSR forwards by label only</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 10, false)"><span class="option-letter">B</span><span>LER does IP lookup; LSR does label lookup</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 10, false)"><span class="option-letter">C</span><span>They are the same</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 10, false)"><span class="option-letter">D</span><span>LER is for storage; LSR is for compute</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-10-correct"><strong>Correct!</strong> LER (Label Edge Router): enters/exits MPLS network, pushes or pops labels, makes initial path selection. LSR (Label Switching Router): interior transit router, forwards by label only — no IP lookup required. LSP (Label Switched Path) is the unidirectional tunnel between a pair of LERs.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-10-incorrect"><strong>Incorrect.</strong> LER (Label Edge Router): enters/exits MPLS network, pushes or pops labels, makes initial path selection. LSR (Label Switching Router): interior transit router, forwards by label only — no IP lookup required. LSP (Label Switched Path) is the unidirectional tunnel between a pair of LERs.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q11</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is a VSAN?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 11, true)"><span class="option-letter">A</span><span>Virtual Storage Area Network — logical partition of a physical SAN fabric</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 11, false)"><span class="option-letter">B</span><span>Virtual Server Area Network</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 11, false)"><span class="option-letter">C</span><span>A type of VLAN for storage</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 11, false)"><span class="option-letter">D</span><span>A VPN for storage traffic</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-11-correct"><strong>Correct!</strong> VSAN (Virtual Storage Area Network) logically partitions a physical SAN fabric into separate SANs. It isolates storage traffic between tenants on the same fabric. Unlike VLAN which is for Ethernet, VSAN is specifically for Fibre Channel storage networks.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-11-incorrect"><strong>Incorrect.</strong> VSAN (Virtual Storage Area Network) logically partitions a physical SAN fabric into separate SANs. It isolates storage traffic between tenants on the same fabric. Unlike VLAN which is for Ethernet, VSAN is specifically for Fibre Channel storage networks.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q12</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What command enables SVI creation on Cisco NX-OS?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 12, true)"><span class="option-letter">A</span><span>feature interface-vlan</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 12, false)"><span class="option-letter">B</span><span>enable svi</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 12, false)"><span class="option-letter">C</span><span>interface vlan</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 12, false)"><span class="option-letter">D</span><span>svi create</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-12-correct"><strong>Correct!</strong> On Cisco NX-OS, you must first run "feature interface-vlan" before you can create SVIs with "interface vlan X". Without this feature enabled, the "interface vlan" command is not available. This is NX-OS specific — IOS doesn't require this.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-12-incorrect"><strong>Incorrect.</strong> On Cisco NX-OS, you must first run "feature interface-vlan" before you can create SVIs with "interface vlan X". Without this feature enabled, the "interface vlan" command is not available. This is NX-OS specific — IOS doesn't require this.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q13</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is the key limitation of Q-in-Q compared to VXLAN?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 13, true)"><span class="option-letter">A</span><span>Only 4,096 customer IDs (12-bit VLAN)</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 13, false)"><span class="option-letter">B</span><span>Requires IP addresses on every link</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 13, false)"><span class="option-letter">C</span><span>Cannot carry Ethernet frames</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 13, false)"><span class="option-letter">D</span><span>Higher overhead than VXLAN</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-13-correct"><strong>Correct!</strong> Q-in-Q uses a 12-bit outer VLAN ID for customer identification, limiting it to 4,096 customers maximum. VXLAN uses a 24-bit VNI, supporting up to 16 million virtual networks. This is why Q-in-Q is suitable for Metro Ethernet service providers but not for large-scale cloud data centers.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-13-incorrect"><strong>Incorrect.</strong> Q-in-Q uses a 12-bit outer VLAN ID for customer identification, limiting it to 4,096 customers maximum. VXLAN uses a 24-bit VNI, supporting up to 16 million virtual networks. This is why Q-in-Q is suitable for Metro Ethernet service providers but not for large-scale cloud data centers.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q14</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">In OVS, what happens on the first packet of a new flow?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 14, true)"><span class="option-letter">A</span><span>Goes to userspace; rule applied; collapsed rule installed in kernel</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 14, false)"><span class="option-letter">B</span><span>Dropped until kernel learns the rule</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 14, false)"><span class="option-letter">C</span><span>Forwarded immediately by kernel</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 14, false)"><span class="option-letter">D</span><span>Sent to controller for approval</span></button>
+      </div>
+      <div class="explanation correct-exp" id="exp-nfv-14-correct"><strong>Correct!</strong> First packet goes to userspace (ovs-vswitchd). The highest-priority matching rule is applied. Once forwarded, a collapsed rule combining all match fields (srcMAC + dstMAC + dstIP + dstTCPPort → action) is installed in the kernel module. Subsequent packets hit the kernel rule directly via hash lookup — no userspace needed.</div>
+      <div class="explanation incorrect-exp" id="exp-nfv-14-incorrect"><strong>Incorrect.</strong> First packet goes to userspace (ovs-vswitchd). The highest-priority matching rule is applied. Once forwarded, a collapsed rule combining all match fields (srcMAC + dstMAC + dstIP + dstTCPPort → action) is installed in the kernel module. Subsequent packets hit the kernel rule directly via hash lookup — no userspace needed.</div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-header"><span>Q15</span><span class="question-type type-mcq">MCQ</span></div>
+    <div class="question-body">
+      <div class="question-text">What is Router-on-a-Stick?</div>
+      <div class="options">
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 15, true)"><span class="option-letter">A</span><span>Single router interface with sub-interfaces for inter-VLAN routing</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 15, false)"><span class="option-letter">B</span><span>A physical router for each VLAN</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 15, false)"><span class="option-letter">C</span><span>L3 switching with SVIs</span></button>
+        <button class="option-btn" onclick="checkMCQ(this, 'nfv', 15, false)"><span class="option-letter">D</span><span>A type of firewall</span></button>
+      </div>
