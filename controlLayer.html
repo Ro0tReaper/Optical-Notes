@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control Layer — Exam Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f11;
+    --surface: #17171a;
+    --surface2: #1e1e22;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8e8ec;
+    --muted: #8b8b99;
+    --accent: #7c6df5;
+    --accent2: #4ec9b0;
+    --accent3: #f4a261;
+    --accent4: #e87070;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,109,245,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,109,245,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+  }
+  header {
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 2rem;
+  }
+  .course-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    margin-bottom: .75rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .course-tag::before { content: ''; width: 20px; height: 1px; background: var(--accent); }
+  h1 {
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    line-height: 1.15;
+    color: #fff;
+    margin-bottom: .75rem;
+  }
+  .subtitle { color: var(--muted); font-family: var(--mono); font-size: 12px; }
+  .topic-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 3rem; }
+  .topic-pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 5px 12px;
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all .15s;
+  }
+  .topic-pill:hover { border-color: var(--accent); color: var(--accent); background: rgba(124,109,245,.06); }
+  .section { margin-bottom: 2.5rem; }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label span { background: rgba(124,109,245,.12); padding: 2px 8px; border-radius: 3px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: .75rem;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: var(--border2); }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: .5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .card p { color: #b0b0be; font-size: 14px; line-height: 1.7; margin-bottom: .5rem; }
+  .card p:last-child { margin-bottom: 0; }
+  ul.points { list-style: none; padding: 0; margin-top: .4rem; }
+  ul.points li {
+    font-size: 13.5px;
+    color: #a0a0b0;
+    line-height: 1.6;
+    padding: .2rem 0 .2rem 1.1rem;
+    position: relative;
+  }
+  ul.points li::before { content: '—'; position: absolute; left: 0; color: var(--border2); }
+  .note {
+    background: rgba(124,109,245,.07);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: .6rem 1rem;
+    margin: .75rem 0 0;
+    font-size: 13px;
+    color: #b0b0cc;
+  }
+  .note.warn { background: rgba(244,162,97,.07); border-left-color: var(--accent3); color: #c8b08a; }
+  .note.good { background: rgba(78,201,176,.07); border-left-color: var(--accent2); color: #8acfbe; }
+  .note.red  { background: rgba(232,112,112,.07); border-left-color: var(--accent4); color: #cc8080; }
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: .75rem 0 0; }
+  .fbox {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  .fbox.hi { border-color: var(--accent); color: #c4b8ff; background: rgba(124,109,245,.08); }
+  .arrow { color: var(--muted); font-size: 13px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-top: .75rem; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .75rem; margin-top: .75rem; }
+  @media(max-width:640px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+  .mini-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .9rem 1rem;
+  }
+  .mini-card h3 { font-size: 13.5px; font-weight: 600; color: #ddd; margin-bottom: .4rem; }
+  .mini-card p, .mini-card li { font-size: 12.5px; color: #8e8ea0; line-height: 1.6; }
+  .mini-card ul { padding-left: .9rem; margin-top: .25rem; }
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent2);
+  }
+  .compare { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: .75rem; }
+  .compare th {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: left;
+    padding: .5rem .75rem;
+    border-bottom: 1px solid var(--border2);
+  }
+  .compare td {
+    padding: .55rem .75rem;
+    color: #a8a8b8;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .compare tr:last-child td { border-bottom: none; }
+  .compare tr:hover td { background: rgba(255,255,255,.02); }
+  .compare td:first-child { font-family: var(--mono); font-size: 12px; color: var(--accent2); white-space: nowrap; }
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 4px;
+    margin-top: 4px;
+  }
+  .b-purple { background: rgba(124,109,245,.15); color: #a99cf5; border: 1px solid rgba(124,109,245,.25); }
+  .b-teal   { background: rgba(78,201,176,.1);   color: #5dd4ba; border: 1px solid rgba(78,201,176,.2); }
+  .b-orange { background: rgba(244,162,97,.1);   color: #d4a06a; border: 1px solid rgba(244,162,97,.2); }
+  .b-red    { background: rgba(232,112,112,.1);  color: #cc8080; border: 1px solid rgba(232,112,112,.2); }
+  .b-gold   { background: rgba(255,215,0,.1);    color: #cca800; border: 1px solid rgba(255,215,0,.2); }
+  .b-silver { background: rgba(192,192,192,.1);  color: #aaaaaa; border: 1px solid rgba(192,192,192,.2); }
+  .b-bronze { background: rgba(205,127,50,.1);   color: #b07030; border: 1px solid rgba(205,127,50,.2); }
+  .sec-num {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    background: var(--surface2); border: 1px solid var(--border);
+    padding: 2px 7px; border-radius: 4px;
+  }
+  .sub-label {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em; margin: 1rem 0 .4rem;
+  }
+  [id] { scroll-margin-top: 1.5rem; }
+  footer {
+    margin-top: 4rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: center;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="course-tag">SIT452 · Cloud Computing & Virtual Network · Week 12</div>
+    <h1>Control Layer</h1>
+    <div class="subtitle">exam review — complete condensed notes</div>
+  </header>
+
+  <nav class="topic-nav">
+    <a class="topic-pill" href="#overview">Overview</a>
+    <a class="topic-pill" href="#element">Element Manager</a>
+    <a class="topic-pill" href="#unified">Unified Manager</a>
+    <a class="topic-pill" href="#discovery">Resource Discovery</a>
+    <a class="topic-pill" href="#management">Resource Management</a>
+    <a class="topic-pill" href="#grading">Resource Grading</a>
+    <a class="topic-pill" href="#allocation">Allocation Models</a>
+    <a class="topic-pill" href="#compute">Compute Management</a>
+    <a class="topic-pill" href="#storage">Storage Management</a>
+    <a class="topic-pill" href="#network">Network Management</a>
+    <a class="topic-pill" href="#provisioning">Resource Provisioning</a>
+    <a class="topic-pill" href="#summary">Quick Reference</a>
+  </nav>
+
+  <!-- 1. Overview -->
+  <div class="section" id="overview">
+    <div class="section-label"><span class="sec-num">01</span> What is the Control Layer?</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#7c6df5"></span>The middle layer — sits between service requests and physical hardware</div>
+      <p>The control layer receives requests from the <strong>service layer</strong> (e.g. "give me a VM with 4 GB RAM and 80 GB HDD") and talks to the <strong>virtual and physical layers</strong> to actually make it happen.</p>
+      <div class="sub-label">Three core functions</div>
+      <div class="grid3">
+        <div class="mini-card"><h3>Configuration</h3><p>Set up and modify infrastructure components (OS install, VLANs, RAID, zoning, LUN masking, etc.)</p></div>
+        <div class="mini-card"><h3>Provisioning</h3><p>Allocate resources from pools and hand them to service instances on demand.</p></div>
+        <div class="mini-card"><h3>Monitoring</h3><p>Track performance, availability, capacity, and security across all infrastructure.</p></div>
+      </div>
+      <p style="margin-top:.75rem;font-size:14px;color:#a0a0b0">To allocate resources, they must first be <strong>pooled and managed centrally</strong>. Control software works together with virtualization software to enable resource pooling, dynamic allocation, and utilization optimization.</p>
+      <div class="sub-label">Two types of control software</div>
+      <div class="grid2">
+        <div class="mini-card"><h3>Element Manager</h3><p>Manages one specific type of infrastructure component (compute, network, or storage) through that component's own API.</p></div>
+        <div class="mini-card"><h3>Unified Manager</h3><p>Single pane of glass — manages all infrastructure types through one interface by talking to each element manager's API.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Element Manager -->
+  <div class="section" id="element">
+    <div class="section-label"><span class="sec-num">02</span> Element Manager</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#4ec9b0"></span>Per-component management — one manager per infrastructure type</div>
+      <p>Vendors ship element managers either built into the hardware or as external software. There are three kinds: <strong>Compute System Management Tool</strong>, <strong>Fabric Management Tool</strong> (network), and <strong>Storage System Management Tool</strong>. Each talks to its hardware via its own API.</p>
+      <div class="sub-label">What an element manager can do</div>
+      <ul class="points">
+        <li><strong>Initial & ongoing configuration</strong> — install guest OS, configure zoning, security settings, VLANs, RAID levels, LUN masking.</li>
+        <li><strong>Capacity expansion</strong> — detects newly added hardware and adds it to an existing resource pool automatically.</li>
+        <li><strong>Troubleshooting</strong> — identify faults and diagnose problems in the component it manages.</li>
+        <li><strong>Monitoring</strong> — tracks performance, availability, capacity, and security of that specific component.</li>
+      </ul>
+      <div class="note">Think of it as the dedicated manager for one domain: the storage element manager only knows about storage; the compute element manager only knows about compute, etc.</div>
+    </div>
+  </div>
+
+  <!-- 3. Unified Manager -->
+  <div class="section" id="unified">
+    <div class="section-label"><span class="sec-num">03</span> Unified Manager</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#f4a261"></span>One management interface to rule them all</div>
+      <p>The Unified Manager sits on top of all the element managers. It communicates with each element manager (and directly with infrastructure) through their native APIs, giving administrators a <strong>single consolidated view</strong> of all resources — compute, network, and storage — wherever they live.</p>
+      <div class="sub-label">Key capabilities</div>
+      <ul class="points">
+        <li>Discovers and collects configuration, connectivity, and utilization info from all cloud infrastructure elements.</li>
+        <li>Compiles this into one consolidated view.</li>
+        <li>Exposes APIs so administrators can integrate it with other tools (automation, billing, orchestration).</li>
+        <li>Used to both manage resources and provision them for services.</li>
+      </ul>
+      <div class="sub-label">Architecture hierarchy</div>
+      <div class="flow">
+        <div class="fbox hi">Unified Management Software</div>
+        <div class="arrow">↓ API</div>
+        <div class="fbox">Element Managers (Compute / Network / Storage)</div>
+        <div class="arrow">↓ API</div>
+        <div class="fbox">Physical Infrastructure</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Resource Discovery -->
+  <div class="section" id="discovery">
+    <div class="section-label"><span class="sec-num">04</span> Resource Discovery</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#4ec9b0"></span>Figuring out what resources exist before you can use them</div>
+      <p>Discovery is the process of learning what resources are available for cloud service deployment. It can run on a schedule (periodic intervals set by the admin) or be triggered manually when a change occurs in the infrastructure.</p>
+
+      <div class="grid3" style="margin-top:.75rem">
+        <div class="mini-card">
+          <h3>Compute discovery</h3>
+          <ul>
+            <li>Number of blade servers</li>
+            <li>CPU speed</li>
+            <li>Memory capacity</li>
+            <li>Virtual-to-physical compute mapping</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h3>Network discovery</h3>
+          <ul>
+            <li>Switch model</li>
+            <li>Network adapters</li>
+            <li>VLAN IDs / VSAN IDs</li>
+            <li>Physical-to-virtual network mapping</li>
+            <li>QoS, topology, zones</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h3>Storage discovery</h3>
+          <ul>
+            <li>Storage system type</li>
+            <li>Drive type</li>
+            <li>Total / free / used capacity</li>
+            <li>RAID level</li>
+            <li>Storage pools</li>
+            <li>Physical-to-virtual storage mapping</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Resource Management -->
+  <div class="section" id="management">
+    <div class="section-label"><span class="sec-num">05</span> Resource Management — Pools</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#7c6df5"></span>Aggregating and organizing physical resources into pools</div>
+      <p>Once discovered, physical resources are grouped into <strong>resource pools</strong>. Virtual resources (VMs, virtual volumes, virtual networks) are created from these pools and provisioned to services. The control software also lets you <strong>grade</strong> these pools.</p>
+      <div class="note good">Resource Grading = categorizing pools by performance, capacity, and availability so you can offer different service tiers to consumers.</div>
+    </div>
+  </div>
+
+  <!-- 6. Resource Grading -->
+  <div class="section" id="grading">
+    <div class="section-label"><span class="sec-num">06</span> Resource Grading — Gold / Silver / Bronze</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#f4a261"></span>Tiered pools = tiered service offerings</div>
+      <p>Pools of different grades let the provider offer a variety of service levels. Grade levels can be defined for compute (CPU + memory), storage, and network (WWN, VLAN ID) pools. The number of grades depends on business requirements.</p>
+      <div class="sub-label">Storage grading example (the one used in the lecture)</div>
+      <div class="grid3">
+        <div class="mini-card" style="border-color:rgba(255,215,0,.2)">
+          <h3><span class="badge b-gold">Gold</span></h3>
+          <ul>
+            <li>Drives: Flash + FC + SATA</li>
+            <li>Supports automated storage tiering</li>
+            <li>Total: 3 TB (Flash 1TB, FC 1TB, SATA 1TB)</li>
+            <li>RAID level 5</li>
+          </ul>
+        </div>
+        <div class="mini-card" style="border-color:rgba(192,192,192,.2)">
+          <h3><span class="badge b-silver">Silver</span></h3>
+          <ul>
+            <li>Drives: Flash + FC + SATA</li>
+            <li>Supports automated storage tiering</li>
+            <li>Total: 3 TB (Flash 0.5TB, FC 1TB, SATA 1.5TB)</li>
+            <li>RAID level 1+0</li>
+          </ul>
+        </div>
+        <div class="mini-card" style="border-color:rgba(205,127,50,.2)">
+          <h3><span class="badge b-bronze">Bronze</span></h3>
+          <ul>
+            <li>Drives: FC only</li>
+            <li>No automated storage tiering</li>
+            <li>Total: 2 TB</li>
+            <li>RAID level 5</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Allocation Models -->
+  <div class="section" id="allocation">
+    <div class="section-label"><span class="sec-num">07</span> Resource Allocation Models</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#e87070"></span>Two ways to control how much a service instance gets</div>
+      <div class="grid2">
+        <div class="mini-card">
+          <h3>Relative Resource Allocation</h3>
+          <p>Resources are assigned proportionally relative to other service instances. No fixed amounts — it's about ratios.</p>
+          <p style="margin-top:.5rem;font-size:12.5px;color:#7c6df5">Example: Platinum = 2X priority, Gold = X priority. Under contention, Platinum gets twice as much as Gold.</p>
+        </div>
+        <div class="mini-card">
+          <h3>Absolute Resource Allocation</h3>
+          <p>Resources are assigned as hard numbers with a lower bound (minimum guaranteed) and upper bound (maximum allowed).</p>
+          <p style="margin-top:.5rem;font-size:12.5px;color:#4ec9b0">Example: VM has lower bound 2 GB / 1200 MHz, upper bound 4 GB / 2400 MHz.</p>
+        </div>
+      </div>
+      <div class="sub-label">Absolute allocation — exam-favourite scenario</div>
+      <ul class="points">
+        <li><strong>If available resources &lt; lower bound</strong> → the VM will NOT power on.</li>
+        <li><strong>If available resources &gt; upper bound</strong> → VM is still capped at the upper bound (4 GB / 2400 MHz). It cannot consume more than the maximum even if more is free.</li>
+        <li><strong>Normal operation</strong> → VM runs between the lower and upper bounds based on what it needs and what's available.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 8. Compute Management -->
+  <div class="section" id="compute">
+    <div class="section-label"><span class="sec-num">08</span> Compute Resource Management</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#4ec9b0"></span>Techniques to get the most out of physical CPUs and memory</div>
+      <div class="grid2">
+        <div class="mini-card">
+          <h3>Hyperthreading</h3>
+          <p>Each physical CPU core presents itself as two logical cores. A dual-core CPU appears as 4 logical cores. VMs get virtual processors mapped to these logical cores. More VMs can be packed onto one physical host.</p>
+        </div>
+        <div class="mini-card">
+          <h3>Memory Page Sharing</h3>
+          <p>If multiple VMs have identical memory pages (e.g. same OS), the hypervisor maps them all to one physical copy. Only when a VM modifies the page does it get its own private copy (copy-on-write). Reduces actual physical RAM usage.</p>
+        </div>
+        <div class="mini-card">
+          <h3>Dynamic Memory Allocation</h3>
+          <p>Memory is not statically assigned to VMs. The hypervisor expands or shrinks a VM's memory allocation at runtime based on demand, so unused memory from idle VMs can be given to busy ones.</p>
+        </div>
+        <div class="mini-card">
+          <h3>VM Load Balancing</h3>
+          <p>The control software monitors host utilization and migrates VMs between physical servers (live migration) to balance workload and prevent hotspots.</p>
+        </div>
+      </div>
+      <div class="mini-card" style="margin-top:.75rem">
+        <h3>Server Flash Caching</h3>
+        <p style="font-size:13px;color:#8e8ea0">Install SSD/flash storage inside the server as a fast local cache. Frequently accessed data is served from flash instead of going to the SAN, dramatically reducing I/O latency for that server's VMs.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Storage Management -->
+  <div class="section" id="storage">
+    <div class="section-label"><span class="sec-num">09</span> Storage Resource Management</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#f4a261"></span>Managing how storage is carved up and tiered</div>
+      <div class="grid2">
+        <div class="mini-card">
+          <h3>Thick vs. Thin Provisioning</h3>
+          <ul>
+            <li><strong>Thick:</strong> All storage space is allocated upfront. The full amount is reserved even if unused. Predictable, no risk of running out mid-operation.</li>
+            <li><strong>Thin:</strong> Only the space actually used is consumed. Can over-provision (promise more than physically exists). More flexible but requires monitoring.</li>
+          </ul>
+        </div>
+        <div class="mini-card">
+          <h3>Storage Pool Rebalancing</h3>
+          <p>As data is added/removed over time, some drives in a pool get more loaded than others. Rebalancing redistributes data evenly across all drives to maintain performance.</p>
+        </div>
+        <div class="mini-card">
+          <h3>Automated Storage Tiering</h3>
+          <p>Automatically moves frequently accessed ("hot") data to faster drives (Flash/SSD) and cold data to slower drives (SATA) — without manual intervention. Optimizes cost vs. performance.</p>
+        </div>
+        <div class="mini-card">
+          <h3>Cache Tiering</h3>
+          <p>Adds a cache tier inside the storage system itself: Tier 0 = DRAM cache (fastest), Tier 1 = SSD. Hot data lives in cache; cold data sits on spinning disk. Reduces latency for active workloads.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Network Management -->
+  <div class="section" id="network">
+    <div class="section-label"><span class="sec-num">10</span> Network Resource Management</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#7c6df5"></span>Controlling and optimizing network bandwidth usage</div>
+      <div class="grid2">
+        <div class="mini-card">
+          <h3>Limit and Share</h3>
+          <p>Set maximum bandwidth a VM or tenant can use (limit) and define proportional shares when there's contention (share). Similar to the relative/absolute allocation models applied to bandwidth.</p>
+        </div>
+        <div class="mini-card">
+          <h3>Traffic Shaping</h3>
+          <p>Enforces a rate limit at a network port. If traffic exceeds the limit, excess packets are <strong>queued</strong> (not dropped) for later transmission — unlike policing which drops them. Ensures SLA for critical apps and prevents one tenant from flooding the network.</p>
+        </div>
+        <div class="mini-card">
+          <h3>Link Aggregation</h3>
+          <p>Bundles multiple physical links between switches (or switch-to-server) into one logical link. Distributes traffic across all links. Covered in depth in Week 11.</p>
+        </div>
+        <div class="mini-card">
+          <h3>NIC Teaming</h3>
+          <p>Server-side version of link aggregation. Multiple NICs combined into one logical interface. Provides both load balancing across NICs and failover if one NIC or link fails.</p>
+        </div>
+      </div>
+      <div class="mini-card" style="margin-top:.75rem">
+        <h3>Multipathing</h3>
+        <p style="font-size:13px;color:#8e8ea0">Multiple physical paths exist between a server and its storage or network. Multipathing software uses all of them simultaneously for load balancing and automatically reroutes traffic if a path fails, improving I/O performance and path utilization.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. Resource Provisioning -->
+  <div class="section" id="provisioning">
+    <div class="section-label"><span class="sec-num">11</span> Resource Provisioning</div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:#4ec9b0"></span>The final step — actually delivering resources to the customer</div>
+      <p>Provisioning = allocating resources from graded resource pools to service instances. It's the end-to-end fulfillment of a customer's request.</p>
+      <div class="sub-label">How it works (two-step)</div>
+      <div class="flow">
+        <div class="fbox hi">1. Consumer picks a service from the service catalog</div>
+        <div class="arrow">→</div>
+        <div class="fbox hi">2. Control software allocates resources from the right graded pool and wires everything together per the service template</div>
+        <div class="arrow">→</div>
+        <div class="fbox">Service instance is live</div>
+      </div>
+      <div class="note good">The service template defines what the service looks like — which compute grade, which storage grade, which network config. Provisioning instantiates that template with real resources from the pools.</div>
+    </div>
+  </div>
+
+  <!-- 12. Quick Reference -->
+  <div class="section" id="summary">
+    <div class="section-label"><span class="sec-num">12</span> Quick reference — everything in one table</div>
+    <div class="card">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Concept</th>
+            <th>What it is / does</th>
+            <th>Key detail to remember</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Control Layer</td><td>Middle layer between service requests and physical hardware</td><td>Functions: configuration, provisioning, monitoring</td></tr>
+          <tr><td>Element Manager</td><td>Manages one type of infrastructure (compute/network/storage) via its native API</td><td>Can configure, expand, troubleshoot, and monitor that component</td></tr>
+          <tr><td>Unified Manager</td><td>Single interface over all element managers</td><td>Discovers, compiles, and presents a consolidated resource view</td></tr>
+          <tr><td>Resource Discovery</td><td>Learning what resources exist and their current state</td><td>Runs on schedule or triggered by admin on infrastructure change</td></tr>
+          <tr><td>Resource Grading</td><td>Categorizing pools by performance/capacity/availability</td><td>Gold/Silver/Bronze; grades enable different service offerings</td></tr>
+          <tr><td>Relative Allocation</td><td>Resources divided proportionally between instances</td><td>Platinum (2X) vs Gold (X) — Platinum gets twice as much under contention</td></tr>
+          <tr><td>Absolute Allocation</td><td>Fixed lower bound (min) and upper bound (max)</td><td>Below lower bound → VM won't start; above upper bound → capped</td></tr>
+          <tr><td>Hyperthreading</td><td>One physical core appears as two logical cores</td><td>More VMs per host; VMs get virtual processors</td></tr>
+          <tr><td>Memory Page Sharing</td><td>Identical pages across VMs mapped to one physical copy</td><td>Copy-on-write: private copy only when VM modifies page</td></tr>
+          <tr><td>Thick Provisioning</td><td>All space reserved upfront</td><td>Predictable; space reserved even if unused</td></tr>
+          <tr><td>Thin Provisioning</td><td>Space allocated as actually used</td><td>Allows over-provisioning; needs monitoring</td></tr>
+          <tr><td>Auto Storage Tiering</td><td>Hot data → fast drives, cold data → slow drives, automatically</td><td>Optimizes cost vs performance without manual moves</td></tr>
+          <tr><td>Cache Tiering</td><td>DRAM (Tier 0) + SSD (Tier 1) inside the storage system</td><td>Hot data served from cache; reduces latency</td></tr>
+          <tr><td>Traffic Shaping</td><td>Rate-limits traffic at a port; queues excess (doesn't drop)</td><td>Ensures SLA for critical apps; controls per-tenant bandwidth</td></tr>
+          <tr><td>Multipathing</td><td>Multiple paths to storage used simultaneously</td><td>Load balancing + automatic failover if a path dies</td></tr>
+          <tr><td>Resource Provisioning</td><td>Allocating from graded pools to create a service instance</td><td>Consumer picks from catalog → control SW instantiates the template</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>SIT452 · Cloud Computing & Virtual Network · Control Layer · Exam Review Sheet &nbsp;·&nbsp; Content from lecture slides by Shaimaa M. Mohamed</footer>
+
+</div>
+</body>
+</html>
