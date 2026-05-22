@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Continuity Layer - Complete Exam Study Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0f1419;
+            --bg-darker: #0a0e13;
+            --bg-card: #1a1f2e;
+            --bg-hover: #242a3a;
+            --text-primary: #e4e6eb;
+            --text-secondary: #b0b3b8;
+            --accent-primary: #64b5f6;
+            --accent-secondary: #81c784;
+            --accent-warning: #ffb74d;
+            --accent-danger: #ef5350;
+            --border-color: #2d3748;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--bg-dark);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-primary);
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .toc {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-primary);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 50px;
+        }
+
+        .toc h2 {
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .toc ul {
+            list-style: none;
+            columns: 2;
+            gap: 30px;
+        }
+
+        .toc li {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .toc li:before {
+            content: "▸";
+            color: var(--accent-primary);
+            position: absolute;
+            left: 0;
+        }
+
+        .toc a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .toc a:hover {
+            color: var(--accent-secondary);
+            text-decoration: underline;
+        }
+
+        .section {
+            margin-bottom: 60px;
+            border-left: 5px solid var(--accent-primary);
+            padding-left: 30px;
+        }
+
+        .section h2 {
+            color: var(--accent-primary);
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .subsection {
+            margin-bottom: 35px;
+        }
+
+        .subsection h3 {
+            color: var(--accent-secondary);
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        .subsection h4 {
+            color: var(--text-primary);
+            font-size: 1.1em;
+            margin-top: 18px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .key-points {
+            background: var(--bg-card);
+            border-left: 5px solid var(--accent-primary);
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .key-points li {
+            margin-left: 25px;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .definition {
+            background: var(--bg-card);
+            border-left: 5px solid var(--accent-warning);
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .definition strong {
+            color: var(--accent-warning);
+        }
+
+        .example {
+            background: var(--bg-card);
+            border-left: 5px solid var(--accent-secondary);
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .example strong {
+            color: var(--accent-secondary);
+        }
+
+        .formula {
+            background: var(--bg-card);
+            border-left: 5px solid #9575cd;
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-family: 'Courier New', monospace;
+            color: #b39ddb;
+            font-weight: 500;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border: none;
+        }
+
+        .comparison-table td {
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            color: var(--text-secondary);
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: rgba(100, 181, 246, 0.05);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(100, 181, 246, 0.15);
+        }
+
+        .comparison-table strong {
+            color: var(--accent-primary);
+        }
+
+        .quick-reference {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-primary);
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--accent-secondary);
+            background: var(--bg-hover);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(100, 181, 246, 0.2);
+        }
+
+        .card h4 {
+            color: var(--accent-primary);
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .card p {
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            background-color: rgba(255, 183, 77, 0.2);
+            color: var(--accent-warning);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            border-left: 3px solid var(--accent-warning);
+            padding-left: 6px;
+        }
+
+        .important {
+            color: var(--accent-danger);
+            font-weight: bold;
+        }
+
+        .tip {
+            background: var(--bg-card);
+            border-left: 5px solid var(--accent-primary);
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .tip strong {
+            color: var(--accent-primary);
+        }
+
+        .warning {
+            background: var(--bg-card);
+            border-left: 5px solid var(--accent-danger);
+            padding: 20px 25px;
+            margin: 20px 0;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .warning strong {
+            color: var(--accent-danger);
+        }
+
+        .diagram {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-primary);
+            overflow-x: auto;
+            white-space: pre;
+            line-height: 1.5;
+        }
+
+        footer {
+            background: var(--bg-darker);
+            padding: 30px;
+            text-align: center;
+            color: var(--text-secondary);
+            border-top: 2px solid var(--border-color);
+        }
+
+        footer p {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent-primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s;
+            font-size: 1.2em;
+            border: none;
+            box-shadow: 0 5px 20px rgba(100, 181, 246, 0.4);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+        }
+
+        .back-to-top:hover {
+            background: var(--accent-secondary);
+            transform: translateY(-5px);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        ul li {
+            margin-left: 0;
+            position: relative;
+            padding-left: 25px;
+            margin-bottom: 10px;
+        }
+
+        ul li:before {
+            content: "•";
+            color: var(--accent-primary);
+            position: absolute;
+            left: 0;
+            font-size: 1.3em;
+        }
+
+        ol {
+            margin-left: 25px;
+        }
+
+        ol li {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .container {
+                box-shadow: none;
+                background: white;
+                color: black;
+            }
+            .back-to-top {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 25px;
+            }
+            header h1 {
+                font-size: 2em;
+            }
+            .section {
+                padding-left: 20px;
+            }
+            .toc ul {
+                columns: 1;
+            }
+            .quick-reference {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ Business Continuity Layer (SIT452)</h1>
+            <p>Complete Exam Study Guide - Week 13 | Cloud Computing & Virtual Networks</p>
+        </header>
+
+        <div class="content">
+            <!-- TABLE OF CONTENTS -->
+            <div class="toc">
+                <h2>📋 Quick Navigation</h2>
+                <ul>
+                    <li><a href="#what-is-bc">What is Business Continuity?</a></li>
+                    <li><a href="#bc-layer">BC Layer Position</a></li>
+                    <li><a href="#key-terms">Essential Definitions</a></li>
+                    <li><a href="#downtime-causes">Downtime Causes</a></li>
+                    <li><a href="#four-pillars">4 Main Strategies</a></li>
+                    <li><a href="#real-examples">Real-World Examples</a></li>
+                    <li><a href="#exam-tips">Exam Tips</a></li>
+                </ul>
+            </div>
+
+            <!-- INTRODUCTION -->
+            <section class="section" id="what-is-bc">
+                <h2>📚 What is Business Continuity?</h2>
+                <div class="subsection">
+                    <div class="definition">
+                        <strong>Business Continuity (BC)</strong> is the coordinated process of ensuring uninterrupted cloud services to consumers by implementing automated procedures to handle failures, disasters, and outages.
+                    </div>
+                    
+                    <h3>Core Definition & Purpose</h3>
+                    <p>Business continuity layer operates at the top of the cloud architecture, overlaying all other layers to provide reliability and fault tolerance.</p>
+                    
+                    <div class="key-points">
+                        <strong>Key Characteristics:</strong>
+                        <ul>
+                            <li><strong>Automated Processes:</strong> BC operations run automatically through orchestration - e.g., if a service requires VM backup every 6 hours, it happens automatically every 6 hours without manual intervention</li>
+                            <li><strong>Three Core Activities:</strong>
+                                <ul style="margin-top: 8px; margin-left: 25px;">
+                                    <li>Preparing for a system outage (proactive planning)</li>
+                                    <li>Responding to a system outage (immediate reaction)</li>
+                                    <li>Recovering from a system outage (restoration)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Mission-Critical Protection:</strong> Prevents interruption of critical services that businesses depend on</li>
+                            <li><strong>Service Level Agreement (SLA) Compliance:</strong> Meets agreed availability requirements with customers</li>
+                            <li><strong>Rapid Recovery:</strong> Reestablishes impacted services as swiftly and smoothly as possible using automated processes</li>
+                        </ul>
+                    </div>
+
+                    <h3>Two Approaches to BC</h3>
+                    <div class="comparison-table">
+                        <tr>
+                            <th>Approach</th>
+                            <th>Description</th>
+                            <th>Purpose</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Proactive Measures</strong></td>
+                            <td>Business impact analysis, risk assessment, building resilient infrastructure, deploying data protection solutions (backup & replication)</td>
+                            <td>Prevent outages before they happen</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reactive Countermeasures</strong></td>
+                            <td>Disaster recovery plans to be invoked when service failure occurs</td>
+                            <td>Minimize downtime after failure occurs</td>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+
+            <!-- BC LAYER POSITION -->
+            <section class="section" id="bc-layer">
+                <h2>🏗️ Cloud Architecture & BC Layer Position</h2>
+                <p>The Business Continuity layer sits at the <span class="highlight">top of the cloud architecture stack</span> and provides protection across all underlying layers:</p>
+                
+                <div class="diagram">
+┌─────────────────────────────────────────────────────┐
+│                 BC Layer                            │  ← Overlays entire stack
+│   (Availability, Failover, Backup, Resilience)     │
+├─────────────────────────────────────────────────────┤
+│              Service Layer                          │
+│        (Applications, APIs, Databases)              │
+├─────────────────────────────────────────────────────┤
+│         Service Orchestration Layer                 │
+│      (Automation, Scheduling, Management)           │
+├─────────────────────────────────────────────────────┤
+│              Control Layer                          │
+│        (VM Management, Network Control)             │
+├─────────────────────────────────────────────────────┤
+│              Virtual Layer                          │
+│     (Virtual Machines, Virtual Networks)            │
+├─────────────────────────────────────────────────────┤
+│          Physical Layer                             │
+│   (Hardware Compute, Storage, Networking)           │
+└─────────────────────────────────────────────────────┘
+                </div>
+
+                <h3>Dependency Chain</h3>
+                <p>The BC layer depends on ALL lower layers. Cloud service availability relies on:</p>
+                <div class="key-points">
+                    <ul>
+                        <li><strong>Infrastructure reliability:</strong> Physical components must be redundant and fault-tolerant</li>
+                        <li><strong>Virtual layer stability:</strong> VMs and virtual networks must support high availability</li>
+                        <li><strong>Control layer automation:</strong> Systems must automatically manage and redistribute workloads</li>
+                        <li><strong>Orchestration layer:</strong> Services must be deployable and manageable across multiple zones/locations</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- KEY TERMS -->
+            <section class="section" id="key-terms">
+                <h2>📖 Essential Definitions & Metrics</h2>
+                
+                <div class="subsection">
+                    <h3>Availability Metrics</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Term</th>
+                            <th>Definition</th>
+                            <th>Impact</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Uptime</strong></td>
+                            <td>Time between two outages (scheduled or unscheduled) - when service is RUNNING</td>
+                            <td>Higher is better; goal is maximize uptime</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Downtime</strong></td>
+                            <td>Time elapsed DURING an outage - when service is UNAVAILABLE</td>
+                            <td>Lower is better; goal is minimize downtime</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Service Availability (%)</strong></td>
+                            <td>Percentage of agreed service time that service is actually available</td>
+                            <td>Direct measure of BC effectiveness; determines SLA compliance</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="subsection">
+                    <h3>Service Availability Calculation</h3>
+                    <div class="formula">
+Service Availability (%) = (Agreed Service Time - Downtime) / Agreed Service Time × 100%
+                    </div>
+                    
+                    <div class="example">
+                        <strong>Example Calculation:</strong><br>
+                        Service offered: Monday-Friday, 8am-6pm (10 hours/day × 5 days = 50 hours/week)<br>
+                        Downtime during week: 3 hours<br><br>
+                        Service Availability = (50 - 3) / 50 × 100 = 47 / 50 × 100 = <strong style="color: var(--accent-secondary);">94%</strong>
+                    </div>
+
+                    <div class="tip">
+                        <strong>📌 Exam Tip:</strong> You must be able to calculate availability percentages. Practice with different scenarios: 1 hour downtime, 6 hours downtime, 24-hour operations vs business hours only.
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Recovery Metrics: RPO vs RTO</h3>
+                    <p style="margin-bottom: 15px;"><strong style="color: var(--accent-danger);">⚠️ CRITICAL EXAM DIFFERENCE - DO NOT CONFUSE THESE TWO</strong></p>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Metric</th>
+                            <th>Full Name</th>
+                            <th>Meaning</th>
+                            <th>Example</th>
+                        </tr>
+                        <tr>
+                            <td><strong>RPO</strong></td>
+                            <td>Recovery Point Objective</td>
+                            <td><strong style="color: var(--accent-warning);">TIME BETWEEN BACKUPS</strong> - maximum acceptable data loss</td>
+                            <td>If RPO=6 hours, backups occur every 6 hours. Can lose up to 6 hours of data.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RTO</strong></td>
+                            <td>Recovery Time Objective</td>
+                            <td><strong style="color: var(--accent-warning);">TIME TO RESTORE SERVICE</strong> - maximum acceptable downtime</td>
+                            <td>If RTO=2 hours, service must be restored within 2 hours of failure</td>
+                        </tr>
+                    </table>
+
+                    <div class="warning">
+                        <strong>Memory Device:</strong> RPO = Restore POINT (when the last backup happened), RTO = Restore TIME (how fast we recover)
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Disaster Recovery (DR)</h3>
+                    <div class="definition">
+                        <strong>Disaster Recovery (DR):</strong> The coordinated process of restoring IT infrastructure and data required to support ongoing cloud services after a natural or human-induced disaster occurs (earthquake, fire, cyberattack, etc.).
+                        <br><br>
+                        <strong>Key Concept:</strong> Requires maintaining a secondary data center (DR site) at a pre-planned level of operational readiness. When the primary data center fails, the DR site automatically takes over.
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Dependency & Failover</h3>
+                    <div class="definition">
+                        <strong>Service Dependency:</strong> A service is dependent if it relies on another service or component. If the dependent service/component fails, the primary service also fails.
+                        <br><br>
+                        <strong>Example:</strong> A web application running on VM-A depends on database server running on VM-B. If VM-B fails, the web application on VM-A cannot access data and effectively fails.
+                    </div>
+                </div>
+            </section>
+
+            <!-- DOWNTIME CAUSES -->
+            <section class="section">
+                <h2>⚠️ What Causes Service Downtime?</h2>
+                
+                <div class="subsection">
+                    <h3>Planned Downtime</h3>
+                    <div class="key-points">
+                        <ul>
+                            <li>Hardware installation & maintenance</li>
+                            <li>Software upgrades or patches</li>
+                            <li>Application or data restores</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Unplanned Downtime</h3>
+                    <div class="key-points">
+                        <ul>
+                            <li>Human errors (accidental deletion, misconfiguration)</li>
+                            <li>Database corruption</li>
+                            <li>Component failures (hardware, software, network)</li>
+                            <li>Disasters (fire, flooding, earthquakes, cyberattacks)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Impact of Service Unavailability</h3>
+                    <div class="key-points">
+                        <ul>
+                            <li><strong>Direct Cost:</strong> Lost revenue, equipment rental, overtime pay</li>
+                            <li><strong>Reputation Damage:</strong> Customer loss, trust erosion</li>
+                            <li><strong>Real-world example:</strong> 2016 NHS hospital hack = 5 days downtime, 2,800 canceled appointments</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4 PILLARS OF BC -->
+            <section class="section">
+                <h2>🔧 4 Main Strategies to Achieve High Availability</h2>
+                
+                <div class="subsection">
+                    <h3>1️⃣ Build Resilient Cloud Infrastructure</h3>
+                    <p><strong>Goal:</strong> Avoid single points of failure (SPOF) - no one component can bring down the whole system.</p>
+                    
+                    <h4 style="margin-top: 15px; color: #666;">A) Compute Level - Clustering</h4>
+                    <div class="definition">
+                        <strong>Clustering:</strong> 2+ servers work together as one system. If one fails, service automatically fails over to another.
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li><strong>Active/Active:</strong> Both servers actively serve requests</li>
+                            <li><strong>Active/Passive:</strong> One active, one standby (takes over if needed)</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="margin-top: 15px; color: #666;">B) Network Level - Multiple Paths</h4>
+                    <div class="key-points">
+                        <ul>
+                            <li><strong>Link Aggregation:</strong> Multiple network links → one logical link for redundancy</li>
+                            <li><strong>NIC Teaming:</strong> Groups multiple NICs, automatic failover if one fails</li>
+                            <li><strong>Switch Aggregation:</strong> Two physical switches appear as one; if one fails, traffic flows through the other</li>
+                            <li><strong>Multipathing:</strong> Multiple paths to storage; if one path fails, I/O automatically reroutes</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="margin-top: 15px; color: #666;">C) Storage Level - RAID & Disk Sparing</h4>
+                    <div class="key-points">
+                        <ul>
+                            <li><strong>RAID:</strong> Combines multiple disks into logical unit with data protection</li>
+                            <li><strong>Dynamic Disk Sparing:</strong> Failed disk automatically replaced by spare disk without manual intervention</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="margin-top: 15px; color: #666;">D) N+1 Redundancy</h4>
+                    <div class="definition">
+                        N components + 1 standby = if one fails, you still have N working. Example: 3 servers + 1 spare = 4 total.
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>2️⃣ Automated Cloud Service Failover</h3>
+                    <div class="definition">
+                        <strong>Service Availability Zones (SAZ):</strong> Isolated locations with their own resources. Failure in one zone doesn't affect others.
+                    </div>
+                    <div class="key-points">
+                        <ul>
+                            <li>Can be part of one data center or an entire data center</li>
+                            <li>Multiple zones across different geographic locations survive data center failures</li>
+                            <li>Enables automatic failover = service keeps running</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>3️⃣ Data Protection (Backup & Replication)</h3>
+                    
+                    <h4 style="margin-top: 15px; color: #666;">A) Backup</h4>
+                    <div class="definition">
+                        <strong>Backup:</strong> Additional copy of data created for disaster recovery. Must be restored by backup software before use.
+                    </div>
+                    <div class="key-points">
+                        <ul>
+                            <li>Always a point-in-time copy (specific moment)</li>
+                            <li>Limited recovery points (can only restore to last backup)</li>
+                            <li>Slower RTO than replication (needs restoration process)</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="margin-top: 15px; color: #666;">B) Replication</h4>
+                    <div class="definition">
+                        <strong>Replication:</strong> Exact copy of data immediately accessible by applications.
+                    </div>
+                    <div class="key-points">
+                        <ul>
+                            <li><strong>Local Replication:</strong> Copy within same location (snapshots, mirroring)</li>
+                            <li><strong>Remote Replication:</strong> Copy to different geographic location</li>
+                        </ul>
+                    </div>
+
+                    <h4 style="margin-top: 15px; color: #666;">Synchronous vs Asynchronous Replication</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Type</th>
+                            <th>How It Works</th>
+                            <th>RPO</th>
+                            <th>Use Case</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Synchronous</strong></td>
+                            <td>Replica always identical to source in real-time</td>
+                            <td>Near-zero RPO</td>
+                            <td>Mission-critical data</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Asynchronous</strong></td>
+                            <td>Replica lags behind source by some time</td>
+                            <td>Higher RPO</td>
+                            <td>Less critical data, cost-saving</td>
+                        </tr>
+                    </table>
+
+                    <h4 style="margin-top: 15px; color: #666;">Backup vs Replication Comparison</h4>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Feature</th>
+                            <th>Backup</th>
+                            <th>Replication</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Accessibility</strong></td>
+                            <td>Must be restored first</td>
+                            <td>Immediately accessible</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RTO</strong></td>
+                            <td>Slower (includes restore time)</td>
+                            <td>Faster</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Copy Type</strong></td>
+                            <td>Point-in-time only</td>
+                            <td>Can be continuous</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Purpose</strong></td>
+                            <td>Operational/disaster recovery</td>
+                            <td>Recovery and restart</td>
+                        </tr>
+                    </table>
+
+                    <h4 style="margin-top: 15px; color: #666;">Tiered Data Protection Approach</h4>
+                    <div class="definition">
+                        Different services get different protection levels based on importance:
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li><strong>Tier 1:</strong> Mission-critical (banks, hospitals) → synchronized replication + backup</li>
+                            <li><strong>Tier 2:</strong> Important but less urgent → periodic backup</li>
+                            <li><strong>Tier 3:</strong> Non-critical → basic backup only</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>4️⃣ Resilient Cloud Applications</h3>
+                    <div class="definition">
+                        Applications designed to keep running even when components fail.
+                    </div>
+                    <div class="key-points">
+                        <ul>
+                            <li><strong>Loosely coupled modules:</strong> If one breaks, others still work</li>
+                            <li><strong>Retry logic:</strong> Automatically retries if a service is temporarily down</li>
+                            <li><strong>Limited functionality mode:</strong> App continues with reduced features instead of crashing</li>
+                            <li><strong>Example:</strong> If payment system is down, allow browsing but queue orders for later</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QUICK REFERENCE -->
+            <section class="section">
+                <h2>⚡ Quick Reference Cards</h2>
+                <div class="quick-reference">
+                    <div class="card">
+                        <h4>SPOF (Single Point of Failure)</h4>
+                        <p>One component whose failure brings down entire system. BC eliminates these through redundancy.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Active/Active</h4>
+                        <p>All redundant components actively working and distributing load</p>
+                    </div>
+                    <div class="card">
+                        <h4>Active/Passive</h4>
+                        <p>One component active, others standby. Standby takes over on failure</p>
+                    </div>
+                    <div class="card">
+                        <h4>Failover</h4>
+                        <p>Automatic switching from failed component to backup</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REAL-WORLD EXAMPLES -->
+            <section class="section">
+                <h2>📌 Real-World Examples</h2>
+                
+                <div class="subsection">
+                    <h3>❌ Example 1: NHS Hospital Attack (2016)</h3>
+                    <div class="example">
+                        <strong>What Happened:</strong> Firewall misconfiguration allowed virus to infect hospital network<br><br>
+                        <strong>Impact:</strong>
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li>3 hospitals shut down for 5 days</li>
+                            <li>2,800+ patient appointments canceled</li>
+                            <li>Patients turned away and redirected</li>
+                        </ul>
+                        <strong>Lesson:</strong> Officials KNEW about the firewall problem before the attack but didn't fix it in time!
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>✅ Example 2: Cantey Technology (2013)</h3>
+                    <div class="example">
+                        <strong>What Happened:</strong> Lightning caused fire at office building housing IT company's infrastructure<br><br>
+                        <strong>The Disaster:</strong>
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li>Servers melted, cables burned, entire office destroyed</li>
+                            <li>Company hosted servers for 200+ clients</li>
+                        </ul>
+                        <strong>Why They Survived:</strong>
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li>Had BC plan: servers replicated to remote data center</li>
+                            <li>Continuous backups stored remotely</li>
+                            <li>Moved staff to temporary office</li>
+                        </ul>
+                        <strong>Result:</strong> Clients experienced ZERO downtime! They never knew anything happened.
+                    </div>
+                </div>
+            </section>
+
+            <!-- EXAM TIPS -->
+            <section class="section">
+                <h2>🎯 Exam Tips & Key Takeaways</h2>
+                <div class="tip">
+                    <strong>Remember the 4 Pillars:</strong>
+                    <ol style="margin-top: 10px; margin-left: 20px;">
+                        <li>Build Resilient Infrastructure (redundancy)</li>
+                        <li>Automated Failover (availability zones)</li>
+                        <li>Data Protection (backup + replication)</li>
+                        <li>Resilient Applications (fault-tolerant code)</li>
+                    </ol>
+                </div>
+                
+                <div class="tip">
+                    <strong>Key Differences to Know:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><span class="highlight">Backup vs Replication</span> - This is a common exam question</li>
+                        <li><span class="highlight">RPO vs RTO</span> - Not the same thing! RPO = interval between backups, RTO = time to restore</li>
+                        <li><span class="highlight">Synchronous vs Asynchronous</span> - Know the trade-offs</li>
+                        <li><span class="highlight">Local vs Remote Replication</span> - Geography matters</li>
+                    </ul>
+                </div>
+
+                <div class="tip">
+                    <strong>Calculation Practice:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Know the availability formula: (Agreed Time - Downtime) / Agreed Time</li>
+                        <li>Practice calculating percentages with different downtime scenarios</li>
+                    </ul>
+                </div>
+
+                <div class="tip">
+                    <strong>Common Misconceptions to Avoid:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>BC is NOT just backup - it includes infrastructure redundancy too</li>
+                        <li>Replication is NOT the same as backup</li>
+                        <li>Active/Passive is NOT the same as Active/Active</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- QUICK STUDY CHECKLIST -->
+            <section class="section">
+                <h2>✅ Pre-Exam Checklist</h2>
+                <div class="key-points">
+                    <ul>
+                        <li>☐ Understand what BC layer is and why it matters</li>
+                        <li>☐ Know 4 pillars of BC strategy</li>
+                        <li>☐ Memorize definitions: uptime, downtime, RPO, RTO, SPOF, DR</li>
+                        <li>☐ Understand clustering (active/active vs active/passive)</li>
+                        <li>☐ Know difference between backup and replication</li>
+                        <li>☐ Understand synchronous vs asynchronous replication</li>
+                        <li>☐ Know local vs remote replication</li>
+                        <li>☐ Be able to calculate service availability %</li>
+                        <li>☐ Know real-world BC examples and why they matter</li>
+                        <li>☐ Understand how service availability zones work</li>
+                        <li>☐ Know N+1 redundancy concept</li>
+                        <li>☐ Understand resilient application design</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- FORMULA SHEET -->
+            <section class="section">
+                <h2>📊 Formula Reference Sheet</h2>
+                <div class="formula">
+                    <strong>Service Availability:</strong><br>
+                    (Agreed Service Time - Downtime) / Agreed Service Time × 100%<br><br>
+                    <strong>Example:</strong> (50 - 3) / 50 × 100 = 94%
+                </div>
+            </section>
+
+        </div>
+
+        <footer>
+            <p><strong>SIT452 - Cloud Computing & Virtual Networks</strong></p>
+            <p>Business Continuity Layer Simplified Study Guide</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Generated for exam review - Use as primary study material</p>
+        </footer>
+    </div>
+</body>
+</html>
