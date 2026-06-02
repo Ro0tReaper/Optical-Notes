@@ -19,325 +19,86 @@
     --orange: #f0883e;
     --red: #f85149;
     --purple: #bc8cff;
-    --teal: #39d353;
     --cyan: #79c0ff;
     --accent: #1f6feb;
     --code-bg: #161b22;
-    --tag-cdp: #1a3a5c;
-    --tag-cdp-text: #79c0ff;
-    --tag-lldp: #1a3a1f;
-    --tag-lldp-text: #56d364;
-    --tag-ntp: #3b1f00;
-    --tag-ntp-text: #f0883e;
-    --tag-snmp: #2d1f47;
-    --tag-snmp-text: #bc8cff;
-    --tag-syslog: #3b1a1a;
-    --tag-syslog-text: #f85149;
-    --tag-file: #1a2f1a;
-    --tag-file-text: #3fb950;
-    --tag-ios: #1a2a3a;
-    --tag-ios-text: #58a6ff;
+    --tag-cdp: #1a3a5c; --tag-cdp-text: #79c0ff;
+    --tag-lldp: #1a3a1f; --tag-lldp-text: #56d364;
+    --tag-ntp: #3b1f00; --tag-ntp-text: #f0883e;
+    --tag-snmp: #2d1f47; --tag-snmp-text: #bc8cff;
+    --tag-syslog: #3b1a1a; --tag-syslog-text: #f85149;
+    --tag-file: #1a2f1a; --tag-file-text: #3fb950;
+    --tag-ios: #1a2a3a; --tag-ios-text: #58a6ff;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    padding: 2rem 1rem;
-  }
-
-  .container { max-width: 900px; margin: 0 auto; }
-
-  header {
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
-  .badge {
-    display: inline-block;
-    font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
-    padding: 3px 8px;
-    border-radius: 4px;
-    background: var(--accent);
-    color: #fff;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.75rem;
-  }
-
-  h1 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.02em;
-  }
-
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem 1rem; }
+  .container { max-width: 920px; margin: 0 auto; }
+  header { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+  .badge { display: inline-block; font-size: 11px; font-family: 'JetBrains Mono', monospace; padding: 3px 8px; border-radius: 4px; background: var(--accent); color: #fff; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+  h1 { font-size: 1.75rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
   h1 span { color: var(--blue); }
-
-  .subtitle {
-    color: var(--muted);
-    font-size: 0.9rem;
-    margin-top: 0.4rem;
-  }
-
-  .toc {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 2rem;
-  }
-
-  .toc a {
-    text-decoration: none;
-    font-size: 12px;
-    font-family: 'JetBrains Mono', monospace;
-    padding: 5px 12px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    transition: all 0.15s;
-  }
-
+  .subtitle { color: var(--muted); font-size: 0.9rem; margin-top: 0.4rem; }
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 2rem; }
+  .toc a { text-decoration: none; font-size: 12px; font-family: 'JetBrains Mono', monospace; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); color: var(--muted); transition: all 0.15s; }
   .toc a:hover { border-color: var(--blue); color: var(--blue); }
-
-  .section {
-    margin-bottom: 2.5rem;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .section-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    min-width: 28px;
-  }
-
-  .section-title {
-    font-weight: 600;
-    font-size: 1rem;
-  }
-
-  .section-tag {
-    margin-left: auto;
-    font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-weight: 600;
-  }
-
+  .section { margin-bottom: 2.5rem; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .section-header { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .section-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); min-width: 28px; }
+  .section-title { font-weight: 600; font-size: 1rem; }
+  .section-tag { margin-left: auto; font-size: 11px; font-family: 'JetBrains Mono', monospace; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
   .section-body { padding: 20px; }
-
-  .key-concept {
-    background: var(--surface2);
-    border-left: 3px solid var(--blue);
-    border-radius: 0 6px 6px 0;
-    padding: 12px 16px;
-    margin-bottom: 16px;
-    font-size: 0.9rem;
-  }
-
+  .key-concept { background: var(--surface2); border-left: 3px solid var(--blue); border-radius: 0 6px 6px 0; padding: 12px 16px; margin-bottom: 16px; font-size: 0.9rem; }
   .key-concept strong { color: var(--cyan); }
-
-  .facts {
-    list-style: none;
-    display: grid;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
-
-  .facts li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 0.88rem;
-  }
-
-  .facts li::before {
-    content: '▸';
-    color: var(--blue);
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  .facts li .hl { color: var(--yellow); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--surface2); padding: 1px 5px; border-radius: 3px; }
-
-  code, .cmd {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.82rem;
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    padding: 1px 6px;
-    border-radius: 4px;
-    color: var(--orange);
-  }
-
-  .cmd-block {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 12px 16px;
-    margin: 12px 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--green);
-    overflow-x: auto;
-    line-height: 1.8;
-  }
-
-  .cmd-block .comment { color: var(--muted); }
-  .cmd-block .prompt { color: var(--blue); }
-
+  .facts { list-style: none; display: grid; gap: 8px; margin-bottom: 14px; }
+  .facts li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; }
+  .facts li::before { content: '▸'; color: var(--blue); flex-shrink: 0; margin-top: 1px; }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--code-bg); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; color: var(--orange); }
+  .cmd-block { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; margin: 12px 0; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--green); overflow-x: auto; line-height: 1.9; white-space: pre; }
+  .cmd-block .cm { color: var(--muted); }
+  .cmd-block .pr { color: var(--blue); }
+  .cmd-block .ky { color: var(--yellow); }
+  .cmd-block .hl { color: var(--cyan); }
   .table-wrap { overflow-x: auto; margin: 12px 0; }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-  }
-
-  th {
-    background: var(--surface2);
-    color: var(--cyan);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
-    padding: 8px 12px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-    font-weight: 600;
-    letter-spacing: 0.04em;
-  }
-
-  td {
-    padding: 7px 12px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th { background: var(--surface2); color: var(--cyan); font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); font-weight: 600; letter-spacing: 0.04em; }
+  td { padding: 7px 12px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 0.85rem; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: var(--surface2); }
-
-  .warn {
-    background: #2d1700;
-    border: 1px solid #6e3900;
-    border-radius: 6px;
-    padding: 10px 14px;
-    font-size: 0.85rem;
-    color: var(--orange);
-    margin: 12px 0;
-  }
-
-  .warn::before { content: '⚠ '; font-weight: 700; }
-
-  .tip {
-    background: #0d2a1a;
-    border: 1px solid #1f6030;
-    border-radius: 6px;
-    padding: 10px 14px;
-    font-size: 0.85rem;
-    color: var(--green);
-    margin: 12px 0;
-  }
-
+  .warn { background: #2d1700; border: 1px solid #6e3900; border-radius: 6px; padding: 10px 14px; font-size: 0.85rem; color: var(--orange); margin: 12px 0; }
+  .warn::before { content: '⚠  '; font-weight: 700; }
+  .tip { background: #0d2a1a; border: 1px solid #1f6030; border-radius: 6px; padding: 10px 14px; font-size: 0.85rem; color: var(--green); margin: 12px 0; }
   .tip::before { content: '💡 '; }
-
-  .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
-  @media (max-width: 600px) { .cols2 { grid-template-columns: 1fr; } }
-
-  .mini-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 14px;
-  }
-
-  .mini-card h4 {
-    font-size: 0.82rem;
-    color: var(--muted);
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.06em;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-  }
-
+  .note { background: #0d1f3a; border: 1px solid #1a3f6e; border-radius: 6px; padding: 10px 14px; font-size: 0.85rem; color: var(--cyan); margin: 12px 0; }
+  .note::before { content: '📌 '; }
+  .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 12px 0; }
+  .cols3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 12px 0; }
+  @media (max-width: 620px) { .cols2, .cols3 { grid-template-columns: 1fr; } }
+  .mini-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+  .mini-card h4 { font-size: 0.78rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.06em; margin-bottom: 10px; text-transform: uppercase; }
   .mini-card ul { list-style: none; font-size: 0.85rem; }
-  .mini-card ul li { padding: 3px 0; }
+  .mini-card ul li { padding: 3px 0; border-bottom: 1px solid var(--border); }
+  .mini-card ul li:last-child { border-bottom: none; }
   .mini-card ul li::before { content: '→ '; color: var(--purple); }
-
-  .steps { counter-reset: step; list-style: none; display: grid; gap: 10px; margin: 12px 0; }
-
-  .steps li {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    font-size: 0.88rem;
-    padding: 10px;
-    background: var(--surface2);
-    border-radius: 6px;
-    border: 1px solid var(--border);
-  }
-
-  .steps li::before {
-    counter-increment: step;
-    content: counter(step);
-    background: var(--accent);
-    color: #fff;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    font-family: 'JetBrains Mono', monospace;
-    flex-shrink: 0;
-  }
-
-  .sev-table td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
-  .sev-0 { color: var(--red); }
-  .sev-1 { color: var(--orange); }
-  .sev-2 { color: #e3a93b; }
-  .sev-3 { color: var(--yellow); }
-  .sev-4 { color: #a8c080; }
-  .sev-5 { color: var(--green); }
-  .sev-6 { color: var(--cyan); }
-  .sev-7 { color: var(--muted); }
-
+  .steps { counter-reset: step; list-style: none; display: grid; gap: 8px; margin: 12px 0; }
+  .steps li { display: flex; align-items: flex-start; gap: 12px; font-size: 0.88rem; padding: 10px 12px; background: var(--surface2); border-radius: 6px; border: 1px solid var(--border); }
+  .steps li::before { counter-increment: step; content: counter(step); background: var(--accent); color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; margin-top: 1px; }
   .divider { height: 1px; background: var(--border); margin: 16px 0; }
-
-  footer {
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--muted);
-    margin-top: 3rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
-    font-family: 'JetBrains Mono', monospace;
-  }
+  .sub-heading { font-size: 0.88rem; font-weight: 600; color: var(--orange); margin: 14px 0 8px; }
+  .sub-heading2 { font-size: 0.88rem; font-weight: 600; color: var(--cyan); margin: 14px 0 8px; }
+  .sev-0 { color: #f85149; } .sev-1 { color: #f0883e; } .sev-2 { color: #e3a93b; }
+  .sev-3 { color: var(--yellow); } .sev-4 { color: #a8c080; } .sev-5 { color: var(--green); }
+  .sev-6 { color: var(--cyan); } .sev-7 { color: var(--muted); }
+  footer { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; }
+  .cap-code { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; background: var(--surface2); border: 1px solid var(--border); padding: 2px 6px; border-radius: 3px; color: var(--yellow); margin: 2px; }
 </style>
 </head>
 <body>
 <div class="container">
 
 <header>
-  <div class="badge">CCNA3 · ENSA · MODULE 10</div>
-  <h1>Network <span>Management</span> — Exam Review</h1>
-  <p class="subtitle">CDP · LLDP · NTP · SNMP · Syslog · File Maintenance · IOS Image Management</p>
+  <div class="badge">CCNA3 · ENSA v7.0 · MODULE 10</div>
+  <h1>Network <span>Management</span> — Complete Exam Review</h1>
+  <p class="subtitle">CDP · LLDP · NTP · SNMP · Syslog · File Maintenance · IOS Image Management — zero details skipped</p>
 </header>
 
 <div class="toc">
@@ -350,235 +111,382 @@
   <a href="#ios">10.7 IOS Images</a>
 </div>
 
-<!-- ===== CDP ===== -->
+<!-- =========================================================== CDP -->
 <div class="section" id="cdp">
   <div class="section-header">
     <span class="section-num">10.1</span>
     <span class="section-title">Device Discovery with CDP</span>
-    <span class="section-tag" style="background:var(--tag-cdp);color:var(--tag-cdp-text);">Cisco Only</span>
+    <span class="section-tag" style="background:var(--tag-cdp);color:var(--tag-cdp-text);">Cisco Proprietary · Layer 2</span>
   </div>
   <div class="section-body">
+
     <div class="key-concept">
-      <strong>CDP (Cisco Discovery Protocol)</strong> is a Cisco-proprietary <strong>Layer 2</strong> protocol. It auto-discovers directly connected Cisco devices and reveals their type, name, and interface info — without needing IP connectivity.
+      <strong>CDP (Cisco Discovery Protocol)</strong> is a Cisco-proprietary <strong>Layer 2</strong> protocol. It gathers info about directly connected Cisco devices — media and protocol independent. Runs on routers, switches, and access servers. Devices send <strong>periodic advertisements</strong> sharing device type, name, and interface info.
     </div>
 
     <ul class="facts">
-      <li>Media and protocol independent — works on routers, switches, access servers</li>
-      <li>Sends periodic advertisements to directly connected neighbors only (not routed)</li>
       <li>Enabled <strong>by default</strong> on all Cisco devices</li>
-      <li>Useful for mapping unknown network topology</li>
+      <li>Works on all Cisco devices: routers, switches, access servers</li>
+      <li>Only discovers <strong>directly connected</strong> neighbors (not routed — Layer 2 only)</li>
+      <li>Does not require IP connectivity to discover neighbors</li>
     </ul>
 
     <div class="divider"></div>
+    <p class="sub-heading2">Commands — Enable / Disable</p>
+    <div class="cmd-block"><span class="pr">Router(config)#</span> cdp run                 <span class="cm">← enable CDP globally (default: on)</span>
+<span class="pr">Router(config)#</span> no cdp run              <span class="cm">← disable CDP on ALL interfaces globally</span>
+<span class="pr">Router(config-if)#</span> cdp enable          <span class="cm">← enable CDP on a specific interface</span>
+<span class="pr">Router(config-if)#</span> no cdp enable       <span class="cm">← disable CDP on a specific interface only</span>
+<span class="cm">                                          (CDP still runs on device, just not that port)</span></div>
+
+    <p class="sub-heading2">Commands — Verify &amp; Discover</p>
+    <div class="cmd-block"><span class="pr">R1#</span> show cdp                              <span class="cm">← verify CDP is running, shows timers</span>
+<span class="pr">R1#</span> show cdp interface                   <span class="cm">← show which interfaces have CDP enabled + status</span>
+<span class="pr">R1#</span> show cdp neighbors                   <span class="cm">← list all directly connected neighbors</span>
+<span class="pr">R1#</span> show cdp neighbors detail            <span class="cm">← includes IP address, IOS version, full detail</span></div>
+
+    <p class="sub-heading2">Output: show cdp neighbors</p>
+    <div class="cmd-block"><span class="pr">R1#</span> show cdp neighbors
+Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone,
+                  D - Remote, C - CVTA, M - Two-port Mac Relay
+
+Device ID   Local Intrfce   Holdtme   Capability   Platform      Port ID
+S1          Gig 0/0/1       179       S I           WS-C3560-     Fas 0/5</div>
+
     <div class="cols2">
       <div class="mini-card">
-        <h4>Key Commands</h4>
+        <h4>Capability Codes</h4>
         <ul>
-          <li><code>show cdp</code> — verify CDP is running</li>
-          <li><code>show cdp interface</code> — show CDP-enabled interfaces</li>
-          <li><code>show cdp neighbors</code> — list neighbors</li>
-          <li><code>show cdp neighbors detail</code> — includes IP addresses</li>
+          <li><code>R</code> — Router</li>
+          <li><code>T</code> — Trans Bridge</li>
+          <li><code>B</code> — Source Route Bridge</li>
+          <li><code>S</code> — Switch</li>
+          <li><code>H</code> — Host</li>
+          <li><code>I</code> — IGMP</li>
+          <li><code>r</code> — Repeater</li>
+          <li><code>P</code> — Phone</li>
+          <li><code>D</code> — Remote</li>
+          <li><code>C</code> — CVTA</li>
+          <li><code>M</code> — Two-port Mac Relay</li>
         </ul>
       </div>
       <div class="mini-card">
-        <h4>Enable / Disable</h4>
+        <h4>Output Fields</h4>
         <ul>
-          <li><code>cdp run</code> — enable globally</li>
-          <li><code>no cdp run</code> — disable globally</li>
-          <li><code>cdp enable</code> — enable on interface</li>
-          <li><code>no cdp enable</code> — disable on interface</li>
+          <li><code>Device ID</code> — neighbor hostname</li>
+          <li><code>Local Intrfce</code> — your port connected to it</li>
+          <li><code>Holdtme</code> — seconds until entry expires</li>
+          <li><code>Capability</code> — letter codes (see left)</li>
+          <li><code>Platform</code> — hardware model</li>
+          <li><code>Port ID</code> — neighbor's port facing you</li>
         </ul>
       </div>
     </div>
 
-    <div class="cmd-block">
-<span class="prompt">R1#</span> show cdp neighbors
-<span class="comment">Device ID   Local Intrfce   Holdtme   Capability   Platform    Port ID</span>
-S1          Gig 0/0/1       179       S I          WS-C3560-   Fas 0/5
+    <p class="sub-heading2">Output: show cdp neighbors detail</p>
+    <div class="cmd-block"><span class="pr">R1#</span> show cdp neighbors detail
+-------------------------
+Device ID: S1
+Entry address(es):
+  IP address: 192.168.1.2             <span class="cm">← IP not shown in basic neighbors</span>
+Platform: cisco WS-C3560-24TS,  Capabilities: Switch IGMP
+Interface: GigabitEthernet0/0/1,  Port ID (outgoing port): FastEthernet0/5
+Holdtime : 136 sec</div>
 
-<span class="prompt">R1#</span> show cdp neighbors detail
-<span class="comment">Device ID: S1 → IP address: 192.168.1.2</span>
-    </div>
-    <div class="tip">Use <code>show cdp neighbors detail</code> to find the IP address of a neighbor when you only know the physical connection.</div>
+    <div class="tip">Use <code>show cdp neighbors detail</code> when you need the neighbor's IP address — it's not shown in the basic <code>show cdp neighbors</code> output.</div>
   </div>
 </div>
 
-<!-- ===== LLDP ===== -->
+<!-- =========================================================== LLDP -->
 <div class="section" id="lldp">
   <div class="section-header">
     <span class="section-num">10.2</span>
     <span class="section-title">Device Discovery with LLDP</span>
-    <span class="section-tag" style="background:var(--tag-lldp);color:var(--tag-lldp-text);">Vendor-Neutral</span>
+    <span class="section-tag" style="background:var(--tag-lldp);color:var(--tag-lldp-text);">Vendor-Neutral · Layer 2</span>
   </div>
   <div class="section-body">
+
     <div class="key-concept">
-      <strong>LLDP (Link Layer Discovery Protocol)</strong> is the open-standard (IEEE 802.1AB) equivalent of CDP. Works with any vendor's devices including routers, switches, and wireless APs.
+      <strong>LLDP (Link Layer Discovery Protocol)</strong> is the open-standard, vendor-neutral equivalent of CDP. Works with any vendor's network devices: routers, switches, and wireless LAN access points. Advertises identity and capabilities; receives info from physically connected Layer 2 devices.
     </div>
 
     <ul class="facts">
-      <li>Vendor-neutral — not Cisco specific</li>
+      <li>Vendor-neutral — not Cisco-specific; works across multi-vendor environments</li>
       <li>Also Layer 2, also sends neighbor advertisements</li>
-      <li>May or may not be enabled by default — must be configured separately to <strong>transmit</strong> and <strong>receive</strong></li>
+      <li>May or may not be enabled by default — check first with <code>show lldp</code></li>
+      <li>LLDP transmit and receive must be configured <strong>separately per interface</strong></li>
     </ul>
 
-    <div class="cmd-block">
-<span class="prompt">Switch(config)#</span> lldp run                        <span class="comment">← enable globally</span>
-<span class="prompt">Switch(config-if)#</span> lldp transmit               <span class="comment">← per interface</span>
-<span class="prompt">Switch(config-if)#</span> lldp receive
+    <div class="divider"></div>
+    <p class="sub-heading2">Commands — Enable / Disable / Verify</p>
+    <div class="cmd-block"><span class="pr">Switch(config)#</span> lldp run                 <span class="cm">← enable LLDP globally</span>
+<span class="pr">Switch(config)#</span> no lldp run              <span class="cm">← disable LLDP globally</span>
+<span class="pr">Switch(config-if)#</span> lldp transmit        <span class="cm">← allow sending LLDP packets on this interface</span>
+<span class="pr">Switch(config-if)#</span> lldp receive         <span class="cm">← allow receiving LLDP packets on this interface</span>
+<span class="pr">Switch#</span> show lldp                        <span class="cm">← verify LLDP is active + global timers</span></div>
 
-<span class="prompt">S1#</span> show lldp neighbors                           <span class="comment">← basic neighbor list</span>
-<span class="prompt">S1#</span> show lldp neighbors detail                    <span class="comment">← includes IOS version + IP</span>
-    </div>
+    <p class="sub-heading2">show lldp Output</p>
+    <div class="cmd-block"><span class="pr">Switch#</span> show lldp
+Global LLDP Information:
+  Status: ACTIVE
+  LLDP advertisements are sent every <span class="ky">30 seconds</span>
+  LLDP hold time advertised is <span class="ky">120 seconds</span>
+  LLDP interface reinitialisation delay is <span class="ky">2 seconds</span></div>
+
+    <p class="sub-heading2">Commands — Discover Neighbors</p>
+    <div class="cmd-block"><span class="pr">S1#</span> show lldp neighbors            <span class="cm">← list neighbors with capability codes</span>
+<span class="pr">S1#</span> show lldp neighbors detail     <span class="cm">← adds IOS version, IP address, full capabilities</span></div>
+
+    <p class="sub-heading2">show lldp neighbors Output</p>
+    <div class="cmd-block"><span class="pr">S1#</span> show lldp neighbors
+Capability codes:
+  (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+  (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+
+Device ID   Local Intf   Hold-time   Capability   Port ID
+R1          Fa0/5        117         R            Gi0/0/1
+S2          Fa0/1        112         B            Fa0/1
+Total entries displayed: 2</div>
 
     <div class="cols2">
       <div class="mini-card">
-        <h4>CDP vs LLDP</h4>
+        <h4>LLDP Capability Codes</h4>
         <ul>
-          <li>CDP = Cisco only</li>
-          <li>LLDP = any vendor</li>
-          <li>Both are Layer 2</li>
-          <li>Both use similar show commands</li>
+          <li><code>R</code> — Router</li>
+          <li><code>B</code> — Bridge (Switch)</li>
+          <li><code>T</code> — Telephone</li>
+          <li><code>C</code> — DOCSIS Cable Device</li>
+          <li><code>W</code> — WLAN Access Point</li>
+          <li><code>P</code> — Repeater</li>
+          <li><code>S</code> — Station</li>
+          <li><code>O</code> — Other</li>
         </ul>
       </div>
       <div class="mini-card">
-        <h4>LLDP Extra Detail</h4>
+        <h4>CDP vs LLDP</h4>
         <ul>
-          <li>Shows IOS version</li>
-          <li>Shows IP address</li>
-          <li>Shows device capabilities</li>
-          <li>TX and RX configured separately</li>
+          <li>CDP = Cisco only / LLDP = any vendor</li>
+          <li>Both are Layer 2</li>
+          <li>Both have basic + detail show commands</li>
+          <li>LLDP TX and RX configured separately</li>
+          <li>LLDP detail shows IOS version</li>
+          <li>LLDP timers: 30s send / 120s hold / 2s reinit</li>
         </ul>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== NTP ===== -->
+<!-- =========================================================== NTP -->
 <div class="section" id="ntp">
   <div class="section-header">
     <span class="section-num">10.3</span>
     <span class="section-title">NTP — Network Time Protocol</span>
-    <span class="section-tag" style="background:var(--tag-ntp);color:var(--tag-ntp-text);">UDP 123</span>
+    <span class="section-tag" style="background:var(--tag-ntp);color:var(--tag-ntp-text);">UDP 123 · RFC 1305</span>
   </div>
   <div class="section-body">
+
     <div class="key-concept">
-      <strong>NTP</strong> synchronizes clocks across all network devices. Consistent time is critical for log correlation and event ordering. Uses <strong>UDP port 123</strong>, documented in RFC 1305.
+      <strong>NTP</strong> synchronizes clocks across all network devices. Without synchronized time, you cannot determine the order of events or correlate logs. Uses <strong>UDP port 123</strong>, documented in <strong>RFC 1305</strong>. Can sync to a private master clock or a public NTP server on the internet.
     </div>
 
-    <ul class="facts">
-      <li>Router software clock starts at boot — not reliable without NTP</li>
-      <li>Manual config: <code>clock set 20:36:00 nov 15 2019</code> — only works for small networks</li>
-      <li>NTP uses a <strong>hierarchical stratum</strong> system — stratum = hops from authoritative source</li>
-      <li>Max stratum = 15. Stratum 16 = <strong>unsynchronized</strong></li>
-    </ul>
+    <div class="divider"></div>
+    <p class="sub-heading2">Method 1: Manual Clock Set (small networks only)</p>
+    <div class="cmd-block"><span class="pr">R1#</span> clock set 20:36:00 nov 15 2019
+<span class="cm">Output: *Nov 15 20:36:00.000: %SYS-6-CLOCKUPDATE: System clock has been updated</span>
+
+<span class="pr">R1#</span> show clock             <span class="cm">← shows current time (basic)</span>
+<span class="pr">R1#</span> show clock detail      <span class="cm">← shows time AND "Time source is user configuration"</span></div>
+
+    <div class="note">Manual configuration doesn't scale. As the network grows, use NTP instead — it keeps all devices synchronized automatically.</div>
 
     <div class="divider"></div>
+    <p class="sub-heading2">NTP Stratum Hierarchy</p>
+    <ul class="facts">
+      <li>NTP uses a hierarchical system — each level is called a <strong>stratum</strong></li>
+      <li>Stratum level = number of hop counts from the authoritative time source</li>
+      <li>Max hop count = <strong>15</strong>. Stratum <strong>16</strong> = device is <strong>unsynchronized</strong></li>
+      <li>Devices at the same stratum can be configured as <strong>peers</strong> for backup/verification</li>
+    </ul>
 
     <div class="table-wrap">
       <table>
-        <tr><th>Stratum</th><th>What it is</th></tr>
-        <tr><td><code>0</code></td><td>Atomic clock / GPS — the actual time source (not on network)</td></tr>
-        <tr><td><code>1</code></td><td>Directly connected to stratum 0 — primary NTP server</td></tr>
-        <tr><td><code>2</code></td><td>Syncs from stratum 1 — can also serve stratum 3 clients</td></tr>
-        <tr><td><code>3+</code></td><td>Each hop adds 1 to the stratum number</td></tr>
-        <tr><td><code>16</code></td><td>Unsynchronized — ignore this device for time</td></tr>
+        <tr><th>Stratum</th><th>What it is</th><th>Example</th></tr>
+        <tr><td><code>0</code></td><td>Authoritative source — atomic clock / GPS. High precision, little/no delay. Not on network directly.</td><td>GPS clock, atomic clock</td></tr>
+        <tr><td><code>1</code></td><td>Directly connected to stratum 0. Primary network time standard.</td><td>NTP server synced to GPS</td></tr>
+        <tr><td><code>2</code></td><td>Syncs via NTP packets from stratum 1. Can also serve stratum 3 devices.</td><td>Corporate NTP server</td></tr>
+        <tr><td><code>3+</code></td><td>Each hop adds 1 to stratum. Syncs from the level above.</td><td>Router, switch</td></tr>
+        <tr><td><code>16</code></td><td style="color:var(--red)">Unsynchronized — do not use for time.</td><td>Device not synced</td></tr>
       </table>
     </div>
 
-    <div class="cmd-block">
-<span class="comment">-- Configure R1 to sync from NTP server --</span>
-<span class="prompt">R1(config)#</span> ntp server 209.165.200.225
+    <div class="divider"></div>
+    <p class="sub-heading2">Method 2: Configure NTP (recommended)</p>
+    <div class="cmd-block"><span class="cm">-- Step 1: Check current time source before NTP --</span>
+<span class="pr">R1#</span> show clock detail
+20:55:10.207 UTC Fri Nov 15 2019
+<span class="ky">Time source is user configuration</span>   <span class="cm">← manually set</span>
 
-<span class="comment">-- Verify --</span>
-<span class="prompt">R1#</span> show clock detail            <span class="comment">← should say "Time source is NTP"</span>
-<span class="prompt">R1#</span> show ntp associations          <span class="comment">← shows NTP server + ref clock + stratum</span>
-<span class="prompt">R1#</span> show ntp status               <span class="comment">← shows stratum level of this device</span>
+<span class="cm">-- Step 2: Point R1 to NTP server --</span>
+<span class="pr">R1(config)#</span> ntp server 209.165.200.225
 
-<span class="comment">-- Configure S1 to sync from R1 --</span>
-<span class="prompt">S1(config)#</span> ntp server 192.168.1.1    <span class="comment">← R1's IP → S1 becomes stratum 3</span>
-    </div>
+<span class="cm">-- Step 3: Verify time source changed --</span>
+<span class="pr">R1#</span> show clock detail
+21:01:34.563 UTC Fri Nov 15 2019
+<span class="ky">Time source is NTP</span>                   <span class="cm">← now synced via NTP</span></div>
 
-    <div class="tip">If R1 syncs from a stratum 1 server, R1 becomes stratum 2. S1 syncing from R1 becomes stratum 3. Each hop = +1.</div>
+    <p class="sub-heading2">Verify NTP Associations</p>
+    <div class="cmd-block"><span class="pr">R1#</span> show ntp associations
+  address         ref clock     st  when  poll  each  delay  offset  disp
+<span class="ky">*~</span>209.165.200.225  .GPS.          1    61    64   377  0.481   7.480  4.261
+<span class="cm">↑ * = sys.peer (selected)   ~ = configured</span>
+<span class="cm">st = stratum of the server (1), when = seconds since last response</span>
+<span class="cm">poll = polling interval (sec), delay/offset/disp = timing quality metrics</span>
+
+<span class="pr">R1#</span> show ntp status
+Clock is synchronized, stratum 2, reference is 209.165.200.225
+<span class="cm">← R1 is now stratum 2 (one hop from the stratum 1 GPS server)</span></div>
+
+    <p class="sub-heading2">Cascade: Sync a Switch from R1</p>
+    <div class="cmd-block"><span class="pr">S1(config)#</span> ntp server 192.168.1.1     <span class="cm">← point S1 to R1</span>
+
+<span class="pr">S1#</span> show ntp associations
+  address         ref clock          st  when  poll  reach  delay  offset  disp
+<span class="ky">*~</span>192.168.1.1      209.165.200.225    2    12    64    377  1.066  13.616   3.840
+<span class="cm">← S1 sees R1 as stratum 2</span>
+
+<span class="pr">S1#</span> show ntp status
+Clock is synchronized, stratum 3, reference is 192.168.1.1
+<span class="cm">← S1 is now stratum 3 (can serve stratum 4 devices)</span></div>
+
+    <div class="tip">Chain rule: if server is stratum N, the client becomes stratum N+1. R1 → stratum 2, S1 syncing from R1 → stratum 3.</div>
   </div>
 </div>
 
-<!-- ===== SNMP ===== -->
+<!-- =========================================================== SNMP -->
 <div class="section" id="snmp">
   <div class="section-header">
     <span class="section-num">10.4</span>
     <span class="section-title">SNMP — Simple Network Management Protocol</span>
-    <span class="section-tag" style="background:var(--tag-snmp);color:var(--tag-snmp-text);">UDP 161/162</span>
+    <span class="section-tag" style="background:var(--tag-snmp);color:var(--tag-snmp-text);">UDP 161 (poll) · UDP 162 (trap)</span>
   </div>
   <div class="section-body">
+
     <div class="key-concept">
-      <strong>SNMP</strong> lets network admins monitor and manage devices remotely. Manager polls agents on <strong>UDP 161</strong>. Agents send traps to manager on <strong>UDP 162</strong>.
-    </div>
-
-    <div class="cols2">
-      <div class="mini-card">
-        <h4>Three Components</h4>
-        <ul>
-          <li><strong style="color:var(--cyan)">SNMP Manager</strong> — the NMS, runs get/set</li>
-          <li><strong style="color:var(--cyan)">SNMP Agent</strong> — runs on managed device</li>
-          <li><strong style="color:var(--cyan)">MIB</strong> — database of variables on device</li>
-        </ul>
-      </div>
-      <div class="mini-card">
-        <h4>Manager Operations</h4>
-        <ul>
-          <li><code>get</code> — read a variable from MIB</li>
-          <li><code>set</code> — write/change a variable</li>
-          <li><code>trap</code> — agent pushes alert to manager (unsolicited)</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="table-wrap" style="margin-top:14px">
-      <table>
-        <tr><th>Operation</th><th>Description</th></tr>
-        <tr><td><code>get-request</code></td><td>Get value of one specific variable</td></tr>
-        <tr><td><code>get-next-request</code></td><td>Sequential search through a table</td></tr>
-        <tr><td><code>get-bulk-request</code></td><td>Get large blocks at once (SNMPv2+)</td></tr>
-        <tr><td><code>get-response</code></td><td>Agent reply to any get/set request</td></tr>
-        <tr><td><code>set-request</code></td><td>Write a value to a variable</td></tr>
-      </table>
+      <strong>SNMP</strong> is an <strong>Application Layer</strong> protocol that lets admins monitor and manage network devices. It provides a message format for communication between managers and agents. Manager polls agents on <strong>UDP 161</strong>. Agents send traps to manager on <strong>UDP 162</strong>.
     </div>
 
     <div class="divider"></div>
-    <p style="font-size:0.88rem; color:var(--muted); margin-bottom:10px;">SNMP Versions:</p>
+    <p class="sub-heading2">Three Core Components</p>
+    <div class="cols3">
+      <div class="mini-card">
+        <h4>SNMP Manager</h4>
+        <ul>
+          <li>Part of NMS (Network Management System)</li>
+          <li>Collects info using <strong>get</strong></li>
+          <li>Changes config using <strong>set</strong></li>
+          <li>Receives unsolicited <strong>traps</strong></li>
+        </ul>
+      </div>
+      <div class="mini-card">
+        <h4>SNMP Agent</h4>
+        <ul>
+          <li>Runs on managed device</li>
+          <li>Collects + stores data in MIB locally</li>
+          <li>Responds to manager get/set requests</li>
+          <li>Sends traps when events occur</li>
+        </ul>
+      </div>
+      <div class="mini-card">
+        <h4>MIB</h4>
+        <ul>
+          <li>Management Information Base</li>
+          <li>Database of variables on the device</li>
+          <li>Organized hierarchically using OIDs</li>
+          <li>Available to authenticated remote users</li>
+        </ul>
+      </div>
+    </div>
 
+    <div class="divider"></div>
+    <p class="sub-heading2">SNMP Operations (Manager ↔ Agent)</p>
     <div class="table-wrap">
       <table>
-        <tr><th>Version</th><th>Auth Method</th><th>Security</th></tr>
-        <tr><td><code>SNMPv1</code></td><td>Community string (plaintext)</td><td style="color:var(--red)">Weak — avoid</td></tr>
-        <tr><td><code>SNMPv2c</code></td><td>Community string (plaintext)</td><td style="color:var(--yellow)">Adds bulk ops + better errors. Often used read-only</td></tr>
-        <tr><td><code>SNMPv3</code></td><td>Username + HMAC-MD5/SHA</td><td style="color:var(--green)">Encryption (DES/3DES/AES) — use this</td></tr>
+        <tr><th>Operation</th><th>Direction</th><th>Description</th></tr>
+        <tr><td><code>get-request</code></td><td>Manager → Agent</td><td>Retrieve value of one specific MIB variable</td></tr>
+        <tr><td><code>get-next-request</code></td><td>Manager → Agent</td><td>Sequential search through a table — no need to know exact variable name</td></tr>
+        <tr><td><code>get-bulk-request</code></td><td>Manager → Agent</td><td>Retrieve large blocks at once (multiple rows). SNMPv2c and later only.</td></tr>
+        <tr><td><code>get-response</code></td><td>Agent → Manager</td><td>Reply to any get-request, get-next-request, or set-request</td></tr>
+        <tr><td><code>set-request</code></td><td>Manager → Agent</td><td>Write a value to a specific MIB variable (can also trigger actions like rebooting)</td></tr>
+        <tr><td><code>trap</code></td><td>Agent → Manager</td><td>Unsolicited notification — agent pushes alert when event occurs (e.g. interface down)</td></tr>
       </table>
     </div>
 
-    <div class="divider"></div>
-    <p style="font-size:0.88rem; margin-bottom:8px;"><strong>Community Strings</strong> (v1/v2c) — act as plaintext passwords for MIB access:</p>
+    <p class="sub-heading2">SNMP Traps</p>
     <ul class="facts">
-      <li><strong>ro</strong> (read-only) — can read MIB variables, cannot change them</li>
-      <li><strong>rw</strong> (read-write) — full read/write access to MIB</li>
+      <li>Traps are <strong>unsolicited</strong> — agent initiates, no polling needed</li>
+      <li>Reduce network/agent overhead by eliminating polling for certain events</li>
+      <li>NMS can respond: send text message, pop up window, or turn device icon red in GUI</li>
     </ul>
 
     <div class="divider"></div>
-    <p style="font-size:0.88rem; margin-bottom:8px;"><strong>MIB Object IDs (OIDs)</strong> — unique identifiers in a hierarchical tree:</p>
-    <div class="cmd-block">
-<span class="comment">Cisco OID path:</span>
-iso(1) → org(3) → dod(6) → internet(1) → private(4) → enterprises(1) → cisco(9)
-<span class="comment">Result: OID = 1.3.6.1.4.1.9</span>
-
-<span class="comment">Polling example (snmpget tool):</span>
-snmpget -v2c -c community 10.250.250.14 .1.3.6.1.4.1.9.2.1.58.0
-<span class="comment">Returns: INTEGER: 11  ← CPU value</span>
+    <p class="sub-heading2">SNMP Versions</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Version</th><th>RFC(s)</th><th>Authentication</th><th>Security</th></tr>
+        <tr><td><code>SNMPv1</code></td><td>RFC 1157</td><td>Community string (plaintext)</td><td style="color:var(--red)">Weak — should not be used (security risks)</td></tr>
+        <tr><td><code>SNMPv2c</code></td><td>RFCs 1901–1908</td><td>Community string (plaintext)</td><td style="color:var(--yellow)">Adds bulk retrieval + detailed error messages. Many orgs use read-only mode only.</td></tr>
+        <tr><td><code>SNMPv3</code></td><td>RFCs 3410–3415</td><td>Username + HMAC-MD5 or HMAC-SHA</td><td style="color:var(--green)">Encryption: DES, 3DES, or AES. Use this version.</td></tr>
+      </table>
     </div>
-    <div class="tip">Traps are unsolicited — the agent notifies the manager when something happens (e.g. interface down), reducing polling overhead.</div>
+
+    <div class="divider"></div>
+    <p class="sub-heading2">Community Strings (v1 and v2c)</p>
+    <ul class="facts">
+      <li>Act as <strong>plaintext passwords</strong> for MIB access — authenticate access to MIB objects</li>
+      <li><strong>ro (read-only)</strong> — can read MIB variables, cannot change them. Used by most orgs in v2c for safety.</li>
+      <li><strong>rw (read-write)</strong> — full read and write access to all MIB objects</li>
+    </ul>
+
+    <div class="divider"></div>
+    <p class="sub-heading2">MIB Object IDs (OIDs)</p>
+    <ul class="facts">
+      <li>MIB organizes variables <strong>hierarchically</strong> in a tree — each variable has a unique OID</li>
+      <li>OIDs can be expressed in words or numbers</li>
+      <li>Public branches: defined by RFCs, common to many devices</li>
+      <li>Private branches: vendor-specific (e.g. Cisco adds its own subtree)</li>
+    </ul>
+
+    <div class="cmd-block"><span class="cm">Cisco OID tree path:</span>
+iso(1) → org(3) → dod(6) → internet(1) → private(4) → enterprises(1) → cisco(9)
+<span class="ky">Cisco OID = 1.3.6.1.4.1.9</span>
+
+<span class="cm">Branches under cisco(9):</span>
+  └── local variables (2)
+  │     └── interface group (2)
+  └── cisco mgmt (9)
+        └── cisco flash group (10)</div>
+
+    <div class="divider"></div>
+    <p class="sub-heading2">SNMP Polling — snmpget Utility</p>
+    <ul class="facts">
+      <li>One use case: poll <strong>CPU utilization</strong> over time — compile on NMS and graph to create baseline</li>
+      <li><code>snmpget</code> retrieves real-time data manually, or NMS runs reports automatically</li>
+    </ul>
+
+    <div class="cmd-block"><span class="cm">snmpget syntax: version  community  IP-address  OID</span>
+snmpget <span class="ky">-v2c</span> -c <span class="ky">community</span> <span class="ky">10.250.250.14</span> <span class="ky">.1.3.6.1.4.1.9.2.1.58.0</span>
+SNMPv2-SMI::enterprises.9.2.1.58.0 = INTEGER: <span class="hl">11</span>   <span class="cm">← CPU value returned</span>
+
+<span class="cm">Fields: -v2c = version, -c community = community string,
+IP = device to poll, OID = variable to read</span></div>
+
+    <div class="note">Cisco SNMP Object Navigator at cisco.com lets you look up any OID by name or number — translates long numeric OIDs into readable variable names and descriptions.</div>
   </div>
 </div>
 
-<!-- ===== SYSLOG ===== -->
+<!-- =========================================================== SYSLOG -->
 <div class="section" id="syslog">
   <div class="section-header">
     <span class="section-num">10.5</span>
@@ -586,164 +494,266 @@ snmpget -v2c -c community 10.250.250.14 .1.3.6.1.4.1.9.2.1.58.0
     <span class="section-tag" style="background:var(--tag-syslog);color:var(--tag-syslog-text);">UDP 514</span>
   </div>
   <div class="section-body">
+
     <div class="key-concept">
-      <strong>Syslog</strong> is the standard logging protocol. Devices send event messages to a syslog server (or local buffer/console) over <strong>UDP port 514</strong>. Critical for monitoring and troubleshooting.
+      <strong>Syslog</strong> uses <strong>UDP port 514</strong> to send event notification messages across IP networks to event message collectors. Provides: (1) gathering logs for monitoring/troubleshooting, (2) selecting what types of messages are captured, (3) specifying destinations for messages.
     </div>
 
-    <p style="font-size:0.88rem; margin-bottom:10px;">Syslog message destinations:</p>
+    <div class="divider"></div>
+    <p class="sub-heading2">How Syslog Works</p>
     <ul class="facts">
-      <li><strong>Logging buffer</strong> — RAM inside router/switch, view with CLI</li>
-      <li><strong>Console line</strong> — shown on console session</li>
-      <li><strong>Terminal line</strong> — shown on VTY (SSH/Telnet) session</li>
-      <li><strong>Syslog server</strong> — centralized external server (preferred)</li>
+      <li>Syslog process starts locally — sends system messages and debug output to local logging</li>
+      <li>Configuration can forward messages across the network to an <strong>external syslog server</strong> (retrieve logs without accessing device directly)</li>
+      <li>Alternatively, messages go to an <strong>internal buffer</strong> — only viewable via CLI of that device</li>
+      <li>Admin specifies which message types go to which destinations</li>
     </ul>
 
-    <div class="divider"></div>
-    <p style="font-size:0.88rem; margin-bottom:10px;"><strong>Severity Levels</strong> — lower number = more critical:</p>
+    <p class="sub-heading2">Syslog Destinations</p>
+    <div class="cols2">
+      <div class="mini-card">
+        <h4>Destinations</h4>
+        <ul>
+          <li><strong>Logging buffer</strong> — RAM inside router/switch</li>
+          <li><strong>Console line</strong> — shown on console connection</li>
+          <li><strong>Terminal line</strong> — shown on VTY (SSH/Telnet)</li>
+          <li><strong>Syslog server</strong> — centralized external server</li>
+        </ul>
+      </div>
+      <div class="mini-card">
+        <h4>Three Primary Functions</h4>
+        <ul>
+          <li>Gather logs for monitoring &amp; troubleshooting</li>
+          <li>Select the type of logging info captured</li>
+          <li>Specify destinations for captured messages</li>
+        </ul>
+      </div>
+    </div>
 
+    <div class="divider"></div>
+    <p class="sub-heading2">Severity Levels — lower number = more critical</p>
     <div class="table-wrap">
-      <table class="sev-table">
-        <tr><th>Level</th><th>Name</th><th>Meaning</th></tr>
-        <tr><td class="sev-0">0</td><td class="sev-0">Emergency</td><td>System unusable</td></tr>
-        <tr><td class="sev-1">1</td><td class="sev-1">Alert</td><td>Immediate action needed</td></tr>
-        <tr><td class="sev-2">2</td><td class="sev-2">Critical</td><td>Critical condition</td></tr>
-        <tr><td class="sev-3">3</td><td class="sev-3">Error</td><td>Error condition</td></tr>
-        <tr><td class="sev-4">4</td><td class="sev-4">Warning</td><td>Warning condition</td></tr>
-        <tr><td class="sev-5">5</td><td class="sev-5">Notification</td><td>Normal but significant</td></tr>
-        <tr><td class="sev-6">6</td><td class="sev-6">Informational</td><td>Info message</td></tr>
-        <tr><td class="sev-7">7</td><td class="sev-7">Debugging</td><td>Debug output</td></tr>
+      <table>
+        <tr><th>Level</th><th>Name</th><th>Explanation</th></tr>
+        <tr><td class="sev-0"><strong>0</strong></td><td class="sev-0">Emergency</td><td>System unusable</td></tr>
+        <tr><td class="sev-1"><strong>1</strong></td><td class="sev-1">Alert</td><td>Immediate action needed</td></tr>
+        <tr><td class="sev-2"><strong>2</strong></td><td class="sev-2">Critical</td><td>Critical condition</td></tr>
+        <tr><td class="sev-3"><strong>3</strong></td><td class="sev-3">Error</td><td>Error condition</td></tr>
+        <tr><td class="sev-4"><strong>4</strong></td><td class="sev-4">Warning</td><td>Warning condition</td></tr>
+        <tr><td class="sev-5"><strong>5</strong></td><td class="sev-5">Notification</td><td>Normal, but significant condition</td></tr>
+        <tr><td class="sev-6"><strong>6</strong></td><td class="sev-6">Informational</td><td>Informational message</td></tr>
+        <tr><td class="sev-7"><strong>7</strong></td><td class="sev-7">Debugging</td><td>Debug output — lowest priority</td></tr>
       </table>
     </div>
 
     <div class="divider"></div>
-    <p style="font-size:0.88rem; margin-bottom:8px;"><strong>Message format:</strong></p>
-    <div class="cmd-block">
-%<span style="color:var(--cyan)">FACILITY</span>-<span style="color:var(--orange)">SEVERITY</span>-<span style="color:var(--purple)">MNEMONIC</span>: description
+    <p class="sub-heading2">Syslog Message Format</p>
+    <div class="cmd-block">%<span class="ky">FACILITY</span>-<span class="sev-3">SEVERITY</span>-<span class="hl">MNEMONIC</span>: description
 
-<span class="comment">Example:</span>
-%LINK-3-UPDOWN: Interface Port-channel1, changed state to up
-<span class="comment">  ↑FACILITY  ↑SEV  ↑MNEMONIC</span>
-    </div>
+<span class="cm">Example:</span>
+%<span class="ky">LINK</span>-<span class="sev-3">3</span>-<span class="hl">UPDOWN</span>: Interface Port-channel1, changed state to up
+ ↑ facility  ↑ severity (error)  ↑ mnemonic</div>
 
-    <p style="font-size:0.88rem; margin-bottom:8px;"><strong>Common Facilities:</strong> IP, OSPF, SYS, IPsec, IF (Interface IP)</p>
+    <p class="sub-heading2">Common Syslog Facilities (Cisco IOS)</p>
+    <ul class="facts">
+      <li><strong>IP</strong> — IP protocol messages</li>
+      <li><strong>OSPF</strong> — OSPF routing protocol</li>
+      <li><strong>SYS</strong> — operating system</li>
+      <li><strong>IPsec</strong> — IP security</li>
+      <li><strong>IF</strong> — Interface IP</li>
+    </ul>
 
     <div class="divider"></div>
-    <p style="font-size:0.88rem; margin-bottom:8px;"><strong>Timestamps</strong> (not enabled by default):</p>
-    <div class="cmd-block">
-<span class="prompt">R1(config)#</span> service timestamps log datetime
-<span class="comment">After this, messages include: *Mar 1 11:52:42: %LINK-3-UPDOWN: ...</span>
-    </div>
-    <div class="tip">Always enable timestamps before sending logs to a syslog server, otherwise you lose track of when events happened.</div>
+    <p class="sub-heading2">Timestamps — not enabled by default</p>
+    <div class="cmd-block"><span class="cm">-- WITHOUT timestamps (default) --</span>
+<span class="pr">R1(config-if)#</span> shutdown
+%LINK-5-CHANGED: Interface GigabitEthernet0/0/0, changed state to administratively down
+%LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0/0, changed state to down
+<span class="cm">^ No time shown — cannot tell WHEN this happened</span>
+
+<span class="cm">-- Enable timestamps --</span>
+<span class="pr">R1(config)#</span> service timestamps log datetime
+
+<span class="cm">-- WITH timestamps (after enabling) --</span>
+<span class="pr">R1(config-if)#</span> no shutdown
+*Mar 1 11:52:42: %LINK-3-UPDOWN: Interface GigabitEthernet0/0/0, changed state to down
+*Mar 1 11:52:45: %LINK-3-UPDOWN: Interface GigabitEthernet0/0/0, changed state to up
+*Mar 1 11:52:46: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0/0, changed state to up</div>
+
+    <div class="tip">Always enable <code>service timestamps log datetime</code> when forwarding to a syslog server — otherwise there is no record of when the event occurred.</div>
   </div>
 </div>
 
-<!-- ===== FILE MAINTENANCE ===== -->
+<!-- =========================================================== FILE MAINTENANCE -->
 <div class="section" id="files">
   <div class="section-header">
     <span class="section-num">10.6</span>
     <span class="section-title">Router &amp; Switch File Maintenance</span>
-    <span class="section-tag" style="background:var(--tag-file);color:var(--tag-file-text);">Config Backup</span>
+    <span class="section-tag" style="background:var(--tag-file);color:var(--tag-file-text);">Backup · Restore · Password Recovery</span>
   </div>
   <div class="section-body">
 
-    <p style="font-size:0.88rem; margin-bottom:10px;"><strong>Cisco IOS File System (IFS)</strong> — navigate with familiar commands:</p>
-    <div class="cmd-block">
-<span class="prompt">Router#</span> show file systems    <span class="comment">← list all filesystems (* = default, # = bootable)</span>
-<span class="prompt">Router#</span> dir                  <span class="comment">← list flash contents (default filesystem)</span>
-<span class="prompt">Router#</span> cd nvram:            <span class="comment">← change to NVRAM</span>
-<span class="prompt">Router#</span> pwd                  <span class="comment">← show current directory</span>
-<span class="prompt">Router#</span> dir                  <span class="comment">← now lists NVRAM (startup-config is here)</span>
-    </div>
+    <p class="sub-heading2">Cisco IOS File System (IFS)</p>
+    <ul class="facts">
+      <li>Allows navigating directories, listing files, creating subdirectories in flash or disk</li>
+      <li>Available directories depend on the device model</li>
+      <li><strong>Asterisk (*)</strong> in <code>show file systems</code> = current default file system</li>
+      <li><strong>Pound sign (#)</strong> = bootable disk. Both default to the flash file system.</li>
+    </ul>
+
+    <div class="cmd-block"><span class="pr">Router#</span> show file systems     <span class="cm">← list all filesystems; * = default, # = bootable</span>
+<span class="pr">Router#</span> dir                  <span class="cm">← list contents of current (default = flash)</span>
+                             <span class="cm">  last file listed = current IOS image running in RAM</span>
+<span class="pr">Router#</span> cd nvram:            <span class="cm">← change directory to NVRAM</span>
+<span class="pr">Router#</span> pwd                  <span class="cm">← print working directory (confirm location)</span>
+<span class="pr">Router#</span> dir                  <span class="cm">← now lists NVRAM; startup-config is here</span></div>
 
     <div class="divider"></div>
-    <div class="cols2">
-      <div class="mini-card">
-        <h4>Backup Methods</h4>
-        <ul>
-          <li>Tera Term → File → Log → <code>show running-config</code></li>
-          <li>TFTP: <code>copy running-config tftp</code></li>
-          <li>USB: <code>copy run usbflash0:/</code></li>
-        </ul>
-      </div>
-      <div class="mini-card">
-        <h4>Restore Methods</h4>
-        <ul>
-          <li>Tera Term → File → Send File</li>
-          <li>TFTP: <code>copy tftp running-config</code></li>
-          <li>USB: <code>copy usbflash0:/R1-Config running-config</code></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="cmd-block">
-<span class="comment">-- TFTP Backup --</span>
-<span class="prompt">R1#</span> copy running-config tftp
-Remote host []? 192.168.10.254
-Name of the configuration file? R1-Jan-2019
-    </div>
-
-    <div class="divider"></div>
-    <p style="font-size:0.9rem; font-weight:600; margin-bottom:12px; color:var(--orange);">Password Recovery Procedure</p>
+    <p class="sub-heading2">Backup Method 1: Tera Term (text file)</p>
     <ol class="steps">
-      <li>Enter <strong>ROMMON mode</strong> — use break sequence during boot or remove flash while powered off. Prompt shows <code>rommon 1 ></code></li>
-      <li>Change config register: <code>confreg 0x2142</code> then <code>reset</code> — this makes the device ignore startup-config on next boot</li>
-      <li>Copy startup to running: <code>copy startup-config running-config</code> — loads old config without booting from it</li>
-      <li>Change the password: <code>enable secret &lt;newpassword&gt;</code></li>
-      <li>Restore register &amp; save: <code>config-register 0x2102</code> then <code>copy running-config startup-config</code></li>
-      <li>Reload the device: <code>reload</code></li>
+      <li>File menu → click <strong>Log</strong></li>
+      <li>Choose location to save. Tera Term begins capturing all terminal text.</li>
+      <li>Execute <code>show running-config</code> or <code>show startup-config</code> — output goes to the file</li>
+      <li>When done, select <strong>Close</strong> in the Tera Term: Log window</li>
+      <li>View the file to verify it was not corrupted</li>
     </ol>
-    <div class="warn">Never run <code>copy running-config startup-config</code> BEFORE copying startup to running in step 3 — you'll erase the original config.</div>
+
+    <p class="sub-heading2">Restore Method 1: Tera Term (text file)</p>
+    <div class="warn">Before restoring: edit the file — remove encrypted passwords (replace with plaintext), remove non-command text like <code>--More--</code> and IOS messages. Add <code>enable</code> and <code>configure terminal</code> at the top, or manually enter global config mode first.</div>
+    <ol class="steps">
+      <li>File menu → click <strong>Send File</strong></li>
+      <li>Locate and select the config file, click Open</li>
+      <li>Tera Term pastes the file into the device — becomes the running configuration</li>
+    </ol>
+
+    <div class="divider"></div>
+    <p class="sub-heading2">Backup/Restore Method 2: TFTP</p>
+    <div class="cmd-block"><span class="cm">-- BACKUP to TFTP --</span>
+<span class="pr">R1#</span> copy running-config tftp
+Remote host []? 192.168.10.254
+Name of the configuration file to write[R1-config]? R1-Jan-2019
+Write file R1-Jan-2019 to 192.168.10.254? [confirm]
+Writing R1-Jan-2019 !!!!!! [OK]
+
+<span class="cm">-- RESTORE from TFTP --</span>
+<span class="pr">R1#</span> copy tftp running-config
+<span class="cm">  (prompts for TFTP server IP, filename, then applies it)</span></div>
+
+    <div class="divider"></div>
+    <p class="sub-heading2">Backup/Restore Method 3: USB Flash Drive</p>
+    <ul class="facts">
+      <li>USB storage provides optional secondary storage and additional boot device</li>
+      <li>First: run <code>show file systems</code> to verify USB is present and confirm its name (e.g. <code>usbflash0:</code>)</li>
+    </ul>
+
+    <div class="cmd-block"><span class="cm">-- BACKUP to USB --</span>
+<span class="pr">R1#</span> copy running-config usbflash0:/
+Destination filename [running-config]? R1-Config
+%Warning: There is a file already existing with this name
+Do you want to over write? [confirm]           <span class="cm">← prompts if file exists</span>
+5024 bytes copied in 1.796 secs (2797 bytes/sec)
+
+<span class="cm">-- VIEW USB contents --</span>
+<span class="pr">R1#</span> dir usbflash0:/                          <span class="cm">← list files on USB</span>
+<span class="pr">R1#</span> more usbflash0:/R1-Config               <span class="cm">← view file contents</span>
+
+<span class="cm">-- RESTORE from USB (edit file first with text editor) --</span>
+<span class="pr">R1#</span> copy usbflash0:/R1-Config running-config</div>
+
+    <div class="divider"></div>
+    <p class="sub-heading2" style="color:var(--red);">Password Recovery Procedure</p>
+    <ul class="facts">
+      <li>Used when passwords are lost/unknown. For <strong>encrypted passwords</strong> (enable secret), the password must be <strong>replaced</strong> — it cannot be recovered, only overwritten.</li>
+      <li>Exact procedure varies by device model — but the principle is always the same 6 steps.</li>
+    </ul>
+
+    <ol class="steps">
+      <li><strong>Enter ROMMON mode</strong> — use a break sequence during boot, OR remove external flash memory while device is powered off. Prompt: <code>rommon 1 &gt;</code></li>
+      <li><strong>Change config register:</strong> <code>confreg 0x2142</code> then <code>reset</code> — causes device to ignore startup-config on next boot. Enter break sequence AGAIN while the device reboots and decompresses IOS.</li>
+      <li><strong>Copy startup to running:</strong> <code>copy startup-config running-config</code> — loads old config into RAM without it being the boot config</li>
+      <li><strong>Change the password:</strong> <code>enable secret cisco</code> (use a strong password in practice)</li>
+      <li><strong>Restore register and save:</strong> <code>config-register 0x2102</code> then <code>copy running-config startup-config</code></li>
+      <li><strong>Reload:</strong> <code>reload</code></li>
+    </ol>
+
+    <div class="warn">CRITICAL: Do NOT run <code>copy running-config startup-config</code> before step 3 (copying startup to running). Doing so will erase your original startup configuration permanently.</div>
+
+    <div class="cmd-block"><span class="cm">-- ROMMON commands --</span>
+<span class="pr">rommon 1 &gt;</span> confreg 0x2142    <span class="cm">← ignore startup-config on boot</span>
+<span class="pr">rommon 2 &gt;</span> reset              <span class="cm">← reboot</span>
+
+<span class="cm">-- After reboot (now in privileged EXEC, no password needed) --</span>
+<span class="pr">Router#</span> copy startup-config running-config
+<span class="pr">R1(config)#</span> enable secret cisco
+<span class="pr">R1(config)#</span> config-register 0x2102   <span class="cm">← restore normal boot register</span>
+<span class="pr">R1(config)#</span> end
+<span class="pr">R1#</span> copy running-config startup-config
+<span class="pr">R1#</span> reload</div>
   </div>
 </div>
 
-<!-- ===== IOS IMAGE ===== -->
+<!-- =========================================================== IOS IMAGE -->
 <div class="section" id="ios">
   <div class="section-header">
     <span class="section-num">10.7</span>
     <span class="section-title">IOS Image Management</span>
-    <span class="section-tag" style="background:var(--tag-ios);color:var(--tag-ios-text);">TFTP / Flash</span>
+    <span class="section-tag" style="background:var(--tag-ios);color:var(--tag-ios-text);">TFTP · Flash · boot system</span>
   </div>
   <div class="section-body">
+
     <div class="key-concept">
-      Store IOS images on a <strong>TFTP server</strong> as backup. If flash gets corrupted or erased, you can restore the image from TFTP over the network.
+      Store IOS images on a central <strong>TFTP server</strong> for backup. If flash is corrupted or accidentally erased, restore the image over the network. TFTP server can be <strong>another router, a workstation, or a host system</strong>.
     </div>
 
-    <p style="font-size:0.9rem; font-weight:600; margin-bottom:10px;">Backup IOS to TFTP:</p>
+    <ul class="facts">
+      <li>Production networks span wide areas — keep backup IOS images always</li>
+      <li>TFTP allows image and configuration uploads/downloads over the network</li>
+      <li>Controls the number of IOS versions and configs that must be maintained</li>
+    </ul>
+
+    <div class="divider"></div>
+    <p class="sub-heading2">Backup IOS Image → TFTP Server</p>
     <ol class="steps">
-      <li>Ping TFTP server to verify connectivity</li>
-      <li>Check image size: <code>show flash0:</code> — ensure TFTP has enough space</li>
-      <li>Copy: <code>copy source-url destination-url</code> — you'll be prompted for filename and IP</li>
+      <li><strong>Ping the TFTP server</strong> — verify connectivity before doing anything</li>
+      <li><strong>Check image size:</strong> <code>show flash0:</code> — verify TFTP server has enough disk space to hold the image</li>
+      <li><strong>Copy:</strong> <code>copy source-url destination-url</code> — prompted for source filename, TFTP IP, and destination filename. Transfer begins.</li>
     </ol>
 
     <div class="divider"></div>
-    <p style="font-size:0.9rem; font-weight:600; margin-bottom:10px;">Restore IOS from TFTP:</p>
+    <p class="sub-heading2">Copy IOS Image from TFTP → Device</p>
     <ol class="steps">
-      <li>Ping TFTP server to verify connectivity</li>
-      <li>Check free flash: <code>show flash:</code> — ensure space for new image</li>
-      <li>Copy image: <code>copy tftp: flash:</code> — enter server IP, source filename, destination</li>
+      <li><strong>Ping the TFTP server</strong> — verify connectivity</li>
+      <li><strong>Check free flash space:</strong> <code>show flash:</code> — compare free space against new image file size</li>
+      <li><strong>Copy from TFTP:</strong> <code>copy tftp: flash:</code> — prompted for TFTP IP, source filename, destination filename</li>
     </ol>
 
-    <div class="cmd-block">
-<span class="prompt">R1#</span> copy tftp: flash:
+    <div class="cmd-block"><span class="pr">R1#</span> copy tftp: flash:
 Address or name of remote host []? 2001:DB8:CAFE:100::99
 Source filename []? isr4200-universalk9_ias.16.09.04.SPA.bin
-Destination filename? <span class="comment">[same]</span>
-<span class="comment">Loading... 517153193 bytes copied in 868.128 secs</span>
-    </div>
+Destination filename [isr4200-universalk9_ias.16.09.04.SPA.bin]?
+Accessing tftp://2001:DB8:CAFE:100::99/isr4200-universalk9_ias.16.09.04.SPA.bin...
+Loading isr4200-universalk9_ias.16.09.04.SPA.bin !!!!!!!!!!!!!!
+[OK - 517153193 bytes]
+517153193 bytes copied in 868.128 secs (265652 bytes/sec)</div>
 
     <div class="divider"></div>
-    <p style="font-size:0.88rem; margin-bottom:8px;"><strong>boot system</strong> — tell the router which IOS image to load:</p>
-    <div class="cmd-block">
-<span class="prompt">R1(config)#</span> boot system flash0:isr4200-universalk9_ias.16.09.04.SPA.bin
-<span class="prompt">R1(config)#</span> exit
-<span class="prompt">R1#</span> copy running-config startup-config
-<span class="prompt">R1#</span> reload
-    </div>
-    <div class="tip">If no <code>boot system</code> command exists, the router loads the first valid IOS image found in flash by default.</div>
+    <p class="sub-heading2">boot system Command — Set Which IOS to Load</p>
+    <ul class="facts">
+      <li>During startup, bootstrap code parses NVRAM startup-config for <code>boot system</code> commands</li>
+      <li><strong>Multiple</strong> <code>boot system</code> commands can be entered in sequence — creates a <strong>fault-tolerant boot plan</strong> (tries first, falls back to next)</li>
+      <li>If <strong>no</strong> <code>boot system</code> commands exist → router defaults to loading the <strong>first valid IOS image in flash</strong></li>
+    </ul>
+
+    <div class="cmd-block"><span class="cm">-- After copying new image, tell router to use it --</span>
+<span class="pr">R1(config)#</span> boot system flash0:isr4200-universalk9_ias.16.09.04.SPA.bin
+<span class="pr">R1(config)#</span> exit
+<span class="pr">R1#</span> copy running-config startup-config   <span class="cm">← save so boot system command persists</span>
+<span class="pr">R1#</span> reload                               <span class="cm">← reboot to load the new image</span></div>
+
+    <div class="tip">Always save the config before reloading — <code>boot system</code> only takes effect on the next boot, and it must be in startup-config to survive the reload.</div>
   </div>
 </div>
 
-<footer>ENSA v7.0 · Module 10 · Quick Review · Good luck on your exam 🎯</footer>
+<footer>ENSA v7.0 · Module 10 · Complete Review — every detail from the lecture included · Good luck 🎯</footer>
 
 </div>
 </body>
