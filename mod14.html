@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENSA Module 14 — Network Automation</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2236;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #00ff9d;
+    --accent3: #ff6b35;
+    --accent4: #a78bfa;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --heading: #f8fafc;
+    --tag-bg: rgba(0,212,255,0.1);
+    --code-bg: #0d1117;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #0a0e1a 0%, #0f1e35 50%, #0a1628 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 48px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(0,212,255,0.06), transparent);
+    pointer-events: none;
+  }
+  .header-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 800;
+    color: var(--heading);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  header h1 span { color: var(--accent); }
+  header p {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 300;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(0,212,255,0.12);
+    border: 1px solid rgba(0,212,255,0.3);
+    color: var(--accent);
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-right: 8px;
+    margin-bottom: 16px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav a {
+    display: inline-block;
+    padding: 14px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.5px;
+  }
+  nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── LAYOUT ── */
+  main { max-width: 1100px; margin: 0 auto; padding: 48px 40px; }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 60px;
+    scroll-margin-top: 80px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--tag-bg);
+    border: 1px solid rgba(0,212,255,0.25);
+    padding: 4px 10px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--heading);
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(0,212,255,0.2); }
+  .card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h3 .icon { font-size: 16px; }
+  .card p { color: var(--text); font-size: 14px; margin-bottom: 6px; }
+  .card ul { list-style: none; padding: 0; }
+  .card ul li {
+    font-size: 14px;
+    color: var(--text);
+    padding: 4px 0 4px 16px;
+    position: relative;
+  }
+  .card ul li::before {
+    content: '▸';
+    position: absolute; left: 0;
+    color: var(--accent);
+    font-size: 11px;
+    top: 6px;
+  }
+  .card ul li strong { color: var(--heading); }
+
+  /* ── GRID ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 700px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    nav { padding: 0 20px; }
+    main { padding: 32px 20px; }
+    header { padding: 32px 20px; }
+  }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 12px 0;
+    overflow-x: auto;
+  }
+  .code-block pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #a5d6ff;
+    line-height: 1.8;
+    white-space: pre;
+  }
+  .code-block .key { color: #ff79c6; }
+  .code-block .val { color: #50fa7b; }
+  .code-block .tag { color: #8be9fd; }
+  .code-block .str { color: #f1fa8c; }
+  .code-block .comment { color: var(--muted); font-style: italic; }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin: 12px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  th {
+    background: var(--surface2);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 11px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(30,45,69,0.6);
+    color: var(--text);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,212,255,0.03); }
+  td strong { color: var(--heading); }
+
+  /* ── HIGHLIGHT BOXES ── */
+  .highlight {
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-size: 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .highlight.blue {
+    background: rgba(0,212,255,0.07);
+    border: 1px solid rgba(0,212,255,0.2);
+    color: #bae6fd;
+  }
+  .highlight.green {
+    background: rgba(0,255,157,0.07);
+    border: 1px solid rgba(0,255,157,0.2);
+    color: #a7f3d0;
+  }
+  .highlight.orange {
+    background: rgba(255,107,53,0.07);
+    border: 1px solid rgba(255,107,53,0.2);
+    color: #fed7aa;
+  }
+  .highlight.purple {
+    background: rgba(167,139,250,0.07);
+    border: 1px solid rgba(167,139,250,0.2);
+    color: #ddd6fe;
+  }
+  .highlight .hi { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .highlight strong { color: var(--heading); }
+
+  /* ── TAGS / PILLS ── */
+  .pill {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    margin: 2px;
+  }
+  .pill.blue { background: rgba(0,212,255,0.15); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
+  .pill.green { background: rgba(0,255,157,0.12); color: var(--accent2); border: 1px solid rgba(0,255,157,0.3); }
+  .pill.orange { background: rgba(255,107,53,0.12); color: var(--accent3); border: 1px solid rgba(255,107,53,0.3); }
+  .pill.purple { background: rgba(167,139,250,0.12); color: var(--accent4); border: 1px solid rgba(167,139,250,0.3); }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin: 14px 0;
+  }
+  .flow-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--heading);
+    text-align: center;
+    flex: 1;
+    min-width: 100px;
+  }
+  .flow-arrow {
+    color: var(--accent);
+    font-size: 20px;
+    padding: 0 8px;
+    flex-shrink: 0;
+  }
+
+  /* ── CRUD TABLE SPECIAL ── */
+  .crud-row td:first-child { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+  .method-get { color: #50fa7b; }
+  .method-post { color: #8be9fd; }
+  .method-put { color: #ffb86c; }
+  .method-delete { color: #ff5555; }
+
+  /* ── SUMMARY BOX ── */
+  .summary {
+    background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(0,255,157,0.03));
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-top: 48px;
+  }
+  .summary h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+  }
+  .summary ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .summary ul li {
+    font-size: 13.5px;
+    color: var(--text);
+    padding: 5px 0 5px 18px;
+    position: relative;
+  }
+  .summary ul li::before {
+    content: '✓';
+    position: absolute; left: 0;
+    color: var(--accent2);
+    font-weight: 700;
+  }
+  @media (max-width: 600px) { .summary ul { grid-template-columns: 1fr; } }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 32px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── COMPARE CARDS (format) ── */
+  .format-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .format-card .fc-head {
+    padding: 12px 18px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .format-card.json .fc-head { background: rgba(0,212,255,0.12); color: var(--accent); }
+  .format-card.yaml .fc-head { background: rgba(0,255,157,0.12); color: var(--accent2); }
+  .format-card.xml .fc-head  { background: rgba(255,107,53,0.12); color: var(--accent3); }
+  .format-card .fc-body { padding: 14px 18px; }
+  .format-card .fc-body ul { list-style: none; }
+  .format-card .fc-body ul li {
+    font-size: 13px;
+    color: var(--text);
+    padding: 3px 0 3px 14px;
+    position: relative;
+  }
+  .format-card .fc-body ul li::before {
+    content: '·';
+    position: absolute; left: 0;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1;
+    top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-label">CCNA3 — ENSA v7.0</div>
+  <h1>Module 14: <span>Network Automation</span></h1>
+  <div style="margin-top:14px;">
+    <span class="badge">14.1 Automation</span>
+    <span class="badge">14.2 Data Formats</span>
+    <span class="badge">14.3 APIs</span>
+    <span class="badge">14.4 REST</span>
+    <span class="badge">14.5 Config Tools</span>
+    <span class="badge">14.6 IBN & DNA</span>
+  </div>
+  <p>Late-night exam review — every detail from the lecture, zero fluff.</p>
+</header>
+
+<!-- NAV -->
+<nav>
+  <a href="#s1">14.1 Automation</a>
+  <a href="#s2">14.2 Data Formats</a>
+  <a href="#s3">14.3 APIs</a>
+  <a href="#s4">14.4 REST</a>
+  <a href="#s5">14.5 Config Tools</a>
+  <a href="#s6">14.6 IBN & DNA</a>
+  <a href="#cheatsheet">⚡ Cheatsheet</a>
+</nav>
+
+<main>
+
+  <!-- ══════════════════════════════════════════════
+       14.1  AUTOMATION OVERVIEW
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">14.1</span>
+      <h2>Automation Overview</h2>
+    </div>
+
+    <div class="highlight blue">
+      <span class="hi">💡</span>
+      <div><strong>Core idea:</strong> Automation removes repetitive manual work from humans and hands it to machines/software — faster, consistent, and at scale.</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3><span class="icon">🤖</span> Why Automate?</h3>
+        <ul>
+          <li>Machines work <strong>24/7</strong> without breaks → greater output</li>
+          <li>Produces a <strong>more uniform, consistent</strong> product</li>
+          <li>Enables collection of <strong>vast data</strong> that can be analyzed quickly</li>
+          <li>Reduces <strong>human risk</strong> in dangerous environments (mining, fire, industrial accidents)</li>
+          <li>Smart devices can <strong>alter behavior</strong> based on environment (energy saving, medical diagnosis, driving safety)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><span class="icon">🧠</span> Thinking / Smart Devices</h3>
+        <ul>
+          <li>A <strong>smart device</strong> takes action based on outside information</li>
+          <li>Examples: smart appliances reducing power during peak demand, self-driving cars</li>
+          <li>Devices "think" by being programmed with <strong>network automation tools</strong></li>
+          <li>The word <em>smart</em> in a product name = ability to alter behavior based on environment</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       14.2  DATA FORMATS
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">14.2</span>
+      <h2>Data Formats</h2>
+    </div>
+
+    <div class="highlight blue">
+      <span class="hi">📦</span>
+      <div><strong>What is a data format?</strong> A structured, standardized way to store and exchange data between applications. Common formats used in network automation: <strong>JSON, YAML, XML</strong>. The format chosen depends on what the application/tool supports; many support multiple.</div>
+    </div>
+
+    <div class="card">
+      <h3>📐 Data Format Rules (apply to all formats)</h3>
+      <div class="grid-2" style="margin-top:8px;">
+        <ul>
+          <li><strong>Syntax</strong> — brackets <code style="color:var(--accent)">[ ] ( ) { }</code>, white space, indentation, quotes, commas</li>
+          <li><strong>Objects</strong> — characters, strings, lists, arrays</li>
+        </ul>
+        <ul>
+          <li><strong>Key/Value pairs</strong> — key (left) identifies/describes the data; value (right) is the data itself</li>
+          <li>Values can be: character, string, number, list, or another object</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- FORMAT COMPARISON -->
+    <div class="grid-3" style="margin-top:4px;">
+      <div class="format-card json">
+        <div class="fc-head">JSON</div>
+        <div class="fc-body">
+          <ul>
+            <li>Human-readable</li>
+            <li>Uses <strong>{ } for objects</strong>, <strong>[ ] for arrays</strong></li>
+            <li>Keys must be in <strong>double quotes</strong></li>
+            <li>Key/value separated by <strong>colon</strong></li>
+            <li>Multiple pairs separated by <strong>commas</strong></li>
+            <li>White space is <strong>not significant</strong></li>
+            <li>Most popular for web APIs</li>
+            <li>Easy to parse in Python</li>
+          </ul>
+        </div>
+      </div>
+      <div class="format-card yaml">
+        <div class="fc-head">YAML</div>
+        <div class="fc-body">
+          <ul>
+            <li>Human-readable</li>
+            <li><strong>Superset of JSON</strong></li>
+            <li>Minimalist — no brackets or commas</li>
+            <li>Uses <strong>indentation</strong> to define structure</li>
+            <li>Key/value separated by <strong>colon, no quotes</strong></li>
+            <li>List items prefixed by a <strong>hyphen ( - )</strong></li>
+            <li>Easiest to read/write</li>
+          </ul>
+        </div>
+      </div>
+      <div class="format-card xml">
+        <div class="fc-head">XML</div>
+        <div class="fc-body">
+          <ul>
+            <li>Human-readable</li>
+            <li>Similar to HTML</li>
+            <li><strong>Self-descriptive</strong> — data enclosed in tags</li>
+            <li>Syntax: <code style="color:var(--accent3)">&lt;key&gt;value&lt;/key&gt;</code></li>
+            <li><strong>No predefined tags</strong> — custom tags</li>
+            <li>Lists use <strong>repeated tag instances</strong></li>
+            <li>Most verbose of the three</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDE BY SIDE CODE -->
+    <div class="card" style="margin-top:16px;">
+      <h3>🔍 Same Data — Three Formats (ISS Position example)</h3>
+      <div class="grid-3" style="margin-top:8px;">
+        <div class="code-block">
+          <pre><span class="comment">// JSON</span>
+{
+  <span class="key">"message"</span>: <span class="str">"success"</span>,
+  <span class="key">"timestamp"</span>: <span class="val">1560789260</span>,
+  <span class="key">"iss_position"</span>: {
+    <span class="key">"latitude"</span>: <span class="str">"25.9990"</span>,
+    <span class="key">"longitude"</span>: <span class="str">"-132.6992"</span>
+  }
+}</pre>
+        </div>
+        <div class="code-block">
+          <pre><span class="comment"># YAML</span>
+<span class="key">message</span>: <span class="val">success</span>
+<span class="key">timestamp</span>: <span class="val">1560789260</span>
+<span class="key">iss_position</span>:
+  <span class="key">latitude</span>: <span class="str">'25.9990'</span>
+  <span class="key">longitude</span>: <span class="str">'-132.6992'</span></pre>
+        </div>
+        <div class="code-block">
+          <pre><span class="comment">&lt;!-- XML --&gt;</span>
+<span class="tag">&lt;root&gt;</span>
+  <span class="tag">&lt;message&gt;</span><span class="val">success</span><span class="tag">&lt;/message&gt;</span>
+  <span class="tag">&lt;timestamp&gt;</span><span class="val">1560789260</span><span class="tag">&lt;/timestamp&gt;</span>
+  <span class="tag">&lt;iss_position&gt;</span>
+    <span class="tag">&lt;latitude&gt;</span><span class="val">25.9990</span><span class="tag">&lt;/latitude&gt;</span>
+    <span class="tag">&lt;longitude&gt;</span><span class="val">-132.6992</span><span class="tag">&lt;/longitude&gt;</span>
+  <span class="tag">&lt;/iss_position&gt;</span>
+<span class="tag">&lt;/root&gt;</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- JSON DETAIL -->
+    <div class="card">
+      <h3>🔑 JSON Deep Dive — Arrays</h3>
+      <p>When a key has multiple values → that's an <strong>array</strong>. Array rules:</p>
+      <ul>
+        <li>Key followed by colon, values enclosed in <strong>square brackets [ ]</strong></li>
+        <li>Array is an <strong>ordered list</strong> of values</li>
+        <li>Can contain: strings, numbers, Booleans, objects, or other arrays</li>
+        <li>Each value separated by a <strong>comma</strong></li>
+      </ul>
+      <div class="code-block" style="margin-top:12px;">
+        <pre><span class="comment">// Array of IPv4 address objects</span>
+{
+  <span class="key">"addresses"</span>: [
+    { <span class="key">"ip"</span>: <span class="str">"172.16.0.2"</span>, <span class="key">"netmask"</span>: <span class="str">"255.255.255.0"</span> },
+    { <span class="key">"ip"</span>: <span class="str">"172.16.0.3"</span>, <span class="key">"netmask"</span>: <span class="str">"255.255.255.0"</span> },
+    { <span class="key">"ip"</span>: <span class="str">"172.16.0.4"</span>, <span class="key">"netmask"</span>: <span class="str">"255.255.255.0"</span> }
+  ]
+}</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       14.3  APIs
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">14.3</span>
+      <h2>APIs</h2>
+    </div>
+
+    <div class="highlight blue">
+      <span class="hi">🔌</span>
+      <div><strong>API (Application Programming Interface):</strong> Software that lets one application access another application's data or services. It's a set of rules describing <em>how</em> apps interact, plus instructions to make that interaction happen. User sends → <strong>API request</strong> → server responds with → <strong>API response + data</strong>.</div>
+    </div>
+
+    <div class="highlight green">
+      <span class="hi">🍽️</span>
+      <div><strong>Analogy:</strong> API = waiter in a restaurant. Customer (user) → waiter (API) → kitchen (server/data) → waiter → customer. The <strong>API call</strong> is the message from the requesting application to the server where data lives.</div>
+    </div>
+
+    <div class="grid-3" style="margin-top:16px;">
+      <div class="card">
+        <h3>🌐 Open / Public APIs</h3>
+        <ul>
+          <li>Publicly available, <strong>no restrictions</strong></li>
+          <li>Often require a free <strong>key/token</strong> to control usage</li>
+          <li>Controls the number of requests processed</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🔒 Internal / Private APIs</h3>
+        <ul>
+          <li>Used <strong>within an organization</strong> only</li>
+          <li>Not exposed publicly</li>
+          <li>Example: salespeople accessing internal sales data on mobile</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🤝 Partner APIs</h3>
+        <ul>
+          <li>Used between a company and its <strong>business partners/contractors</strong></li>
+          <li>Requires a <strong>license or permission</strong></li>
+          <li>Example: travel site using an airline's API</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- WEB SERVICE TYPES -->
+    <div class="card" style="margin-top:8px;">
+      <h3>🌍 Types of Web Service APIs</h3>
+      <p style="margin-bottom:12px;">A <strong>web service</strong> = a service available over the internet via WWW. Four types:</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Full Name</th>
+              <th>Data Format</th>
+              <th>Released</th>
+              <th>Strength</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>SOAP</strong></td>
+              <td>Simple Object Access Protocol</td>
+              <td><span class="pill orange">XML</span></td>
+              <td>1998</td>
+              <td>Well-established</td>
+            </tr>
+            <tr>
+              <td><strong>REST</strong></td>
+              <td>Representational State Transfer</td>
+              <td><span class="pill blue">JSON</span> <span class="pill green">XML</span> <span class="pill purple">YAML</span></td>
+              <td>2000</td>
+              <td>Flexible, most widely used</td>
+            </tr>
+            <tr>
+              <td><strong>XML-RPC</strong></td>
+              <td>XML Remote Procedure Call</td>
+              <td><span class="pill orange">XML</span></td>
+              <td>1998</td>
+              <td>Well-established, simplicity</td>
+            </tr>
+            <tr>
+              <td><strong>JSON-RPC</strong></td>
+              <td>JSON Remote Procedure Call</td>
+              <td><span class="pill blue">JSON</span></td>
+              <td>2005</td>
+              <td>Simplicity</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       14.4  REST
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">14.4</span>
+      <h2>REST</h2>
+    </div>
+
+    <div class="highlight blue">
+      <span class="hi">🔄</span>
+      <div><strong>REST API</strong> = an API that works on top of HTTP. It defines functions (GET, POST, etc.) for performing requests and receiving responses. "Conforming to REST constraints" = being <strong>RESTful</strong>.</div>
+    </div>
+
+    <!-- RESTful constraints -->
+    <div class="card">
+      <h3>✅ RESTful Constraints (must have ALL three)</h3>
+      <div class="grid-3" style="margin-top:8px;">
+        <div class="highlight blue" style="margin:0; flex-direction:column;">
+          <strong>Client-Server</strong>
+          <p style="font-size:13px; color:var(--text); margin-top:4px;">Client handles front end, server handles back end. Either can be replaced independently.</p>
+        </div>
+        <div class="highlight green" style="margin:0; flex-direction:column;">
+          <strong>Stateless</strong>
+          <p style="font-size:13px; color:var(--text); margin-top:4px;">No client data stored on server between requests. Session state stored on the <em>client</em>.</p>
+        </div>
+        <div class="highlight purple" style="margin:0; flex-direction:column;">
+          <strong>Cacheable</strong>
+          <p style="font-size:13px; color:var(--text); margin-top:4px;">Clients can cache server responses to improve performance.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HTTP methods CRUD -->
+    <div class="card">
+      <h3>⚡ HTTP Methods → CRUD Operations</h3>
+      <div class="table-wrap" style="margin-top:10px;">
+        <table>
+          <thead>
+            <tr><th>HTTP Method</th><th>RESTful Operation</th><th>What it does</th></tr>
+          </thead>
+          <tbody class="crud-row">
+            <tr>
+              <td><span class="method-post">POST</span></td>
+              <td><strong>Create</strong></td>
+              <td>Create a new resource on the server</td>
+            </tr>
+            <tr>
+              <td><span class="method-get">GET</span></td>
+              <td><strong>Read</strong></td>
+              <td>Retrieve / read data from the server</td>
+            </tr>
+            <tr>
+              <td><span class="method-put">PUT / PATCH</span></td>
+              <td><strong>Update</strong></td>
+              <td>Update an existing resource</td>
+            </tr>
+            <tr>
+              <td><span class="method-delete">DELETE</span></td>
+              <td><strong>Delete</strong></td>
+              <td>Remove a resource from the server</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- URI / URN / URL -->
+    <div class="card">
+      <h3>🔗 URI vs URN vs URL</h3>
+      <ul>
+        <li><strong>URI (Uniform Resource Identifier)</strong> — string that identifies a specific network resource. Parent term.</li>
+        <li><strong>URN (Uniform Resource Name)</strong> — identifies the <em>namespace</em> of the resource only; no protocol reference</li>
+        <li><strong>URL (Uniform Resource Locator)</strong> — defines the <em>network location</em> of a resource; includes a protocol (HTTP, HTTPS, FTP, SFTP, SSH...)</li>
+      </ul>
+      <div class="code-block" style="margin-top:12px;">
+        <pre><span class="comment">// Example URI breakdown:</span>
+https://www.example.com/author/book.html#page155
+│       │                │               │
+Protocol Hostname          Path/File       Fragment</pre>
+      </div>
+    </div>
+
+    <!-- RESTful Implementation -->
+    <div class="card">
+      <h3>🏗️ RESTful Web Service — 4 Required Aspects</h3>
+      <ul>
+        <li>A <strong>base URI</strong> for the web service (e.g. <code style="color:var(--accent)">http://example.com/resources</code>)</li>
+        <li>A supported <strong>data format</strong> (JSON, YAML, XML, or any valid hypertext standard)</li>
+        <li>A set of <strong>HTTP methods</strong> supported (POST, GET, PUT/PATCH, DELETE)</li>
+        <li>The API must be <strong>hypertext driven</strong></li>
+      </ul>
+    </div>
+
+    <!-- Anatomy of RESTful Request -->
+    <div class="card">
+      <h3>🧩 Anatomy of a RESTful Request</h3>
+      <p style="margin-bottom:12px; font-size:13px; color:var(--muted);">Example: MapQuest Directions API</p>
+      <div class="code-block">
+        <pre>http://www.mapquestapi.com/directions/v2/route?outFormat=json&key=KEY&from=San+Jose,Ca&to=Monterey,Ca
+│                        │                   │                  │    │                 │
+API Server               Resources           Format             Key  Parameter1        Parameter2</pre>
+      </div>
+      <div class="grid-2" style="margin-top:14px;">
+        <ul>
+          <li><strong>API Server</strong> — URL of the server answering REST requests</li>
+          <li><strong>Resources</strong> — the specific API being requested (e.g. directions)</li>
+          <li><strong>Query</strong> — specifies data format + info the client is requesting</li>
+        </ul>
+        <ul>
+          <li><strong>Format</strong> — usually JSON, can be YAML or XML</li>
+          <li><strong>Key</strong> — for authorization (if required by the API provider)</li>
+          <li><strong>Parameters</strong> — specific info for the request (e.g. from/to locations)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Why APIs require a key -->
+    <div class="card">
+      <h3>🔑 Why API Providers Require a Key</h3>
+      <div class="grid-2" style="margin-top:6px;">
+        <ul>
+          <li><strong>Authenticate</strong> the source / verify authorization</li>
+          <li><strong>Limit number of people</strong> using the API</li>
+          <li><strong>Limit requests per user</strong></li>
+        </ul>
+        <ul>
+          <li><strong>Capture and track</strong> requested data</li>
+          <li><strong>Gather info</strong> on people using the API</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RESTful API applications -->
+    <div class="card">
+      <h3>🛠️ Ways to Call a RESTful API</h3>
+      <ul>
+        <li><strong>Web Browser</strong> — type the URI directly (works for simple GET requests)</li>
+        <li><strong>Developer Web Site</strong> — API docs with interactive request builder</li>
+        <li><strong>Postman</strong> — app for testing/using REST APIs; full support for query params and keys</li>
+        <li><strong>Python</strong> — call APIs from within a script → enables automation, customization, app integration</li>
+        <li><strong>Network Operating Systems</strong> — protocols like <strong>NETCONF</strong> and <strong>RESTCONF</strong> provide alternative methods for configuration, monitoring, and management</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       14.5  CONFIGURATION MANAGEMENT TOOLS
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">14.5</span>
+      <h2>Configuration Management Tools</h2>
+    </div>
+
+    <!-- Traditional -->
+    <div class="card">
+      <h3>📟 Traditional Network Configuration (the old way)</h3>
+      <ul>
+        <li>Network admin configures devices one by one using the <strong>CLI</strong></li>
+        <li>Every change/new feature must be <strong>manually entered on every device</strong></li>
+        <li>Scales poorly — becomes a <strong>major issue on large/complex networks</strong></li>
+        <li><strong>SNMP</strong> — lets admins manage nodes on an IP network via a Network Management Station (NMS): monitor performance, find problems, query stats. <strong>NOT typically used for configuration</strong> due to security concerns and implementation difficulty</li>
+      </ul>
+    </div>
+
+    <!-- Network Automation -->
+    <div class="highlight green">
+      <span class="hi">🚀</span>
+      <div><strong>Network Automation:</strong> The shift from managing dozens of devices via CLI to deploying/managing thousands of physical and virtual devices with software. Tools include: REST, Ansible, Puppet, Chef, SaltStack, Python, JSON, XML, NETCONF.</div>
+    </div>
+
+    <!-- What config mgmt tools do -->
+    <div class="card">
+      <h3>⚙️ What Configuration Management Tools Do</h3>
+      <p>Use <strong>RESTful API requests</strong> to automate tasks, scalable to thousands of devices. Aspects admins automate:</p>
+      <div class="grid-2" style="margin-top:10px;">
+        <ul>
+          <li>Software and <strong>version control</strong></li>
+          <li>Device attributes: <strong>names, addressing, security</strong></li>
+        </ul>
+        <ul>
+          <li><strong>Protocol configurations</strong></li>
+          <li><strong>ACL configurations</strong></li>
+        </ul>
+      </div>
+      <div class="highlight purple" style="margin-top:14px;">
+        <span class="hi">📌</span>
+        <div>
+          <strong>Automation</strong> = a tool automatically performs a task on a system.<br>
+          <strong>Orchestration</strong> = arranging automated tasks to produce a coordinated process or workflow.
+        </div>
+      </div>
+    </div>
+
+    <!-- Tool Comparison -->
+    <div class="card">
+      <h3>📊 Ansible vs Chef vs Puppet vs SaltStack</h3>
+      <p style="font-size:13px; color:var(--muted); margin-bottom:12px;">All support JSON and YAML. All come with RESTful API documentation.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Characteristic</th>
+              <th>Ansible</th>
+              <th>Chef</th>
+              <th>Puppet</th>
+              <th>SaltStack</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Programming Language</td>
+              <td><span class="pill blue">Python</span> + <span class="pill green">YAML</span></td>
+              <td><span class="pill orange">Ruby</span></td>
+              <td><span class="pill orange">Ruby</span></td>
+              <td><span class="pill blue">Python</span></td>
+            </tr>
+            <tr>
+              <td>Agent Model</td>
+              <td><strong>Agentless</strong></td>
+              <td>Agent-based</td>
+              <td>Supports both</td>
+              <td>Supports both</td>
+            </tr>
+            <tr>
+              <td>Controller / Master</td>
+              <td>Any device can be controller</td>
+              <td>Chef Master</td>
+              <td>Puppet Master</td>
+              <td>Salt Master</td>
+            </tr>
+            <tr>
+              <td>What tool creates</td>
+              <td><strong>Playbook</strong></td>
+              <td><strong>Cookbook</strong></td>
+              <td><strong>Manifest</strong></td>
+              <td><strong>Pillar</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="highlight orange">
+      <span class="hi">🎯</span>
+      <div><strong>Goal of all config tools:</strong> Reduce complexity and time involved in configuring/maintaining large-scale infrastructure with hundreds or thousands of devices. Also beneficial for smaller networks.</div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       14.6  IBN & CISCO DNA CENTER
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="s6">
+    <div class="section-header">
+      <span class="section-num">14.6</span>
+      <h2>IBN & Cisco DNA Center</h2>
+    </div>
+
+    <!-- IBN Overview -->
+    <div class="highlight blue">
+      <span class="hi">🌐</span>
+      <div><strong>IBN (Intent-Based Networking)</strong> = the next-generation networking model. Builds on SDN. Transforms hardware-centric, manual network design to <strong>software-centric, fully automated</strong>. Business objectives are expressed as <em>intent</em>; IBN uses analytics, ML, and automation to keep the network aligned as business needs change.</div>
+    </div>
+
+    <!-- Three functions -->
+    <div class="card">
+      <h3>🔺 Cisco IBN — Three Essential Functions</h3>
+      <div class="flow" style="margin: 16px 0;">
+        <div class="flow-item" style="border-color:rgba(0,212,255,0.4); color:var(--accent);">
+          🗣️ <strong>Translation</strong>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-item" style="border-color:rgba(255,165,0,0.4); color:#fb923c;">
+          ⚡ <strong>Activation</strong>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-item" style="border-color:rgba(0,255,157,0.4); color:var(--accent2);">
+          ✅ <strong>Assurance</strong>
+        </div>
+      </div>
+      <div class="grid-3" style="margin-top:4px;">
+        <div class="highlight blue" style="margin:0; flex-direction:column;">
+          <strong>Translation</strong>
+          <p style="font-size:13px; color:var(--text); margin-top:6px;">Enables the admin to <em>express</em> expected networking behavior that supports the business intent.</p>
+        </div>
+        <div class="highlight orange" style="margin:0; flex-direction:column;">
+          <strong>Activation</strong>
+          <p style="font-size:13px; color:var(--text); margin-top:6px;">Interprets captured intent into <em>policies</em> → installs them into physical/virtual infrastructure via networkwide automation.</p>
+        </div>
+        <div class="highlight green" style="margin:0; flex-direction:column;">
+          <strong>Assurance</strong>
+          <p style="font-size:13px; color:var(--text); margin-top:6px;">Maintains a <em>continuous validation-and-verification loop</em> to ensure expressed intent is honored at any point in time.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay / Underlay -->
+    <div class="grid-2">
+      <div class="card">
+        <h3>🔲 Overlay Network (Logical)</h3>
+        <ul>
+          <li>From IBN's view, network infrastructure is a <strong>fabric</strong></li>
+          <li>Overlay = <strong>logical topology</strong> used to virtually connect devices</li>
+          <li>Limits the number of devices the admin must program</li>
+          <li>Provides services and forwarding methods <strong>not controlled by physical devices</strong></li>
+          <li>Where encapsulation protocols like <strong>IPsec</strong> and <strong>CAPWAP</strong> occur</li>
+          <li>Physical connections between switches are <strong>not a concern of the overlay</strong></li>
+          <li>Admin uses policies to control the <strong>overlay control plane</strong></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🔩 Underlay Network (Physical)</h3>
+        <ul>
+          <li>The <strong>physical topology</strong> including all hardware to meet business objectives</li>
+          <li>Reveals additional devices and <strong>how they are connected</strong></li>
+          <li>End points (servers) access network through <strong>Layer 2 devices</strong></li>
+          <li>Underlay control plane is responsible for <strong>simple forwarding tasks</strong></li>
+          <li>Routing devices are <strong>Layer 3</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Cisco DNA -->
+    <div class="card" style="margin-top:16px;">
+      <h3>🧬 Cisco DNA (Digital Network Architecture)</h3>
+      <p style="margin-bottom:12px;">Cisco's implementation of the IBN fabric. Business intent is securely deployed into the fabric. Cisco DNA <strong>continuously gathers data</strong> from devices/applications to provide rich context, then analyzes it to ensure the network performs securely at optimal level in accordance with business intent and policies.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>DNA Solution</th><th>Description</th><th>Benefits</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>SD-Access</strong></td>
+              <td>First intent-based enterprise networking solution built on Cisco DNA. Single network fabric across LAN and WLAN for consistent, secure user experience. Segments user/device/application traffic, automates user-access policies.</td>
+              <td>Network access in minutes for any user/device/application without compromising security.</td>
+            </tr>
+            <tr>
+              <td><strong>SD-WAN</strong></td>
+              <td>Cloud-delivered architecture that centrally manages WAN connections. Simplifies/accelerates delivery of secure WAN services across data centers, branches, campuses, colocation.</td>
+              <td>Better app user experience. Greater agility and cost savings through easier deployment and transport independence.</td>
+            </tr>
+            <tr>
+              <td><strong>DNA Assurance</strong></td>
+              <td>Troubleshoots and boosts IT productivity. Uses advanced analytics and ML to improve performance, predict and assure network performance, provides real-time notifications.</td>
+              <td>Identify root causes, suggested remediation. Single dashboard with drilldown. ML predicts problems before they occur.</td>
+            </tr>
+            <tr>
+              <td><strong>DNA Security</strong></td>
+              <td>Uses the network as a sensor for real-time analysis. Provides granular control to enforce policy and contain threats, even in encrypted traffic.</td>
+              <td>Reduced risk, 360° visibility through real-time analytics, lower complexity with end-to-end security.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- DNA Center -->
+    <div class="card">
+      <h3>🖥️ Cisco DNA Center</h3>
+      <p style="margin-bottom:10px;">The <strong>foundational controller and analytics platform</strong> at the heart of Cisco DNA. A hardware and software platform providing a <strong>"single-pane-of-glass"</strong> (single interface) focused on assurance, analytics, and automation. Used for provisioning and configuring network devices.</p>
+      <p style="margin-bottom:12px; font-size:13px; color:var(--muted);">Launch page shows overall health summary and network snapshot. Five main menu areas:</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Menu Area</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Design</strong></td>
+              <td>Model the entire network — sites, buildings, devices, links (physical and virtual) across campus, branch, WAN, and cloud.</td>
+            </tr>
+            <tr>
+              <td><strong>Policy</strong></td>
+              <td>Use policies to automate and simplify network management. Reduces cost and risk; speeds rollout of new/enhanced services.</td>
+            </tr>
+            <tr>
+              <td><strong>Provision</strong></td>
+              <td>Deliver new services to users with ease, speed, and security across the enterprise — regardless of network size or complexity.</td>
+            </tr>
+            <tr>
+              <td><strong>Assurance</strong></td>
+              <td>Proactive monitoring and insights from network, devices, and applications to predict problems faster and ensure config changes achieve business intent.</td>
+            </tr>
+            <tr>
+              <td><strong>Platform</strong></td>
+              <td>Use APIs to integrate with preferred IT systems to create end-to-end solutions and add support for multi-vendor devices.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       CHEAT SHEET
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="cheatsheet">
+    <div class="section-header">
+      <span class="section-num" style="background:rgba(255,107,53,0.12); border-color:rgba(255,107,53,0.3); color:var(--accent3);">⚡</span>
+      <h2>Quick-Fire Cheat Sheet</h2>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3 style="color:var(--accent2);">Data Formats — Key Differences</h3>
+        <ul>
+          <li><strong>JSON:</strong> { } objects, [ ] arrays, double-quoted keys, comma-separated</li>
+          <li><strong>YAML:</strong> indentation only, no brackets, hyphen for list items, superset of JSON</li>
+          <li><strong>XML:</strong> &lt;tag&gt;value&lt;/tag&gt;, self-descriptive, no predefined tags, verbose</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent2);">REST HTTP Methods (CRUD)</h3>
+        <ul>
+          <li><span class="pill blue">POST</span> → <strong>Create</strong></li>
+          <li><span class="pill green">GET</span> → <strong>Read</strong></li>
+          <li><span class="pill orange">PUT/PATCH</span> → <strong>Update</strong></li>
+          <li><span class="pill purple">DELETE</span> → <strong>Delete</strong></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent2);">Config Tool Memory Aid</h3>
+        <ul>
+          <li>Ansible → <strong>Agentless</strong>, Python+YAML, creates <strong>Playbook</strong></li>
+          <li>Chef → Agent-based, Ruby, creates <strong>Cookbook</strong>, Chef Master</li>
+          <li>Puppet → Supports both, Ruby, creates <strong>Manifest</strong>, Puppet Master</li>
+          <li>SaltStack → Supports both, Python, creates <strong>Pillar</strong>, Salt Master</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent2);">IBN Functions</h3>
+        <ul>
+          <li><strong>Translation</strong> → express business intent</li>
+          <li><strong>Activation</strong> → convert to policies + deploy networkwide</li>
+          <li><strong>Assurance</strong> → continuous validation/verification loop</li>
+          <li><strong>Overlay</strong> = logical, <strong>Underlay</strong> = physical</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent2);">API Types Quick Ref</h3>
+        <ul>
+          <li><strong>Open/Public</strong> → free, may need a key/token</li>
+          <li><strong>Internal/Private</strong> → org-only access</li>
+          <li><strong>Partner</strong> → between company + partners, needs license</li>
+          <li><strong>API Call</strong> = message from requesting app to server</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--accent2);">RESTful Request Parts</h3>
+        <ul>
+          <li><strong>API Server</strong> → base URL of the server</li>
+          <li><strong>Resources</strong> → specific API endpoint</li>
+          <li><strong>Format</strong> → JSON / XML / YAML</li>
+          <li><strong>Key</strong> → authorization token</li>
+          <li><strong>Parameters</strong> → request-specific data</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- DNA Center menus shortlist -->
+    <div class="card" style="margin-top:4px;">
+      <h3 style="color:var(--accent2);">DNA Center 5 Menus</h3>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+        <span class="pill blue">Design</span>
+        <span style="color:var(--muted); margin-top:2px; font-size:13px;">— Model everything</span>
+        <span class="pill green">Policy</span>
+        <span style="color:var(--muted); margin-top:2px; font-size:13px;">— Automate policies</span>
+        <span class="pill orange">Provision</span>
+        <span style="color:var(--muted); margin-top:2px; font-size:13px;">— Deploy services</span>
+        <span class="pill purple">Assurance</span>
+        <span style="color:var(--muted); margin-top:2px; font-size:13px;">— Proactive monitoring</span>
+        <span class="pill blue">Platform</span>
+        <span style="color:var(--muted); margin-top:2px; font-size:13px;">— APIs + multi-vendor</span>
+      </div>
+    </div>
+
+    <!-- Cisco DNA Solutions shortlist -->
+    <div class="card" style="margin-top:4px;">
+      <h3 style="color:var(--accent2);">Cisco DNA Solutions</h3>
+      <ul>
+        <li><strong>SD-Access</strong> — LAN/WLAN fabric, segments traffic, automates user access, no security compromise</li>
+        <li><strong>SD-WAN</strong> — cloud-managed WAN, connects DC/branch/campus/colocation, transport independence</li>
+        <li><strong>DNA Assurance</strong> — ML + analytics, real-time notifications, root cause ID, single dashboard</li>
+        <li><strong>DNA Security</strong> — network as sensor, 360° visibility, encrypted traffic threat detection</li>
+      </ul>
+    </div>
+
+    <!-- Final summary checklist -->
+    <div class="summary" style="margin-top:24px;">
+      <h3>// MODULE 14 — EVERYTHING YOU NEED TO KNOW</h3>
+      <ul>
+        <li>Benefits of automation (24/7, uniform, data, safety)</li>
+        <li>Smart device definition</li>
+        <li>JSON: { } objects, [ ] arrays, double-quoted keys</li>
+        <li>YAML: superset of JSON, indentation, hyphen lists</li>
+        <li>XML: self-descriptive, paired tags, no predefined tags</li>
+        <li>API = rules for app-to-app interaction</li>
+        <li>API Call = message from requester to server</li>
+        <li>Open / Internal / Partner API types</li>
+        <li>SOAP / REST / XML-RPC / JSON-RPC differences</li>
+        <li>REST = stateless, client-server, cacheable</li>
+        <li>POST=Create, GET=Read, PUT=Update, DELETE=Delete</li>
+        <li>URI → URN (namespace) + URL (location + protocol)</li>
+        <li>RESTful request: server, resources, format, key, params</li>
+        <li>Key purposes: auth, limit users, limit requests, track data</li>
+        <li>API tools: Browser, Postman, Python, NETCONF/RESTCONF</li>
+        <li>SNMP = monitoring, NOT config (security/difficulty)</li>
+        <li>Automation vs Orchestration</li>
+        <li>Ansible: agentless, Python+YAML, Playbook</li>
+        <li>Chef: agent, Ruby, Cookbook, Chef Master</li>
+        <li>Puppet: both, Ruby, Manifest, Puppet Master</li>
+        <li>SaltStack: both, Python, Pillar, Salt Master</li>
+        <li>IBN = intent → SDN evolution, software-centric</li>
+        <li>IBN functions: Translation, Activation, Assurance</li>
+        <li>Overlay = logical fabric, IPsec/CAPWAP encapsulation</li>
+        <li>Underlay = physical topology, L3 routing, L2 access</li>
+        <li>Cisco DNA = IBN implementation with analytics + ML</li>
+        <li>DNA Center: single-pane-of-glass, hardware+software</li>
+        <li>DNA Center 5 menus: Design, Policy, Provision, Assurance, Platform</li>
+        <li>SD-Access, SD-WAN, DNA Assurance, DNA Security</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ENSA Module 14 — Network Automation &nbsp;|&nbsp; CCNA3 v7.0 &nbsp;|&nbsp; Good luck on your exam, Moe 🔥
+</footer>
+
+</body>
+</html>
