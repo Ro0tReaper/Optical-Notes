@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENSA Module 11 – Network Design | Exam Review</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --card: #161d2e;
+    --border: #1e2d45;
+    --accent: #00d4ff;
+    --accent2: #00ff9d;
+    --accent3: #ff6b35;
+    --accent4: #a78bfa;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --heading: #f8fafc;
+    --tag-bg: rgba(0,212,255,0.1);
+    --tag-border: rgba(0,212,255,0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* HEADER */
+  header {
+    text-align: center;
+    margin-bottom: 56px;
+    padding: 48px 32px;
+    background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(0,255,157,0.03));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(0,255,157,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .course-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    border: 1px solid var(--tag-border);
+    background: var(--tag-bg);
+    padding: 4px 12px;
+    border-radius: 4px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  header h1 {
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 800;
+    color: var(--heading);
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  header h1 span { color: var(--accent); }
+
+  header p {
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  /* TABLE OF CONTENTS */
+  .toc {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 48px;
+  }
+
+  .toc a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .toc a:hover {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.05);
+    color: var(--accent);
+  }
+
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  /* SECTIONS */
+  section {
+    margin-bottom: 48px;
+    scroll-margin-top: 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--bg);
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .s1 .section-number { background: var(--accent); }
+  .s2 .section-number { background: var(--accent2); }
+  .s3 .section-number { background: var(--accent3); }
+  .s4 .section-number { background: var(--accent4); }
+
+  .section-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--heading);
+    letter-spacing: -0.5px;
+  }
+
+  .s1 .section-header h2 { color: var(--accent); }
+  .s2 .section-header h2 { color: var(--accent2); }
+  .s3 .section-header h2 { color: var(--accent3); }
+  .s4 .section-header h2 { color: var(--accent4); }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+  }
+
+  .s1 .card::before { background: var(--accent); }
+  .s2 .card::before { background: var(--accent2); }
+  .s3 .card::before { background: var(--accent3); }
+  .s4 .card::before { background: var(--accent4); }
+
+  .card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--heading);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .card p, .card li {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  .card ul, .card ol {
+    padding-left: 18px;
+  }
+
+  .card li { margin-bottom: 4px; }
+
+  /* HIGHLIGHT PILL */
+  .pill {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  .pill-blue { background: rgba(0,212,255,0.15); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
+  .pill-green { background: rgba(0,255,157,0.12); color: var(--accent2); border: 1px solid rgba(0,255,157,0.3); }
+  .pill-orange { background: rgba(255,107,53,0.12); color: var(--accent3); border: 1px solid rgba(255,107,53,0.3); }
+  .pill-purple { background: rgba(167,139,250,0.12); color: var(--accent4); border: 1px solid rgba(167,139,250,0.3); }
+
+  /* COMPARISON GRID */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .compare-grid { grid-template-columns: 1fr; }
+  }
+
+  .compare-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+
+  .compare-card h4 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 10px;
+  }
+
+  .compare-card ul {
+    padding-left: 16px;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .compare-card li { margin-bottom: 5px; }
+
+  /* TABLE */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead tr {
+    background: var(--surface);
+  }
+
+  th {
+    padding: 10px 14px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(30,45,69,0.6);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(255,255,255,0.01); }
+
+  td:first-child {
+    font-weight: 700;
+    color: var(--heading);
+    white-space: nowrap;
+  }
+
+  /* ALERT BOX */
+  .alert {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 13px;
+  }
+
+  .alert-warn {
+    background: rgba(255,107,53,0.08);
+    border: 1px solid rgba(255,107,53,0.25);
+    color: #fda07a;
+  }
+
+  .alert-info {
+    background: rgba(0,212,255,0.07);
+    border: 1px solid rgba(0,212,255,0.2);
+    color: #67e3f9;
+  }
+
+  .alert-green {
+    background: rgba(0,255,157,0.07);
+    border: 1px solid rgba(0,255,157,0.2);
+    color: #6ee7b7;
+  }
+
+  .alert-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* LAYER VISUAL */
+  .layer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 12px 0;
+  }
+
+  .layer {
+    padding: 12px 18px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .layer-core {
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+  }
+
+  .layer-dist {
+    background: rgba(167,139,250,0.1);
+    border: 1px solid rgba(167,139,250,0.3);
+    margin: 0 20px;
+  }
+
+  .layer-access {
+    background: rgba(0,255,157,0.08);
+    border: 1px solid rgba(0,255,157,0.25);
+    margin: 0 40px;
+  }
+
+  .layer-name {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--heading);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .layer-desc {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* KEY-VALUE PAIRS */
+  .kv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .kv {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .kv-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .kv-val {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+
+  /* SCROLL ANIMATION */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  section {
+    animation: fadeIn 0.5s ease both;
+  }
+
+  section:nth-child(1) { animation-delay: 0.1s; }
+  section:nth-child(2) { animation-delay: 0.2s; }
+  section:nth-child(3) { animation-delay: 0.3s; }
+  section:nth-child(4) { animation-delay: 0.4s; }
+
+  strong { color: var(--heading); }
+  em { color: var(--accent); font-style: normal; font-weight: 600; }
+
+  .inline-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="course-tag">CCNA3 · ENSA v7.0</div>
+    <h1>Module 11<br><span>Network Design</span></h1>
+    <p>Last-minute exam review — every concept, zero fluff</p>
+  </header>
+
+  <!-- TABLE OF CONTENTS -->
+  <nav class="toc">
+    <a href="#s1"><span class="toc-num">11.1</span> Hierarchical Networks</a>
+    <a href="#s2"><span class="toc-num">11.2</span> Scalable Networks</a>
+    <a href="#s3"><span class="toc-num">11.3</span> Switch Hardware</a>
+    <a href="#s4"><span class="toc-num">11.4</span> Router Hardware</a>
+  </nav>
+
+  <!-- ============================= -->
+  <!-- SECTION 1: HIERARCHICAL NETS  -->
+  <!-- ============================= -->
+  <section id="s1" class="s1">
+    <div class="section-header">
+      <span class="section-number">11.1</span>
+      <h2>Hierarchical Networks</h2>
+    </div>
+
+    <div class="card">
+      <h3>Why Scale?</h3>
+      <p>Organizations need networks that can handle:</p>
+      <ul>
+        <li><strong>Converged traffic</strong> — data, voice, and video on the same network</li>
+        <li><strong>Critical applications</strong> — always-on services</li>
+        <li><strong>Diverse business needs</strong> — different departments, locations</li>
+        <li><strong>Centralized admin control</strong> — manage everything from one place</li>
+      </ul>
+      <br>
+      <p>Campus networks range from a single LAN switch (small) to thousands of connections (large).</p>
+    </div>
+
+    <div class="card">
+      <h3>Cisco Borderless Network</h3>
+      <p>A network architecture that connects <em>anyone, anywhere, anytime, on any device — securely, reliably, seamlessly.</em></p>
+      <br>
+      <ul>
+        <li>Unifies <strong>wired and wireless</strong> access on a single framework</li>
+        <li>Built on scalable, resilient hierarchical hardware</li>
+        <li>Key properties: <span class="pill pill-blue">Hierarchical</span> <span class="pill pill-green">Modular</span> <span class="pill pill-orange">Resilient</span> <span class="pill pill-purple">Flexible</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>The 3 Layers — Core Concept ⚡</h3>
+      <p>Every layer has a specific, well-defined job. Know all three cold.</p>
+      <div class="layer-stack">
+        <div class="layer layer-core">
+          <div>
+            <div class="layer-name">🔵 Core Layer</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">The backbone</div>
+          </div>
+          <div class="layer-desc">High-speed backbone connectivity<br>Fault isolation<br>Connects distribution switches</div>
+        </div>
+        <div class="layer layer-dist">
+          <div>
+            <div class="layer-name">🟣 Distribution Layer</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">The aggregator</div>
+          </div>
+          <div class="layer-desc">Routing · QoS · Security<br>Limits Layer 2 broadcast domains<br>Aggregates wiring closets<br>Connects access ↔ core</div>
+        </div>
+        <div class="layer layer-access">
+          <div>
+            <div class="layer-name">🟢 Access Layer</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">Where users connect</div>
+          </div>
+          <div class="layer-desc">End-user network access<br>Connects to distribution layer</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4 style="color:var(--accent);">Three-Tier Model</h4>
+        <ul>
+          <li>Has all 3 layers: access, distribution, <strong>and</strong> core</li>
+          <li>Used by larger organizations with multiple buildings</li>
+          <li>Recommended topology: <strong>extended-star</strong> from a central building to all others on campus</li>
+        </ul>
+      </div>
+      <div class="compare-card">
+        <h4 style="color:var(--accent2);">Two-Tier Model (Collapsed Core)</h4>
+        <ul>
+          <li>Distribution and core are <strong>merged into one layer</strong></li>
+          <li>Used in smaller campuses or single-building sites</li>
+          <li>Also called: <strong>collapsed core network design</strong></li>
+          <li>Good when a separate core isn't needed</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Role of Switched Networks</h3>
+      <ul>
+        <li>Networks evolved from <strong>flat hub-based</strong> networks → <strong>switched LANs</strong> in a hierarchy</li>
+        <li>Switched LANs provide: flexibility, traffic management, QoS, security</li>
+        <li>Also support: <strong>wireless, IP telephony, mobility services</strong></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================= -->
+  <!-- SECTION 2: SCALABLE NETWORKS  -->
+  <!-- ============================= -->
+  <section id="s2" class="s2">
+    <div class="section-header">
+      <span class="section-number">11.2</span>
+      <h2>Scalable Networks</h2>
+    </div>
+
+    <div class="card">
+      <h3>What is Scalability?</h3>
+      <p>A network that can <strong>grow without losing availability or reliability</strong>. Designers use four core strategies:</p>
+      <br>
+      <div class="kv-grid">
+        <div class="kv">
+          <div class="kv-key">1. Redundancy</div>
+          <div class="kv-val">Eliminate single points of failure with duplicate equipment</div>
+        </div>
+        <div class="kv">
+          <div class="kv-key">2. Multiple Links</div>
+          <div class="kv-val">EtherChannel for bandwidth aggregation</div>
+        </div>
+        <div class="kv">
+          <div class="kv-key">3. Scalable Routing Protocol</div>
+          <div class="kv-val">OSPF for large hierarchical networks</div>
+        </div>
+        <div class="kv">
+          <div class="kv-key">4. Wireless Connectivity</div>
+          <div class="kv-val">WLANs to extend access layer reach</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>1. Plan for Redundancy</h3>
+      <p>Redundancy = eliminating <strong>single points of failure</strong> by:</p>
+      <ul>
+        <li>Installing <strong>duplicate equipment</strong></li>
+        <li>Providing <strong>failover services</strong> for critical devices</li>
+        <li>Providing <strong>redundant paths</strong> — alternate physical routes for data</li>
+      </ul>
+      <br>
+      <div class="alert alert-warn">
+        <span class="alert-icon">⚠️</span>
+        <span><strong>Redundant paths in Ethernet = Layer 2 loops.</strong> You MUST run <strong>Spanning Tree Protocol (STP)</strong> to prevent broadcast storms.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>2. Reduce Failure Domain Size</h3>
+      <p>A <strong>failure domain</strong> = the area of the network impacted when something breaks.</p>
+      <ul>
+        <li>Hierarchical design <strong>terminates failure domains at the distribution layer</strong></li>
+        <li>Each router acts as gateway for a <strong>limited number</strong> of access layer users</li>
+        <li>Routers or multilayer switches are deployed in pairs → called a <strong>building switch block</strong> (or departmental switch block)</li>
+        <li>Each switch block acts <strong>independently</strong> — one failure doesn't bring down the whole network</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>3. Increase Bandwidth — EtherChannel</h3>
+      <p><strong>Link aggregation</strong> combines multiple physical links into one logical link for more bandwidth.</p>
+      <br>
+      <div class="alert alert-info">
+        <span class="alert-icon">💡</span>
+        <span><strong>EtherChannel</strong> = Cisco's link aggregation technology. Multiple physical ports → one <strong>Port Channel interface</strong>.</span>
+      </div>
+      <br>
+      <ul>
+        <li>Config is done on the <strong>Port Channel interface</strong>, not each individual port → ensures consistency</li>
+        <li>EtherChannel can <strong>load balance</strong> traffic across member links</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>4. Expand the Access Layer — WLANs</h3>
+      <p>Wireless LANs are the go-to method for growing the access layer.</p>
+      <ul>
+        <li>Benefits: increased flexibility, reduced costs, adapts to changing needs</li>
+        <li>End devices need a <strong>wireless NIC</strong> to connect to a <strong>wireless router</strong> or <strong>Access Point (AP)</strong></li>
+      </ul>
+      <br>
+      <p style="font-weight:600;font-size:13px;color:var(--heading);margin-bottom:6px;">Key considerations when implementing WLAN:</p>
+      <ul>
+        <li>Types of wireless devices connecting</li>
+        <li>Wireless <strong>coverage requirements</strong></li>
+        <li><strong>Interference</strong> considerations</li>
+        <li><strong>Security</strong> considerations</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>5. Tune Routing Protocols — OSPF</h3>
+      <p><strong>OSPF (Open Shortest Path First)</strong> is the standard choice for large enterprise networks.</p>
+      <br>
+      <div class="kv-grid">
+        <div class="kv">
+          <div class="kv-key">Type</div>
+          <div class="kv-val">Link-state routing protocol</div>
+        </div>
+        <div class="kv">
+          <div class="kv-key">Structure</div>
+          <div class="kv-val">Uses <strong>areas</strong> to support hierarchical network design</div>
+        </div>
+        <div class="kv">
+          <div class="kv-key">Neighbors</div>
+          <div class="kv-val">Routers establish and maintain <strong>neighbor adjacencies</strong></div>
+        </div>
+        <div class="kv">
+          <div class="kv-key">Database</div>
+          <div class="kv-val">Routers <strong>synchronize</strong> their link-state database</div>
+        </div>
+        <div class="kv">
+          <div class="kv-key">Updates</div>
+          <div class="kv-val">On network change → <strong>link-state updates</strong> sent to all OSPF routers → new best path calculated</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= -->
+  <!-- SECTION 3: SWITCH HARDWARE    -->
+  <!-- ============================= -->
+  <section id="s3" class="s3">
+    <div class="section-header">
+      <span class="section-number">11.3</span>
+      <h2>Switch Hardware</h2>
+    </div>
+
+    <div class="card">
+      <h3>Switch Platforms — Know These Types</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Platform Type</th>
+              <th>Description</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Campus LAN Switches</td>
+              <td>High user density, speed, and enterprise-grade security</td>
+              <td>Cisco 3850 Series</td>
+            </tr>
+            <tr>
+              <td>Cloud-Managed (Meraki)</td>
+              <td>Virtual stacking, managed via web — no onsite IT needed</td>
+              <td>Cisco Meraki MS</td>
+            </tr>
+            <tr>
+              <td>Data Center (Nexus)</td>
+              <td>Infrastructure scalability, operational continuity, transport flexibility</td>
+              <td>Cisco Nexus</td>
+            </tr>
+            <tr>
+              <td>Service Provider</td>
+              <td>Application intelligence, unified services, virtualization, integrated security</td>
+              <td>SP Ethernet Access</td>
+            </tr>
+            <tr>
+              <td>Virtual Networking (Nexus VN)</td>
+              <td>Secure multi-tenant services with virtualization intelligence</td>
+              <td>Cisco Nexus VN</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Switch Form Factors</h3>
+      <div class="compare-grid">
+        <div class="compare-card">
+          <h4 style="color:var(--accent3);">Fixed Configuration</h4>
+          <ul>
+            <li>Features/ports are <strong>set at purchase</strong> — cannot be changed</li>
+            <li>Typically 1U (1.75 inches / 44.45 mm) rack height</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h4 style="color:var(--accent3);">Modular</h4>
+          <ul>
+            <li>Chassis accepts <strong>field-replaceable line cards</strong></li>
+            <li>Highly expandable — swap cards as needs change</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h4 style="color:var(--accent3);">Stackable</h4>
+          <ul>
+            <li>Multiple switches connected with <strong>special cables</strong></li>
+            <li>Operate as <strong>one logical switch</strong></li>
+            <li>Great for growing port count without a chassis switch</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h4 style="color:var(--accent3);">Non-Stackable</h4>
+          <ul>
+            <li>Standalone unit — cannot be combined into a stack</li>
+          </ul>
+        </div>
+      </div>
+      <div class="alert alert-info">
+        <span class="alert-icon">📐</span>
+        <span>Rack thickness is measured in <strong>rack units (U)</strong>. 1U = 1.75 inches = 44.45 mm.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Port Density</h3>
+      <p>Port density = <strong>number of ports on a single switch</strong>.</p>
+      <ul>
+        <li><strong>Fixed switches</strong> offer set configurations — e.g., Cisco Catalyst 3850 comes in <em>12, 24, or 48 port</em> options</li>
+        <li><strong>Modular switches</strong> support very high densities — e.g., Cisco Catalyst 9400 supports up to <em>384 switchport interfaces</em></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Forwarding Rates</h3>
+      <p>How much data (in bits/sec) the switch can process — the switch's throughput capability.</p>
+      <ul>
+        <li>Switch product lines are classified by forwarding rates</li>
+        <li><strong>Entry-level</strong> switches = lower forwarding rates</li>
+        <li><strong>Enterprise-level</strong> switches = higher forwarding rates</li>
+        <li>If rate is too low → can't handle <strong>full wire-speed</strong> on all ports simultaneously</li>
+        <li><strong>Wire speed</strong> = max data rate per port: 100 Mbps / 1 Gbps / 10 Gbps / 100 Gbps</li>
+      </ul>
+      <div class="alert alert-green">
+        <span class="alert-icon">✅</span>
+        <span>Access layer switches typically <strong>don't need full wire speed</strong> — they're limited by their uplinks to the distribution layer anyway.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Power over Ethernet (PoE)</h3>
+      <p>PoE lets a switch <strong>deliver electrical power over Ethernet cables</strong> to connected devices.</p>
+      <ul>
+        <li>Supported devices: <strong>IP phones, wireless APs, IP cameras</strong></li>
+        <li>Eliminates need for separate power supplies at the device</li>
+      </ul>
+      <div class="alert alert-warn">
+        <span class="alert-icon">💰</span>
+        <span>PoE switches cost more. Only buy PoE when it's actually needed for the installation.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Multilayer Switching</h3>
+      <p>Multilayer switches operate at <strong>both Layer 2 and Layer 3</strong>.</p>
+      <ul>
+        <li>Deployed at <strong>core and distribution layers</strong></li>
+        <li>Support routing protocols and forward IP packets at near-Layer-2 speeds</li>
+        <li>Use <strong>ASICs</strong> (Application-Specific Integrated Circuits) — specialized hardware chips</li>
+        <li>ASICs + dedicated software data structures = forward packets <strong>independently of the CPU</strong></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Business Considerations for Switch Selection</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Factor</th>
+              <th>What to Think About</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cost</td>
+              <td>Depends on port count, speed, features, and expansion capability</td>
+            </tr>
+            <tr>
+              <td>Port Density</td>
+              <td>Must support the number of devices on the network</td>
+            </tr>
+            <tr>
+              <td>Power (PoE)</td>
+              <td>Needed for APs, IP phones, compact switches. Some chassis switches support redundant power supplies</td>
+            </tr>
+            <tr>
+              <td>Reliability</td>
+              <td>Switch must provide continuous network access</td>
+            </tr>
+            <tr>
+              <td>Port Speed</td>
+              <td>Primary concern for end users — faster = better experience</td>
+            </tr>
+            <tr>
+              <td>Frame Buffers</td>
+              <td>Ability to store frames during congestion (important for server-side ports)</td>
+            </tr>
+            <tr>
+              <td>Scalability</td>
+              <td>User count grows over time — the switch must support future growth</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= -->
+  <!-- SECTION 4: ROUTER HARDWARE    -->
+  <!-- ============================= -->
+  <section id="s4" class="s4">
+    <div class="section-header">
+      <span class="section-number">11.4</span>
+      <h2>Router Hardware</h2>
+    </div>
+
+    <div class="card">
+      <h3>What Routers Do — Core Functions</h3>
+      <ul>
+        <li>Route packets using the <strong>network portion (prefix) of the destination IP address</strong></li>
+        <li>Select an <strong>alternate path if a link goes down</strong></li>
+        <li>Hosts point their <strong>default gateway</strong> to the local router interface</li>
+      </ul>
+      <br>
+      <p style="font-weight:600;color:var(--heading);margin-bottom:8px;">Additional router functions:</p>
+      <ul>
+        <li><strong>Broadcast containment</strong> — limits broadcasts to the local network</li>
+        <li><strong>WAN interconnection</strong> — connects geographically separated locations</li>
+        <li><strong>Logical grouping</strong> — groups users by application or department</li>
+        <li><strong>Security</strong> — filters unwanted traffic using <strong>Access Control Lists (ACLs)</strong></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Cisco Router Types — Know Each Category</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Router Type</th>
+              <th>Purpose</th>
+              <th>Example Series</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Branch Routers</td>
+              <td>Optimize branch services on a single platform; best application experience across branch &amp; WAN</td>
+              <td>Cisco ISR 4000 Series</td>
+            </tr>
+            <tr>
+              <td>Network Edge Routers</td>
+              <td>High-performance, secure, reliable services uniting campus, data center, and branch</td>
+              <td>Cisco ASR 9000 Series</td>
+            </tr>
+            <tr>
+              <td>Service Provider Routers</td>
+              <td>End-to-end scalable solutions + subscriber-aware services</td>
+              <td>Cisco NCS 6000 Series</td>
+            </tr>
+            <tr>
+              <td>Industrial Routers</td>
+              <td>Enterprise-class features in <strong>rugged/harsh environments</strong></td>
+              <td>Cisco 1100 Series Industrial ISR</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Router Form Factors — Know Each</h3>
+      <div class="kv-grid">
+        <div class="kv">
+          <div class="kv-key">Cisco 900 Series</div>
+          <div class="kv-val">Small branch office router. Combines WAN + switching + security + connectivity. Compact, <strong>fanless</strong> platform for SMBs.</div>
+        </div>
+        <div class="kv">
+          <div class="kv-key">Cisco ASR 9000 &amp; 1000</div>
+          <div class="kv-val">Aggregation Services Routers. Density + resiliency + programmability for a <strong>scalable network edge</strong>.</div>
+        </div>
+        <div class="kv">
+          <div class="kv-key">Cisco NCS 5500 Series</div>
+          <div class="kv-val">Network Convergence System. Scales between large data centers and enterprise/SP WAN/aggregation networks.</div>
+        </div>
+        <div class="kv">
+          <div class="kv-key">Cisco 800 Industrial ISR</div>
+          <div class="kv-val">Compact. Built for <strong>harsh environments</strong> (outdoor, industrial, rugged deployments).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-green" style="margin-top:8px;">
+      <span class="alert-icon">🎯</span>
+      <span><strong>Exam tip:</strong> Match the router series to its use case. ISR 4000 = branch. ASR 9000 = network edge. NCS 6000 = service provider. NCS 5500 = data center/enterprise scale. Industrial series = harsh environments.</span>
+    </div>
+  </section>
+
+  <!-- QUICK REFERENCE CHEATSHEET -->
+  <section>
+    <div class="section-header" style="border-bottom-color:var(--border);">
+      <h2 style="color:var(--heading);font-size:18px;">⚡ Quick-Fire Cheat Sheet</h2>
+    </div>
+
+    <div class="card" style="border-color:rgba(255,107,53,0.3);">
+      <h3 style="color:var(--accent3);">Must-Know Facts for the Exam</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Concept</th><th>Key Detail</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Borderless Network properties</td><td>Hierarchical, Modular, Resilient, Flexible</td></tr>
+            <tr><td>Core layer job</td><td>High-speed backbone + fault isolation</td></tr>
+            <tr><td>Distribution layer job</td><td>Routing + QoS + Security + limits broadcast domains</td></tr>
+            <tr><td>Access layer job</td><td>End-user connectivity</td></tr>
+            <tr><td>Two-tier = collapsed core</td><td>Distribution + Core merged into one layer</td></tr>
+            <tr><td>Three-tier topology</td><td>Extended-star from central building</td></tr>
+            <tr><td>Failure domain termination</td><td>At the distribution layer</td></tr>
+            <tr><td>Switch block / building block</td><td>Routers/multilayer switches deployed in pairs</td></tr>
+            <tr><td>STP purpose</td><td>Prevents Layer 2 loops caused by redundant paths</td></tr>
+            <tr><td>EtherChannel config</td><td>Done on Port Channel interface, not individual ports</td></tr>
+            <tr><td>OSPF type</td><td>Link-state, area-based, hierarchical</td></tr>
+            <tr><td>Port density — fixed (3850)</td><td>12 / 24 / 48 ports</td></tr>
+            <tr><td>Port density — modular (9400)</td><td>Up to 384 ports</td></tr>
+            <tr><td>1U rack height</td><td>1.75 inches = 44.45 mm</td></tr>
+            <tr><td>ASICs</td><td>Forward IP packets independent of CPU (multilayer switches)</td></tr>
+            <tr><td>PoE devices</td><td>IP phones, APs, cameras</td></tr>
+            <tr><td>Wire speed options</td><td>100 Mbps, 1 Gbps, 10 Gbps, 100 Gbps</td></tr>
+            <tr><td>ISR 4000</td><td>Branch routers</td></tr>
+            <tr><td>ASR 9000</td><td>Network edge routers</td></tr>
+            <tr><td>NCS 6000</td><td>Service provider routers</td></tr>
+            <tr><td>1100 Industrial ISR</td><td>Industrial/harsh environment routers</td></tr>
+            <tr><td>Cisco 900 Series</td><td>Small branch office, fanless, SMB</td></tr>
+            <tr><td>Cisco 800 Industrial</td><td>Compact, harsh environments</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    ENSA v7.0 · Module 11 · Network Design · Generated for Exam Review
+  </footer>
+
+</div>
+</body>
+</html>
