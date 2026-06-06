@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Secure Programming – Exam Review | Lectures 7 & 8</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0f1a;
+      --surface: #141726;
+      --card: #1a1f35;
+      --accent: #f97316;
+      --accent2: #6366f1;
+      --accent3: #22d3ee;
+      --text: #e8eaf0;
+      --muted: #8b90a8;
+      --border: #252a42;
+      --green: #4ade80;
+      --red: #f87171;
+      --yellow: #fbbf24;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 15px; line-height: 1.7; }
+
+    header {
+      background: linear-gradient(135deg, #0d0f1a 0%, #1a0a10 50%, #0d0f1a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(249,115,22,.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .tag {
+      display: inline-block;
+      background: rgba(248,113,113,.15);
+      color: var(--red);
+      border: 1px solid rgba(248,113,113,.3);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.1;
+      background: linear-gradient(90deg, #fff 0%, #fecaca 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+    header p { color: var(--muted); font-size: 14px; }
+    header p strong { color: var(--text); }
+
+    nav {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      padding: 20px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    nav a {
+      text-decoration: none; color: var(--muted);
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 5px 14px; font-size: 12.5px; font-weight: 500;
+      transition: all .2s;
+    }
+    nav a:hover { color: var(--red); border-color: var(--red); background: rgba(248,113,113,.08); }
+
+    main { max-width: 960px; margin: 0 auto; padding: 40px 20px 80px; }
+
+    section { margin-bottom: 48px; scroll-margin-top: 80px; }
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .section-num {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--red), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; flex-shrink: 0;
+    }
+    section h2 { font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 700; color: #fff; }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; margin-bottom: 14px; }
+    .card h3 {
+      font-family: 'Syne', sans-serif; font-size: .9rem; font-weight: 700;
+      color: var(--red); margin-bottom: 10px;
+      text-transform: uppercase; letter-spacing: .05em;
+    }
+    .card h3.cyan { color: var(--accent3); }
+    .card h3.orange { color: var(--accent); }
+    .card h3.indigo { color: #a5b4fc; }
+    .card h3.green { color: var(--green); }
+    .card h3.yellow { color: var(--yellow); }
+    .card p { color: var(--text); margin-bottom: 6px; }
+    .card p:last-child { margin-bottom: 0; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media(max-width:600px){ .grid-2 { grid-template-columns: 1fr; } }
+
+    .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: rgba(248,113,113,.12); }
+    thead th { padding: 12px 16px; text-align: left; font-family: 'Syne', sans-serif; font-size: .82rem; color: var(--red); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+    tbody tr { border-top: 1px solid var(--border); transition: background .15s; }
+    tbody tr:hover { background: rgba(255,255,255,.03); }
+    tbody td { padding: 10px 16px; font-size: 13.5px; color: var(--text); vertical-align: top; }
+    tbody td:first-child { color: var(--accent3); font-weight: 600; white-space: nowrap; }
+
+    .pill-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .pill { padding: 4px 12px; border-radius: 20px; font-size: 12.5px; font-weight: 500; border: 1px solid; }
+    .pill.orange { background: rgba(249,115,22,.1); color: var(--accent); border-color: rgba(249,115,22,.3); }
+    .pill.indigo { background: rgba(99,102,241,.1); color: #a5b4fc; border-color: rgba(99,102,241,.3); }
+    .pill.cyan   { background: rgba(34,211,238,.1); color: var(--accent3); border-color: rgba(34,211,238,.3); }
+    .pill.green  { background: rgba(74,222,128,.1); color: var(--green); border-color: rgba(74,222,128,.3); }
+    .pill.red    { background: rgba(248,113,113,.1); color: var(--red); border-color: rgba(248,113,113,.3); }
+    .pill.yellow { background: rgba(251,191,36,.1); color: var(--yellow); border-color: rgba(251,191,36,.3); }
+
+    .highlight {
+      background: rgba(248,113,113,.07);
+      border-left: 3px solid var(--red);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px; margin: 10px 0;
+      font-size: 13.5px; color: var(--text);
+    }
+    .highlight.orange { background: rgba(249,115,22,.07); border-color: var(--accent); }
+    .highlight.cyan   { background: rgba(34,211,238,.07); border-color: var(--accent3); }
+    .highlight.green  { background: rgba(74,222,128,.07); border-color: var(--green); }
+    .highlight strong { color: var(--red); }
+    .highlight.orange strong { color: var(--accent); }
+    .highlight.cyan strong { color: var(--accent3); }
+    .highlight.green strong { color: var(--green); }
+
+    code {
+      background: rgba(99,102,241,.15); color: #a5b4fc;
+      padding: 1px 7px; border-radius: 4px;
+      font-size: 12.5px; font-family: 'Courier New', monospace;
+    }
+    code.red { background: rgba(248,113,113,.15); color: #fca5a5; }
+    code.green { background: rgba(74,222,128,.12); color: #86efac; }
+
+    .attack-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-bottom: 14px;
+      border-left: 4px solid var(--red);
+    }
+    .attack-card.sql { border-left-color: var(--yellow); }
+    .attack-card.csrf { border-left-color: var(--accent2); }
+    .attack-card.dir { border-left-color: var(--accent3); }
+    .attack-card.cmd { border-left-color: var(--accent); }
+    .attack-card.rfi { border-left-color: var(--green); }
+
+    .attack-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 4px; color: #fff;
+    }
+    .attack-card .badge {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 9px; border-radius: 10px; margin-bottom: 12px;
+      text-transform: uppercase; letter-spacing: .05em;
+    }
+    .badge.red    { background: rgba(248,113,113,.2); color: var(--red); border: 1px solid rgba(248,113,113,.3); }
+    .badge.yellow { background: rgba(251,191,36,.2);  color: var(--yellow); border: 1px solid rgba(251,191,36,.3); }
+    .badge.indigo { background: rgba(99,102,241,.2);  color: #a5b4fc; border: 1px solid rgba(99,102,241,.3); }
+    .badge.cyan   { background: rgba(34,211,238,.2);  color: var(--accent3); border: 1px solid rgba(34,211,238,.3); }
+    .badge.orange { background: rgba(249,115,22,.2);  color: var(--accent); border: 1px solid rgba(249,115,22,.3); }
+    .badge.green  { background: rgba(74,222,128,.2);  color: var(--green); border: 1px solid rgba(74,222,128,.3); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+    @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } }
+
+    .mini { background: rgba(255,255,255,.04); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+    .mini p { font-size: 13px; margin-bottom: 4px; }
+    .mini p strong { color: var(--accent3); }
+
+    .warn {
+      background: rgba(248,113,113,.08);
+      border: 1px solid rgba(248,113,113,.25);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: #fca5a5;
+      text-align: center;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+    footer { text-align: center; padding: 30px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--border); }
+    footer strong { color: var(--red); }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header>
+  <div class="tag">Exam Review</div>
+  <h1>Web Security<br/>Lectures 7 &amp; 8</h1>
+  <p>Introduction to Security &nbsp;·&nbsp; <strong>Attacks, Tools &amp; Defenses</strong> &nbsp;·&nbsp; Every detail, zero fluff</p>
+</header>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="#why">Why Web Security</a>
+  <a href="#web-how">How the Web Works</a>
+  <a href="#http">HTTP</a>
+  <a href="#cookies">Cookies</a>
+  <a href="#owasp">OWASP Top 10</a>
+  <a href="#tools">Practice Tools</a>
+  <a href="#proxies">Web Proxies</a>
+  <a href="#basics">Basic Vulns</a>
+  <a href="#xss">XSS</a>
+  <a href="#sqli">SQL Injection</a>
+  <a href="#bypass">Bypass Attacks</a>
+  <a href="#csrf">CSRF</a>
+  <a href="#dir">Directory Traversal</a>
+  <a href="#cmd">Command Injection</a>
+  <a href="#rfi">File Inclusion</a>
+  <a href="#moral">The Moral</a>
+  <a href="#quickref">Quick Reference</a>
+</nav>
+
+<main>
+
+  <!-- ── 1. WHY WEB SECURITY ── -->
+  <section id="why">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>Why Web Security?</h2>
+    </div>
+    <div class="card">
+      <h3 class="orange">The Problem</h3>
+      <p>Buffer overflow has become harder due to protections like <strong>ASLR (Address Space Layout Randomization)</strong> and <strong>StackGuard</strong>. Web attacks remain the dominant threat.</p>
+      <div class="highlight orange">
+        <strong>69%</strong> of web apps have vulnerabilities leading to sensitive data exposure. <strong>55%</strong> have CSRF flaws. <strong>25%</strong> of web apps are still vulnerable to 8 of the OWASP Top 10. (circa 2017)
+      </div>
+      <p>We are still battling the same issues we have been fighting for <strong>decades</strong>.</p>
+    </div>
+  </section>
+
+  <!-- ── 2. HOW THE WEB WORKS ── -->
+  <section id="web-how">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>How Does the Web Work?</h2>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3 class="cyan">What is the Web?</h3>
+        <p>The <strong>World Wide Web (WWW)</strong> is NOT the same as the Internet. It is a <strong>subset of the Internet</strong> — a collection of websites, pages, and content from around the world.</p>
+      </div>
+      <div class="card">
+        <h3 class="cyan">Client–Server Model</h3>
+        <p><strong>Client</strong> — a program on your computer (e.g., web browser: Chrome, Firefox, Safari, IE, Opera, lynx). Sends HTTP Requests.</p>
+        <p style="margin-top:8px"><strong>Server</strong> — remote computer running web server software; delivers content back. Examples: <strong>Nginx, Apache HTTP Server, Microsoft IIS</strong>.</p>
+      </div>
+    </div>
+
+    <!-- URL -->
+    <div class="card">
+      <h3 class="cyan">URLs — Uniform Resource Locators</h3>
+      <p>A universal naming scheme for locating content. A <strong>subset of URI (Uniform Resource Identifier)</strong>. Created by Tim Berners-Lee in <strong>1994</strong>.</p>
+      <div class="highlight cyan">
+        <strong>Format:</strong> <code>protocol://machine_or_server/directory/file.type</code><br/>
+        <strong>Example:</strong> <code>http://www.eecs.tufts.edu/index.html</code><br/>
+        &nbsp;• <code>http</code> = Hypertext Transport Protocol<br/>
+        &nbsp;• <code>www.eecs.tufts.edu</code> = machine + domain<br/>
+        &nbsp;• <code>index.html</code> = file
+      </div>
+      <p><strong>URL Protocols (Application Layer of OSI):</strong></p>
+      <div class="pill-list">
+        <span class="pill cyan">http</span><span class="pill cyan">ftp</span><span class="pill cyan">telnet</span>
+        <span class="pill cyan">gopher</span><span class="pill cyan">mailto</span><span class="pill cyan">file</span>
+      </div>
+      <div class="highlight cyan" style="margin-top:12px">
+        <strong>Query String:</strong> Data passed to the server as key=value pairs after a <code>?</code>, separated by <code>&amp;</code>.<br/>
+        Example: <code>https://www.google.com/search?q=grand+theft+auto&amp;lr=lang_zh-TW</code><br/>
+        &nbsp;• <code>q</code> = query key &nbsp;• <code>lr</code> = language key<br/>
+        <strong>HTTPS</strong> = HTTP + Transport Layer Security (TLS) — encrypted!
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. HTTP ── -->
+  <section id="http">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>HTTP — HyperText Transfer Protocol</h2>
+    </div>
+    <div class="card">
+      <h3 class="orange">HTTP Basics</h3>
+      <p>Lives on the <strong>Application Layer</strong> of the OSI Model. Works as a <strong>request–response</strong> protocol (like question-and-answer). It is:</p>
+      <div class="pill-list">
+        <span class="pill red">Plaintext (insecure)</span>
+        <span class="pill red">Stateless</span>
+        <span class="pill orange">RFC 2616</span>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3 class="cyan">HTTP Request</h3>
+        <p>Two parts: <strong>Header</strong> (details — like an envelope) and <strong>Body</strong> (data sent, including query string key-value pairs).</p>
+        <p style="margin-top:10px;font-size:13px;color:var(--muted);margin-bottom:6px">Request Methods:</p>
+        <div class="pill-list">
+          <span class="pill green">GET — download / typing URL in browser</span>
+          <span class="pill orange">POST — form submission</span>
+          <span class="pill cyan">PUT — upload</span>
+          <span class="pill red">DELETE — delete</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3 class="cyan">HTTP Response Status Codes</h3>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Two parts: <strong>Header</strong> (characteristics of data) and <strong>Body</strong> (content: HTML, text, JSON…)</p>
+        <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px;">
+          <span style="color:var(--green);font-weight:600">200</span><span>OK</span>
+          <span style="color:var(--yellow);font-weight:600">301</span><span>Moved Permanently</span>
+          <span style="color:var(--yellow);font-weight:600">302</span><span>Found (Redirected)</span>
+          <span style="color:var(--red);font-weight:600">401</span><span>Unauthorized</span>
+          <span style="color:var(--red);font-weight:600">403</span><span>Forbidden</span>
+          <span style="color:var(--red);font-weight:600">404</span><span>Not Found</span>
+          <span style="color:var(--red);font-weight:600">500</span><span>Internal Server Error</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="cyan">HTML &amp; JavaScript</h3>
+      <p><strong>HTML</strong> = structure of the page. <strong>JavaScript</strong> = can run on client-side AND server-side. In this course we focus on <strong>client-side JavaScript</strong> to abuse web pages.</p>
+    </div>
+  </section>
+
+  <!-- ── 4. COOKIES ── -->
+  <section id="cookies">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>HTTP Cookies</h2>
+    </div>
+    <div class="card">
+      <h3 class="yellow">What is a Cookie?</h3>
+      <p>A <strong>small amount of data</strong> sent by the server to the browser, which sends it back on future requests to the same site. Data is stored as <strong>key-value pairs</strong>. RFC 2109.</p>
+      <div class="two-col" style="margin-top:10px">
+        <div class="mini">
+          <p><strong>Max size:</strong> 4 KB</p>
+          <p><strong>Max total cookies:</strong> 300</p>
+          <p><strong>Max per domain:</strong> 20 cookies</p>
+        </div>
+        <div class="mini">
+          <p><strong>Uses:</strong> authentication, user tracking, shopping cart, preferences</p>
+          <p><strong>Can be persistent</strong> (survive browser close)</p>
+          <p><strong>Stored as a file</strong> on the client</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="yellow">Cookie Rules</h3>
+      <div class="highlight orange">
+        <strong>Same-Origin Policy:</strong> a domain CANNOT access a cookie set by another domain!
+      </div>
+      <p style="margin-top:10px">All cookies set by server are sent back to the server during every interaction.</p>
+    </div>
+    <div class="card">
+      <h3 class="yellow">Cookie Manipulation via JavaScript</h3>
+      <p>Set a cookie: <code>document.cookie = "key=value";</code></p>
+      <p>Read all cookies: <code>allCookies = document.cookie;</code></p>
+      <p>Get a specific value: find it inside <code>document.cookie</code></p>
+    </div>
+  </section>
+
+  <!-- ── 5. OWASP ── -->
+  <section id="owasp">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>OWASP Top 10 (2017)</h2>
+    </div>
+    <div class="card">
+      <h3 class="red">What is OWASP?</h3>
+      <p><strong>Open Web Application Security Project</strong> — a non-profit, international organization. Their Top 10 project educates developers, designers, architects, and managers about the most critical web security weaknesses. While not perfect, it has been instrumental in raising awareness.</p>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Code</th><th>Risk</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A1:2017</td><td>Injection</td></tr>
+          <tr><td>A2:2017</td><td>Broken Authentication</td></tr>
+          <tr><td>A3:2017</td><td>Sensitive Data Exposure</td></tr>
+          <tr><td>A4:2017</td><td>XML External Entities (XXE)</td></tr>
+          <tr><td>A5:2017</td><td>Broken Access Control</td></tr>
+          <tr><td>A6:2017</td><td>Security Misconfiguration</td></tr>
+          <tr><td>A7:2017</td><td>Cross Site Scripting (XSS)</td></tr>
+          <tr><td>A8:2017</td><td>Insecure Deserialization</td></tr>
+          <tr><td>A9:2017</td><td>Using Components with Known Vulnerabilities</td></tr>
+          <tr><td>A10:2017</td><td>Insufficient Logging &amp; Monitoring</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3 class="orange">CWE/SANS TOP 25 Most Dangerous Software Errors</h3>
+      <p>A similar list from the <strong>SANS Institute</strong> (last updated circa 2011). Notice the overlap with the OWASP Top 10 — the same categories of problems appear in both.</p>
+    </div>
+  </section>
+
+  <!-- ── 6. PRACTICE TOOLS ── -->
+  <section id="tools">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <h2>Legal Practice Environments</h2>
+    </div>
+    <div class="warn">⚠️ NEVER deploy these applications on the public internet or a production system!</div>
+    <div class="grid-2">
+      <div class="card">
+        <h3 class="green">Damn Vulnerable Web App (DVWA)</h3>
+        <p>Intentionally vulnerable PHP/MySQL web application for practicing common web attacks.</p>
+      </div>
+      <div class="card">
+        <h3 class="green">Mutillidae</h3>
+        <p>Free, open-source web application designed specifically to be hacked. Part of Metasploitable 2.</p>
+      </div>
+      <div class="card">
+        <h3 class="green">WebGoat</h3>
+        <p>By OWASP. A deliberately insecure web application for learning about web security.</p>
+      </div>
+      <div class="card">
+        <h3 class="green">Hacme Casino</h3>
+        <p>By McAfee. Ruby on Rails based. Older but still referenced.</p>
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(74,222,128,.3)">
+      <h3 class="green">Metasploitable 2</h3>
+      <p>An <strong>intentionally vulnerable Linux VM</strong> (under 2 GB), developed by <strong>Rapid7</strong>. Runs on VMware (default) or VirtualBox. Contains DVWA, Mutillidae, phpMyAdmin, and more — the ultimate practice lab.</p>
+    </div>
+  </section>
+
+  <!-- ── 7. WEB PROXIES ── -->
+  <section id="proxies">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <h2>Web Proxies — Essential Attack Tool</h2>
+    </div>
+    <div class="card">
+      <h3 class="orange">What is a Web Proxy?</h3>
+      <p>A tool that <strong>intercepts HTTP requests and responses</strong> between your browser and the server. Lets you: modify header fields, modify the request body, change query strings and data, and log/record all HTTP(S) traffic.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card" style="border-color:rgba(249,115,22,.3)">
+        <h3 class="orange">Burp Suite</h3>
+        <p>Java-based. Available on Kali Linux. The most popular pen-test proxy.</p>
+        <p style="margin-top:8px"><strong>Free:</strong> intercept browser traffic via man-in-the-middle proxy.</p>
+        <p style="margin-top:4px"><strong>Paid:</strong> automated crawler and scanner for 100+ vulnerabilities including all OWASP Top 10.</p>
+      </div>
+      <div class="card" style="border-color:rgba(34,211,238,.3)">
+        <h3 class="cyan">OWASP ZAP (Zed Attack Proxy)</h3>
+        <p>Free and open-source. Java-based. Similar to Burp Suite.</p>
+        <p style="margin-top:8px">Includes a <strong>vulnerability scanner</strong> and <strong>spider</strong> for automated discovery.</p>
+      </div>
+      <div class="card" style="border-color:rgba(99,102,241,.3)">
+        <h3 class="indigo">Tamper Data (Firefox Add-on)</h3>
+        <p>Simple Firefox add-on. Can intercept and modify HTTP request parameters. Less feature-rich than Burp or ZAP.</p>
+      </div>
+      <div class="card" style="border-color:rgba(99,102,241,.3)">
+        <h3 class="indigo">mitmproxy</h3>
+        <p>Command-line based man-in-the-middle proxy. Open-source. Good for scripting and automation.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="orange">Using Burp Suite (Hackme Playground Workflow)</h3>
+      <p>Turn on Burp → intercept the HTTP request → under <strong>Proxy &gt; Intercept</strong>, modify field values (e.g., <code>price</code>, <code>fullname</code>, <code>beverage</code>) → press <strong>Forward</strong> to send altered request to server.</p>
+    </div>
+  </section>
+
+  <!-- ── 8. BASIC VULNS ── -->
+  <section id="basics">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <h2>Basic Vulnerabilities</h2>
+    </div>
+
+    <div class="card" style="border-color:rgba(248,113,113,.3)">
+      <h3 class="red">Principle of Least Privilege — Or Lack Thereof</h3>
+      <p><strong>The issue:</strong> connecting to a database as <code>root</code> or <code>administrator</code> — the account that can do anything.</p>
+      <div class="highlight">
+        <strong>Bad code example:</strong> <code class="red">$conn = mysql_connect("127.0.0.1", "root", "pass");</code> — whoever gets the root password gets the keys to the kingdom.
+      </div>
+      <p><strong>Defense:</strong> create a separate DB user for the web app with access <em>only</em> to what it needs (least privilege = access only to information, operations, and resources necessary to its legitimate purpose).</p>
+    </div>
+
+    <div class="card" style="border-color:rgba(248,113,113,.3)">
+      <h3 class="red">Hard-Coded Credentials</h3>
+      <p><strong>The issue:</strong> usernames, passwords, or API keys written directly into source code.</p>
+      <div class="highlight">
+        <strong>Worst case:</strong> pushing that source code to a public GitHub repo — credentials instantly exposed!
+      </div>
+      <p><strong>Defense:</strong> never hard-code credentials in source code. Store them in <strong>system environment variables</strong> instead.</p>
+    </div>
+  </section>
+
+  <!-- ── 9. XSS ── -->
+  <section id="xss">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <h2>Cross-Site Scripting (XSS)</h2>
+    </div>
+    <div class="attack-card">
+      <h3>Cross-Site Scripting (XSS)</h3>
+      <span class="badge red">OWASP A7:2017</span>
+      <p><strong>The idea:</strong> instead of entering normal data in form fields, enter <strong>JavaScript code</strong> that gets executed on other users' browsers.</p>
+      <div class="two-col">
+        <div class="mini">
+          <p><strong>Where to attack:</strong></p>
+          <p>Anywhere user input is echoed to other users — e.g., message boards, comment sections, search fields.</p>
+        </div>
+        <div class="mini">
+          <p><strong>Consequences:</strong></p>
+          <p>• Show fraudulent web content to all users<br/>• Steal cookie information<br/>• Inject malicious code<br/>• Display annoying pop-ups</p>
+        </div>
+      </div>
+      <div class="highlight" style="margin-top:12px">
+        <strong>Important:</strong> XSS is <em>NOT</em> the same as phishing. XSS is embedded in the actual trusted website.
+      </div>
+      <p style="margin-top:10px"><strong>How to embed script in HTML:</strong> using the <code>&lt;script&gt;</code> tag.</p>
+      <p style="margin-top:10px"><strong>XSS Payloads:</strong></p>
+      <div style="background:rgba(0,0,0,.3);border-radius:8px;padding:12px;margin-top:8px;font-family:'Courier New',monospace;font-size:12.5px;color:#86efac;">
+        &lt;script&gt;alert('XSS');&lt;/script&gt;<br/><br/>
+        &lt;script&gt;window.document.getElementById("SOME_ID").innerHTML='&lt;img src="SOME_URL" /&gt;';&lt;/script&gt;
+      </div>
+      <p style="margin-top:14px"><strong>Defense:</strong></p>
+      <p>Remove ability for data to be interpreted as code. Escape angle brackets:</p>
+      <div class="pill-list" style="margin-top:6px">
+        <span class="pill green">Change &lt; to &amp;lt;</span>
+        <span class="pill green">Change &gt; to &amp;gt;</span>
+        <span class="pill cyan">Draconian: filter ALL special characters from user input</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 10. SQL INJECTION ── -->
+  <section id="sqli">
+    <div class="section-header">
+      <div class="section-num">10</div>
+      <h2>SQL Injection</h2>
+    </div>
+    <div class="attack-card sql">
+      <h3>SQL Injection</h3>
+      <span class="badge yellow">OWASP A1:2017 — Injection</span>
+      <p><strong>The idea:</strong> twist SQL queries via user input to access or modify data you shouldn't have access to. <em>This is really bad!</em></p>
+      <div class="two-col">
+        <div class="mini">
+          <p><strong>Where to attack:</strong> web apps with a database — form fields or URL parameters.</p>
+          <p style="margin-top:6px"><strong>The culprit:</strong> the single quote <code>'</code></p>
+          <p style="margin-top:6px"><strong>How to detect:</strong> errors displayed on the page when you inject a quote.</p>
+        </div>
+        <div class="mini">
+          <p><strong>Blind SQL Injection:</strong> asks the database true/false questions and infers the answer from the app's behavior — no error messages needed.</p>
+        </div>
+      </div>
+      <p style="margin-top:14px"><strong>Classic Example:</strong></p>
+      <div style="background:rgba(0,0,0,.3);border-radius:8px;padding:12px;margin-top:8px;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.8;">
+        <span style="color:#94a3b8">-- Normal (requires correct password):</span><br/>
+        <span style="color:#86efac">SELECT id FROM users WHERE username='batman' AND password='foo';</span><br/><br/>
+        <span style="color:#94a3b8">-- With injection payload: WHATEVER' OR '1'='1</span><br/>
+        <span style="color:#fca5a5">SELECT id FROM users WHERE username='batman' AND password='WHATEVER' OR '1'='1';</span><br/>
+        <span style="color:#fbbf24">-- Always returns a result → bypass login!</span>
+      </div>
+      <p style="margin-top:14px"><strong>Defense:</strong></p>
+      <div class="pill-list" style="margin-top:6px">
+        <span class="pill green">Filter out ' and " characters</span>
+        <span class="pill green">Use Prepared Statements</span>
+        <span class="pill cyan">Apply least privilege to the DB user</span>
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(251,191,36,.3)">
+      <h3 class="yellow">Tool: sqlmap</h3>
+      <p>Open-source pen-testing tool that <strong>automates detecting and exploiting SQL injection flaws</strong> and can take over database servers. Usage: <code>sqlmap -u &lt;target_url&gt;</code></p>
+    </div>
+  </section>
+
+  <!-- ── 11. BYPASS ATTACKS ── -->
+  <section id="bypass">
+    <div class="section-header">
+      <div class="section-num">11</div>
+      <h2>Bypassing Input Restrictions</h2>
+    </div>
+
+    <!-- Bypass general -->
+    <div class="attack-card" style="border-left-color:var(--accent);">
+      <h3>Bypassing Form Restrictions</h3>
+      <span class="badge orange">Client-Side Bypass</span>
+      <p><strong>The idea:</strong> form restrictions (maxlength, dropdown choices, etc.) are enforced only in the browser. A proxy bypasses them entirely.</p>
+      <p style="margin-top:8px"><strong>Conducting the attack:</strong> use a proxy (Burp Suite), intercept the HTTP request, modify any field values, forward the altered request to the server.</p>
+      <p style="margin-top:8px"><strong>Defense:</strong> always perform <strong>server-side input validation</strong> — never rely on client-side checks alone.</p>
+    </div>
+
+    <!-- Hidden form values -->
+    <div class="attack-card" style="border-left-color:var(--accent);">
+      <h3>Hidden Form Fields</h3>
+      <span class="badge orange">Form Tampering</span>
+      <p>All hidden fields are sent to the server on form submission. They are easy to identify: <code>&lt;input type="hidden" name="..."&gt;</code></p>
+      <div class="highlight orange">
+        <strong>Bad mistake:</strong> storing sensitive information in hidden fields — e.g., account number, password, product <strong>price</strong>. Historical exploit: buying a plasma TV for $0.99 by modifying the price field.
+      </div>
+      <p><strong>Conducting attack:</strong> intercept with proxy → modify hidden field values → forward.</p>
+      <p style="margin-top:8px"><strong>Defense:</strong> never store important information in hidden form fields.</p>
+    </div>
+
+    <!-- Cookie tampering -->
+    <div class="attack-card" style="border-left-color:var(--accent);">
+      <h3>Cookie Tampering</h3>
+      <span class="badge orange">Cookie Attack</span>
+      <p><strong>The idea:</strong> intercept the HTTP request with a proxy, modify cookie values (e.g., change <code>isAdmin=false</code> to <code>isAdmin=true</code>), and send to server.</p>
+      <p style="margin-top:8px"><strong>Defense:</strong> never store sensitive data in cookies such as passwords or admin-check booleans. Validate on the server side.</p>
+    </div>
+  </section>
+
+  <!-- ── 12. CSRF ── -->
+  <section id="csrf">
+    <div class="section-header">
+      <div class="section-num">12</div>
+      <h2>Cross-Site Request Forgery (CSRF / XSRF)</h2>
+    </div>
+    <div class="attack-card csrf">
+      <h3>Cross-Site Request Forgery (CSRF)</h3>
+      <span class="badge indigo">Think: Forgery</span>
+      <p><strong>The idea:</strong> exploits the fact that you are already logged into a website. The attacker tricks your browser into performing actions on the site <strong>on your behalf, without your knowledge or consent</strong>.</p>
+      <div class="highlight cyan" style="margin-top:10px">
+        <strong>Key difference from XSS:</strong> CSRF does <em>NOT</em> require JavaScript! It just needs a browser that is already authenticated.
+      </div>
+      <p style="margin-top:10px"><strong>Real Example (YouTube, ~2008):</strong> an attacker could add a video to any logged-in user's Favorites simply by embedding an <code>&lt;img&gt;</code> tag with the action URL. No JS needed — the browser automatically sent the authenticated request.</p>
+      <p style="margin-top:10px"><strong>Defense:</strong></p>
+      <div class="pill-list" style="margin-top:6px">
+        <span class="pill cyan">Verify requests come from the same origin</span>
+        <span class="pill cyan">Require user interaction for transactions</span>
+        <span class="pill cyan">Append unpredictable challenge tokens (CSRF tokens) to each request, tied to user session</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 13. DIRECTORY TRAVERSAL ── -->
+  <section id="dir">
+    <div class="section-header">
+      <div class="section-num">13</div>
+      <h2>Directory Traversal (Path Traversal)</h2>
+    </div>
+    <div class="attack-card dir">
+      <h3>Directory / Path Traversal</h3>
+      <span class="badge cyan">Also: Path Traversal</span>
+      <p><strong>The idea:</strong> access files <strong>outside the website's root directory</strong>, including sensitive system files like password and configuration files.</p>
+      <div class="highlight cyan" style="margin-top:10px">
+        <strong>Method:</strong> manipulate URL variables using <code>../</code> (dot-dot-slash) sequences or absolute paths.<br/>
+        <strong>Example:</strong> <code>http://somedomain/../../../../etc/passwd</code> — this should NOT display the passwd file, but a vulnerable server will!
+      </div>
+      <p style="margin-top:10px"><strong>Real Case:</strong> Miele dishwasher (IoT) — its web server was vulnerable to directory traversal via <code>/../../../etc/shadow</code>, exposing Linux password hashes.</p>
+      <p style="margin-top:10px"><strong>Why it still happens:</strong> web server misconfiguration or developer laziness.</p>
+      <p style="margin-top:10px"><strong>Defense:</strong></p>
+      <div class="pill-list" style="margin-top:6px">
+        <span class="pill cyan">Input validation — filter out <code>/</code>, <code>.</code>, and <code>%</code></span>
+        <span class="pill cyan">Proper web server configuration</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 14. COMMAND INJECTION ── -->
+  <section id="cmd">
+    <div class="section-header">
+      <div class="section-num">14</div>
+      <h2>Command Injection (Command Execution)</h2>
+    </div>
+    <div class="attack-card cmd">
+      <h3>Command Injection</h3>
+      <span class="badge orange">OS-Level Attack</span>
+      <p><strong>The idea:</strong> trick the web server into running arbitrary system commands (e.g., <code>ls</code>, <code>cat</code>, <code>ping</code>, <code>more</code>) through a vulnerable URL parameter or input field.</p>
+      <div class="highlight orange" style="margin-top:10px">
+        <strong>Before (normal):</strong> <code>http://site/cgi-bin/userData.pl?doc=user1.txt</code><br/>
+        <strong>After (attack!):</strong> <code class="red">http://site/cgi-bin/userData.pl?doc=/bin/ls</code> — runs <code>ls</code> on the server!
+      </div>
+      <p style="margin-top:14px"><strong>Dangerous ("dirty") functions by language:</strong></p>
+      <div class="two-col" style="margin-top:8px">
+        <div class="mini">
+          <p><strong style="color:var(--red)">Java:</strong> <code>Runtime.exec()</code></p>
+          <p style="margin-top:6px"><strong style="color:var(--red)">C/C++:</strong> <code>system</code>, <code>exec</code>, <code>ShellExecute</code></p>
+        </div>
+        <div class="mini">
+          <p><strong style="color:var(--red)">Python:</strong> <code>exec</code>, <code>eval</code>, <code>os.system</code>, <code>os.popen</code>, <code>subprocess.popen</code>, <code>subprocess.call</code></p>
+          <p style="margin-top:6px"><strong style="color:var(--red)">PHP:</strong> <code>system</code>, <code>shell_exec</code>, <code>exec</code>, <code>proc_open</code>, <code>eval</code></p>
+        </div>
+      </div>
+      <p style="margin-top:14px"><strong>Defense:</strong> input validation, filter out special characters, avoid using dangerous functions with user input.</p>
+    </div>
+  </section>
+
+  <!-- ── 15. FILE INCLUSION ── -->
+  <section id="rfi">
+    <div class="section-header">
+      <div class="section-num">15</div>
+      <h2>Remote &amp; Local File Inclusion (RFI / LFI)</h2>
+    </div>
+    <div class="attack-card rfi">
+      <h3>File Inclusion Attacks</h3>
+      <span class="badge green">LFI &amp; RFI</span>
+      <p><strong>The idea:</strong> the app accepts a file path or URL as user input and uses it directly — the input is trusted without validation.</p>
+      <div class="grid-2" style="margin-top:10px">
+        <div class="mini">
+          <p><strong style="color:var(--green)">Local File Inclusion (LFI)</strong></p>
+          <p>Similar to directory traversal. The attacker selects a file on the <em>local</em> server to display.</p>
+          <p style="margin-top:8px;font-family:'Courier New',monospace;font-size:12px">
+            Normal: <code>?page=home.php</code><br/>
+            Attack: <code class="red">?page=/etc/passwd</code>
+          </p>
+        </div>
+        <div class="mini">
+          <p><strong style="color:var(--green)">Remote File Inclusion (RFI)</strong></p>
+          <p>The attacker uses a <em>remote</em> URL as input, loading an external resource into the page.</p>
+          <p style="margin-top:8px;font-family:'Courier New',monospace;font-size:12px">
+            Normal: <code>?page=home.php</code><br/>
+            Attack: <code class="red">?page=https://google.com</code>
+          </p>
+        </div>
+      </div>
+      <p style="margin-top:14px"><strong>Defense:</strong></p>
+      <div class="pill-list" style="margin-top:6px">
+        <span class="pill green">Input validation — filter <code>/</code>, <code>.</code>, <code>%</code></span>
+        <span class="pill green">In PHP: set <code>allow_url_fopen = Off</code> and <code>allow_url_include = Off</code> in php.ini</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 16. THE MORAL ── -->
+  <section id="moral">
+    <div class="section-header">
+      <div class="section-num">⚡</div>
+      <h2>The Moral of the Story</h2>
+    </div>
+    <div style="background: linear-gradient(135deg, rgba(248,113,113,.12), rgba(249,115,22,.08)); border: 1px solid rgba(248,113,113,.3); border-radius: 14px; padding: 30px; text-align: center;">
+      <p style="font-family:'Syne',sans-serif; font-size: 2rem; font-weight: 800; color: var(--red); letter-spacing: .02em; line-height: 1.4;">
+        NEVER TRUST<br/>USER INPUT.
+      </p>
+      <p style="color: var(--muted); margin-top: 16px; font-size: 14px;">This is the root cause of XSS, SQL Injection, Command Injection, Directory Traversal, File Inclusion, Hidden Form Tampering, and more.</p>
+      <div class="pill-list" style="justify-content:center;margin-top:16px">
+        <span class="pill red">Validate on the server</span>
+        <span class="pill red">Sanitize all inputs</span>
+        <span class="pill red">Filter special characters</span>
+        <span class="pill red">Escape output</span>
+        <span class="pill red">Use prepared statements</span>
+        <span class="pill red">Least privilege</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── QUICK REFERENCE ── -->
+  <section id="quickref">
+    <div class="section-header">
+      <div class="section-num">⚡</div>
+      <h2>Attack Quick Reference — Exam Ready</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Attack</th><th>One-liner</th><th>Key Defense</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>XSS</td>
+            <td>Inject JavaScript into fields that display to other users via &lt;script&gt;</td>
+            <td>Escape &lt; → &amp;lt; and &gt; → &amp;gt;; filter special chars</td>
+          </tr>
+          <tr>
+            <td>SQL Injection</td>
+            <td>Use ' or WHATEVER' OR '1'='1 in form/URL to bypass SQL logic</td>
+            <td>Prepared statements; filter quotes; least privilege DB user</td>
+          </tr>
+          <tr>
+            <td>CSRF</td>
+            <td>Forge requests from another site while victim is logged in; no JS needed</td>
+            <td>CSRF tokens; verify same-origin; require user interaction</td>
+          </tr>
+          <tr>
+            <td>Cookie Tampering</td>
+            <td>Intercept &amp; modify cookie values (e.g., isAdmin) via proxy</td>
+            <td>Never store sensitive values in cookies</td>
+          </tr>
+          <tr>
+            <td>Hidden Field Tampering</td>
+            <td>Modify hidden form values (e.g., price) via proxy before submission</td>
+            <td>Never store important data in hidden fields; server-side validation</td>
+          </tr>
+          <tr>
+            <td>Directory Traversal</td>
+            <td>Use ../../etc/passwd in URL to escape web root and read system files</td>
+            <td>Filter / . %; proper server config</td>
+          </tr>
+          <tr>
+            <td>Command Injection</td>
+            <td>Pass OS commands (/bin/ls) via URL params to execute on server</td>
+            <td>Filter special chars; avoid dangerous functions (exec, system, eval)</td>
+          </tr>
+          <tr>
+            <td>Local File Inclusion</td>
+            <td>Replace a file parameter with a path to a local system file (/etc/passwd)</td>
+            <td>Input validation; filter / . %; server-side checks</td>
+          </tr>
+          <tr>
+            <td>Remote File Inclusion</td>
+            <td>Replace a file parameter with an external URL to load remote content</td>
+            <td>Set allow_url_fopen and allow_url_include to Off in php.ini</td>
+          </tr>
+          <tr>
+            <td>Least Privilege Violation</td>
+            <td>App connects to DB as root — full access if exploited</td>
+            <td>Create a limited DB user with only required permissions</td>
+          </tr>
+          <tr>
+            <td>Hard-Coded Credentials</td>
+            <td>Password/key in source code — anyone reading code gets access</td>
+            <td>Use environment variables; never commit credentials to repos</td>
+          </tr>
+          <tr>
+            <td>Blind SQL Injection</td>
+            <td>Asks DB true/false questions; determines data from app's response behavior</td>
+            <td>Same as SQL injection defenses</td>
+          </tr>
+          <tr>
+            <td>HTTP (vs HTTPS)</td>
+            <td>HTTP is plaintext and stateless; HTTPS = HTTP + TLS encryption</td>
+            <td>Always use HTTPS in production</td>
+          </tr>
+          <tr>
+            <td>OWASP Top 10</td>
+            <td>Non-profit list of top 10 web security risks; A1=Injection, A7=XSS</td>
+            <td>Know all 10 codes and names</td>
+          </tr>
+          <tr>
+            <td>sqlmap</td>
+            <td>Open-source tool that auto-detects &amp; exploits SQL injection</td>
+            <td>Used by attackers AND defenders for testing</td>
+          </tr>
+          <tr>
+            <td>Burp Suite</td>
+            <td>Java-based web proxy; free = intercept traffic; paid = auto-scanner</td>
+            <td>Available on Kali Linux; man-in-the-middle proxy</td>
+          </tr>
+          <tr>
+            <td>OWASP ZAP</td>
+            <td>Free/open-source Java-based proxy; includes vulnerability scanner + spider</td>
+            <td>Similar to Burp Suite</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Secure Programming — Lectures 7 &amp; 8 &nbsp;·&nbsp; Web Security &nbsp;·&nbsp; <strong>Good luck on your exam! 🎯</strong>
+</footer>
+
+</body>
+</html>

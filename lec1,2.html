@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Secure Programming – Exam Review | Lectures 1 & 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0f1a;
+      --surface: #141726;
+      --card: #1a1f35;
+      --accent: #f97316;
+      --accent2: #6366f1;
+      --accent3: #22d3ee;
+      --text: #e8eaf0;
+      --muted: #8b90a8;
+      --border: #252a42;
+      --green: #4ade80;
+      --red: #f87171;
+      --yellow: #fbbf24;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #0d0f1a 0%, #1a1040 50%, #0d0f1a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 36px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 300px;
+      background: radial-gradient(ellipse, rgba(99,102,241,.25) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .tag {
+      display: inline-block;
+      background: rgba(249,115,22,.15);
+      color: var(--accent);
+      border: 1px solid rgba(249,115,22,.3);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.1;
+      background: linear-gradient(90deg, #fff 0%, #c7d2fe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+    header p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    header p strong { color: var(--text); }
+
+    /* ── NAV PILLS ── */
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      padding: 20px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12.5px;
+      font-weight: 500;
+      transition: all .2s;
+    }
+    nav a:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(249,115,22,.08);
+    }
+
+    /* ── LAYOUT ── */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── SECTION ── */
+    section {
+      margin-bottom: 48px;
+      scroll-margin-top: 80px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .section-num {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent3));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    section h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-bottom: 14px;
+    }
+    .card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .card p { color: var(--text); margin-bottom: 6px; }
+    .card p:last-child { margin-bottom: 0; }
+
+    /* ── GRID ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media(max-width:600px){ .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── COMPARISON TABLE ── */
+    .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: rgba(99,102,241,.15); }
+    thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-family: 'Syne', sans-serif;
+      font-size: .85rem;
+      color: var(--accent3);
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    tbody tr { border-top: 1px solid var(--border); transition: background .15s; }
+    tbody tr:hover { background: rgba(255,255,255,.03); }
+    tbody td { padding: 10px 16px; font-size: 13.5px; color: var(--text); vertical-align: top; }
+    tbody td:first-child { color: var(--accent3); font-weight: 500; }
+
+    /* ── PILL LIST ── */
+    .pill-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .pill {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 500;
+      border: 1px solid;
+    }
+    .pill.orange { background: rgba(249,115,22,.1); color: var(--accent); border-color: rgba(249,115,22,.3); }
+    .pill.indigo { background: rgba(99,102,241,.1); color: #a5b4fc; border-color: rgba(99,102,241,.3); }
+    .pill.cyan   { background: rgba(34,211,238,.1); color: var(--accent3); border-color: rgba(34,211,238,.3); }
+    .pill.green  { background: rgba(74,222,128,.1); color: var(--green); border-color: rgba(74,222,128,.3); }
+    .pill.red    { background: rgba(248,113,113,.1); color: var(--red); border-color: rgba(248,113,113,.3); }
+    .pill.yellow { background: rgba(251,191,36,.1); color: var(--yellow); border-color: rgba(251,191,36,.3); }
+
+    /* ── PROS/CONS ── */
+    .proscons { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media(max-width:550px){ .proscons { grid-template-columns: 1fr; } }
+    .pros-card { background: rgba(74,222,128,.06); border: 1px solid rgba(74,222,128,.2); border-radius: 12px; padding: 16px 18px; }
+    .cons-card { background: rgba(248,113,113,.06); border: 1px solid rgba(248,113,113,.2); border-radius: 12px; padding: 16px 18px; }
+    .pros-card h4 { color: var(--green); font-family:'Syne',sans-serif; font-size:.85rem; font-weight:700; margin-bottom:10px; text-transform:uppercase; letter-spacing:.05em; }
+    .cons-card h4 { color: var(--red);   font-family:'Syne',sans-serif; font-size:.85rem; font-weight:700; margin-bottom:10px; text-transform:uppercase; letter-spacing:.05em; }
+    .pros-card li, .cons-card li { font-size: 13.5px; color: var(--text); margin-bottom: 5px; padding-left: 4px; list-style: none; }
+    .pros-card li::before { content: '✓  '; color: var(--green); }
+    .cons-card li::before { content: '✗  '; color: var(--red); }
+
+    /* ── HIGHLIGHT BOX ── */
+    .highlight {
+      background: rgba(249,115,22,.07);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 12px 0;
+      font-size: 13.5px;
+      color: var(--text);
+    }
+    .highlight strong { color: var(--accent); }
+
+    /* ── DEFINITION LIST ── */
+    dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; align-items: baseline; }
+    dt { color: var(--accent3); font-weight: 600; font-size: 13px; white-space: nowrap; }
+    dd { color: var(--text); font-size: 13.5px; }
+
+    /* ── INLINE CODE ── */
+    code {
+      background: rgba(99,102,241,.15);
+      color: #a5b4fc;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* ── DIVIDER ── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+    }
+    footer strong { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header>
+  <div class="tag">Exam Review</div>
+  <h1>Secure Programming<br/>Lectures 1 &amp; 2</h1>
+  <p>Dr. Nour Eldeen Mahmoud &nbsp;·&nbsp; <strong>Static &amp; Dynamic Websites</strong> &nbsp;·&nbsp; All key concepts, zero fluff</p>
+</header>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav>
+  <a href="#grades">Grades</a>
+  <a href="#web-intro">Web Intro</a>
+  <a href="#web-versions">Web 1/2/3</a>
+  <a href="#web-layers">Surface/Deep/Dark</a>
+  <a href="#static">Static Sites</a>
+  <a href="#dynamic">Dynamic Sites</a>
+  <a href="#cms">CMS</a>
+  <a href="#choose">Static vs Dynamic?</a>
+  <a href="#technologies">Technologies</a>
+</nav>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main>
+
+  <!-- ── 1. GRADES ── -->
+  <section id="grades">
+    <div class="section-header">
+      <div class="section-num">0</div>
+      <h2>Course Grades (Year Work)</h2>
+    </div>
+    <div class="card">
+      <div class="pill-list">
+        <span class="pill orange">Mid-term Exam → 20 marks</span>
+        <span class="pill cyan">Lab → 15 marks</span>
+        <span class="pill indigo">Presentation → 5 marks</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 2. WEB INTRO ── -->
+  <section id="web-intro">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>Introduction to the Web</h2>
+    </div>
+    <div class="card">
+      <h3>What is the WWW?</h3>
+      <p>A system of <strong>interlinked hypertext documents</strong> that runs over the Internet. Users view web pages (text, images, multimedia) and navigate with <strong>hyperlinks</strong>.</p>
+      <div class="highlight"><strong>Created ~1990</strong> by <strong>Tim Berners-Lee</strong> and <strong>Robert Cailliau</strong> at <strong>CERN, Geneva, Switzerland</strong>.</div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Hypertext / Hyperlink</h3>
+        <p>Clickable links connecting resources across the web. Uses <strong>URI / URL</strong> (Uniform Resource Identifier / Locator) to identify resources.</p>
+        <p style="margin-top:8px;font-size:13px;color:var(--muted)">Protocols: <code>http://</code> or <code>ftp://</code></p>
+        <p style="font-size:13px;color:var(--muted)">Example: <code>http://somehost/path/resource.txt</code></p>
+      </div>
+      <div class="card">
+        <h3>Markup Language</h3>
+        <p>Characters or codes <strong>embedded in text</strong> that indicate structure, semantic meaning, or presentation advice.</p>
+        <p style="margin-top:8px;font-size:13px;color:var(--muted)">Example: HTML tags like <code>&lt;h1&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;a&gt;</code></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 3. WEB VERSIONS ── -->
+  <section id="web-versions">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>Web 1.0 → Web 2.0 → Web 3.0</h2>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <h3>Web 1.0 — "Crawl" (Read-Only Web)</h3>
+      <p>Pages were <strong>static and read-only</strong>. Users consumed content, they couldn't create it. Resources linked via hyperlinks (href). Company-focused. Home pages, directories, HTML/Portals, banner advertising, page-view metrics.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <h3>Web 2.0 — "Walk" (Social Web)</h3>
+      <p>Term popularised by <strong>Tim O'Reilly</strong>. A "second phase" of architecture — users can now <strong>read AND write</strong>. Ordinary users meet, collaborate, and share via social software.</p>
+      <p style="margin-top:8px"><strong>Examples:</strong> Wikipedia, Flickr, Google Maps, del.icio.us, digg, Skype, orkut.</p>
+      <div style="margin-top:10px">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:6px">6 Key Principles:</p>
+        <div class="pill-list">
+          <span class="pill indigo">The Web as Platform</span>
+          <span class="pill indigo">Data is the next "Intel Inside"</span>
+          <span class="pill indigo">End of Software Release Cycles</span>
+          <span class="pill indigo">Lightweight Programming Models</span>
+          <span class="pill indigo">Software Above a Single Device</span>
+          <span class="pill indigo">Rich User Experiences</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <h3>Web 3.0 — "Run" (Semantic Web)</h3>
+      <p>Vision by <strong>Tim Berners-Lee</strong>. The web gains <strong>machine-understandable semantics</strong>. Computers reason over information automatically.</p>
+      <div class="highlight">
+        <strong>"An extension of the current Web in which information is given well-defined meaning, better enabling computers and people to work in cooperation."</strong><br/>
+        <span style="color:var(--muted);font-size:12.5px">— Tim Berners-Lee et al., Scientific American, 2001</span>
+      </div>
+      <p style="margin-top:8px">Uses: <strong>Semantic Searching</strong> — search augmented with related activities, recommendations, and contextual information.</p>
+    </div>
+
+    <!-- Summary Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Web 1.0 (Crawl)</th>
+            <th>Web 2.0 (Walk)</th>
+            <th>Web 3.0 (Run)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Mode</td><td>Mostly Read-Only</td><td>Wildly Read-Write</td><td>Portable &amp; Personal</td></tr>
+          <tr><td>Focus</td><td>Company</td><td>Community</td><td>Individual</td></tr>
+          <tr><td>Content type</td><td>Home Pages</td><td>Blogs / Wikis</td><td>Lifestreams / Waves</td></tr>
+          <tr><td>Content ownership</td><td>Owning Content</td><td>Sharing Content</td><td>Consolidating Content</td></tr>
+          <tr><td>Forms</td><td>Web Forms</td><td>Web Applications</td><td>Smart Applications</td></tr>
+          <tr><td>Navigation</td><td>Directories</td><td>Tagging</td><td>User Behavior</td></tr>
+          <tr><td>Metrics</td><td>Page Views</td><td>Cost Per Click</td><td>User Engagement</td></tr>
+          <tr><td>Ads</td><td>Banner Advertising</td><td>Interactive Advertising</td><td>Behavioral Advertising</td></tr>
+          <tr><td>Encyclopedia</td><td>Britannica Online</td><td>Wikipedia</td><td>The Semantic Web</td></tr>
+          <tr><td>Tech</td><td>HTML / Portals</td><td>XML / RSS</td><td>RDF / RDFS / OWL</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── 4. WEB LAYERS ── -->
+  <section id="web-layers">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>Surface Web / Deep Web / Dark Web</h2>
+    </div>
+    <div class="card">
+      <p>Think of the web as an <strong>iceberg</strong>. All three layers are part of the Internet.</p>
+    </div>
+    <div class="grid-2" style="grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div class="card" style="border-color:rgba(34,211,238,.3)">
+        <h3 style="color:var(--accent3)">Surface Web</h3>
+        <p>Publicly visible, indexed by search engines (Google, Bing).</p>
+        <p style="margin-top:8px;font-size:13px;color:var(--muted)">e.g. Wikipedia, BBC, Facebook public pages, Amazon, CNN</p>
+      </div>
+      <div class="card" style="border-color:rgba(99,102,241,.3)">
+        <h3 style="color:#a5b4fc">Deep Web</h3>
+        <p>Not indexed by search engines. Requires login or credentials.</p>
+        <p style="margin-top:8px;font-size:13px;color:var(--muted)">e.g. LinkedIn (private), Netflix, PayPal, Dropbox, Gmail, Bank of America, WhatsApp, JPMorgan</p>
+      </div>
+      <div class="card" style="border-color:rgba(248,113,113,.3)">
+        <h3 style="color:var(--red)">Dark Web</h3>
+        <p>Requires special software (like Tor) to access. Often illegal activity.</p>
+        <p style="margin-top:8px;font-size:13px;color:var(--muted)">e.g. Silk Road, AlphaBay Market, DuckDuckGo (onion), ProPublica (onion)</p>
+      </div>
+    </div>
+    <style>.grid-2.three { grid-template-columns:1fr 1fr 1fr; } @media(max-width:600px){.grid-2.three{grid-template-columns:1fr;}}</style>
+  </section>
+
+  <!-- ── 5. STATIC ── -->
+  <section id="static">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>Static Websites</h2>
+    </div>
+    <div class="card">
+      <h3>What is it?</h3>
+      <p>A site with <strong>fixed content written in HTML</strong>. Every page is coded and saved <strong>separately</strong> on the server. Changes must be made <strong>manually</strong> and require coding knowledge.</p>
+      <div class="highlight">Static files are published by <strong>physical transfer</strong> from the developer's PC to the web hosting computer. The client sends a <strong>Request</strong> → server responds with a <strong>static HTML document</strong>.</div>
+    </div>
+    <div class="card">
+      <h3>Typical Structure</h3>
+      <div class="pill-list">
+        <span class="pill cyan">Header (Logo, Menu, Icons)</span>
+        <span class="pill cyan">Side Bars</span>
+        <span class="pill cyan">Content / Body</span>
+        <span class="pill cyan">Footer (Links, Icons)</span>
+      </div>
+    </div>
+    <div class="proscons">
+      <div class="pros-card">
+        <h4>✓ Advantages</h4>
+        <ul>
+          <li>Easy to develop</li>
+          <li>Cheap to develop</li>
+          <li>Cheap to host</li>
+        </ul>
+      </div>
+      <div class="cons-card">
+        <h4>✗ Disadvantages</h4>
+        <ul>
+          <li>Requires coding expertise to update</li>
+          <li>Changes are very time-consuming</li>
+          <li>Less useful for the user</li>
+          <li>Content gets stagnant / out of date</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 6. DYNAMIC ── -->
+  <section id="dynamic">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>Dynamic Websites</h2>
+    </div>
+    <div class="card">
+      <h3>What is it?</h3>
+      <p>A site controlled by an <strong>application server</strong> using <strong>server-side scripts</strong>. Pages are <strong>not coded separately</strong> — the design/template and content are stored separately, then the page is <strong>dynamically populated</strong> on every request.</p>
+      <div class="highlight">
+        Server → queries <strong>Database</strong> → dynamically builds the page → sends it to the Client/Browser.
+      </div>
+    </div>
+    <div class="card">
+      <h3>File Extensions Used</h3>
+      <div class="pill-list">
+        <span class="pill orange">.jsp</span>
+        <span class="pill orange">.cfm</span>
+        <span class="pill orange">.pl</span>
+        <span class="pill orange">.php</span>
+        <span class="pill orange">.asp</span>
+        <span class="pill orange">.aspx</span>
+      </div>
+      <p style="margin-top:10px;font-size:13.5px">Can leverage company databases, spreadsheets, and text files as web content. Pages support full <strong>CRUD</strong> operations:</p>
+      <div class="pill-list" style="margin-top:6px">
+        <span class="pill green">Create</span>
+        <span class="pill cyan">Retrieve</span>
+        <span class="pill yellow">Update</span>
+        <span class="pill red">Delete</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Dynamic Page Structure</h3>
+      <p>A single request dynamically fills all sections from a <strong>template file</strong>:</p>
+      <div class="pill-list" style="margin-top:8px">
+        <span class="pill indigo">Header (Logo, Icons)</span>
+        <span class="pill indigo">Menu</span>
+        <span class="pill indigo">Content / Body</span>
+        <span class="pill indigo">Side Bars</span>
+        <span class="pill indigo">Footer (Links, Icons)</span>
+      </div>
+    </div>
+    <div class="proscons">
+      <div class="pros-card">
+        <h4>✓ Advantages</h4>
+        <ul>
+          <li>Much more functional</li>
+          <li>Much easier to update</li>
+          <li>Easy to add new content/pages</li>
+          <li>Fresh content helps SEO &amp; brings users back</li>
+          <li>Staff/users can collaborate</li>
+        </ul>
+      </div>
+      <div class="cons-card">
+        <h4>✗ Disadvantages</h4>
+        <ul>
+          <li>More expensive to develop</li>
+          <li>Slower to develop</li>
+          <li>Hosting costs slightly more (though less true now with shared hosting plans)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 7. CMS ── -->
+  <section id="cms">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <h2>Content Management Systems (CMS)</h2>
+    </div>
+    <div class="card">
+      <h3>Web Content Management System (WCMS)</h3>
+      <p>A CMS designed to <strong>simplify publishing web content</strong>, allowing content creators to submit content <strong>without needing HTML knowledge</strong> or manual file uploads.</p>
+      <div style="margin-top:12px">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Popular CMS examples:</p>
+        <div class="pill-list">
+          <span class="pill orange">WordPress</span>
+          <span class="pill orange">Joomla</span>
+          <span class="pill orange">Drupal</span>
+          <span class="pill orange">nopCommerce</span>
+          <span class="pill orange">DotNetNuke</span>
+          <span class="pill orange">Magento</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 8. WHICH TO CHOOSE ── -->
+  <section id="choose">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <h2>Static vs. Dynamic — Which to Choose?</h2>
+    </div>
+    <div class="grid-2">
+      <div class="card" style="border-color:rgba(34,211,238,.3)">
+        <h3 style="color:var(--accent3)">Choose Static When…</h3>
+        <ul style="list-style:none;font-size:13.5px">
+          <li style="margin-bottom:6px">📦 Limited budget / starting a basic web presence</li>
+          <li style="margin-bottom:6px">📄 20 pages or fewer</li>
+          <li style="margin-bottom:6px">🗓️ Planning to add new pages only occasionally</li>
+          <li style="margin-bottom:6px">👨‍💻 Skilled staff or an assigned provider handles updates</li>
+          <li>💾 Need portable, physical web page files</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:rgba(249,115,22,.3)">
+        <h3 style="color:var(--accent)">Choose Dynamic When…</h3>
+        <ul style="list-style:none;font-size:13.5px">
+          <li style="margin-bottom:6px">⚙️ Need custom programming for unique business needs</li>
+          <li style="margin-bottom:6px">🔌 Pages must pull data from external sources</li>
+          <li style="margin-bottom:6px">✏️ Need to add/edit pages easily from a browser</li>
+          <li style="margin-bottom:6px">🗄️ Pages display &amp; update records from info systems</li>
+          <li style="margin-bottom:6px">👥 Multiple staff members need edit access</li>
+          <li>🛒 Need blogs, events, login, ecommerce, article publishing</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 9. TECHNOLOGIES ── -->
+  <section id="technologies">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <h2>Technologies Every Web Developer Should Know</h2>
+    </div>
+
+    <!-- Browsers -->
+    <div class="card">
+      <h3>Browsers</h3>
+      <p>Browsers are the <strong>interpreters of the web</strong>. They send requests, receive responses, and render pages.</p>
+      <div class="pill-list" style="margin-top:8px">
+        <span class="pill cyan">Google Chrome — most popular</span>
+        <span class="pill cyan">Safari — Apple</span>
+        <span class="pill cyan">Firefox — open-source (Mozilla)</span>
+        <span class="pill red">Internet Explorer — Microsoft (developers complain about this one)</span>
+      </div>
+    </div>
+
+    <!-- HTML -->
+    <div class="card">
+      <h3>HTML — HyperText Markup Language</h3>
+      <p>The <strong>standard markup language</strong> for creating web pages. Provides the <strong>structure</strong> of a website so browsers know what to display.</p>
+      <div class="highlight">HTML = <strong>Structure</strong> of the page</div>
+    </div>
+
+    <!-- CSS -->
+    <div class="card">
+      <h3>CSS — Cascading Style Sheet</h3>
+      <p>A style sheet language that describes the <strong>presentation</strong> of HTML documents. Controls colors, fonts, animations, and transitions — it makes the web <strong>look good</strong>.</p>
+      <div class="highlight">CSS = <strong>Visual appearance</strong> of the page</div>
+    </div>
+
+    <!-- Programming Languages -->
+    <div class="card">
+      <h3>Programming Languages</h3>
+      <p>Ways to communicate with computers and tell them what to do.</p>
+      <div class="grid-2" style="margin-top:10px;gap:10px">
+        <div style="background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:8px;padding:12px">
+          <p style="color:#a5b4fc;font-weight:600;font-size:13px;margin-bottom:8px">🖥 Server-Side</p>
+          <div class="pill-list">
+            <span class="pill indigo">ASP.NET</span>
+            <span class="pill indigo">PHP</span>
+            <span class="pill indigo">JSP</span>
+            <span class="pill indigo">Ruby</span>
+          </div>
+        </div>
+        <div style="background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);border-radius:8px;padding:12px">
+          <p style="color:var(--accent3);font-weight:600;font-size:13px;margin-bottom:8px">🌐 Client-Side</p>
+          <div class="pill-list">
+            <span class="pill cyan">JavaScript</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frameworks -->
+    <div class="card">
+      <h3>Frameworks</h3>
+      <p>Built on top of programming languages to <strong>make development easier</strong>. Handle repetitive tasks in setting up a web app — either doing them for you or simplifying them.</p>
+      <div class="pill-list" style="margin-top:8px">
+        <span class="pill orange">Drupal</span>
+        <span class="pill orange">WordPress</span>
+        <span class="pill orange">Node.js</span>
+      </div>
+    </div>
+
+    <!-- Libraries -->
+    <div class="card">
+      <h3>Libraries</h3>
+      <p>Pre-written code collections that developers can use to <strong>add functionality</strong> without writing from scratch. (Mentioned in the lecture outline alongside frameworks.)</p>
+    </div>
+
+    <!-- Databases -->
+    <div class="card">
+      <h3>Databases</h3>
+      <p>Where all data is <strong>stored</strong>. Two main types:</p>
+      <div class="grid-2" style="margin-top:10px;gap:10px">
+        <div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px">
+          <p style="color:var(--green);font-weight:600;font-size:13px;margin-bottom:6px">SQL — Structured</p>
+          <p style="font-size:13px;margin-bottom:8px">More structure → ensures data is <strong>correct and validated</strong>.</p>
+          <div class="pill-list">
+            <span class="pill green">MySQL</span>
+            <span class="pill green">Oracle</span>
+            <span class="pill green">SQL Server</span>
+          </div>
+        </div>
+        <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.2);border-radius:8px;padding:12px">
+          <p style="color:var(--yellow);font-weight:600;font-size:13px;margin-bottom:6px">NoSQL — Flexible</p>
+          <p style="font-size:13px;margin-bottom:8px">More <strong>flexibility</strong> for building and maintaining applications.</p>
+          <div class="pill-list">
+            <span class="pill yellow">MongoDB</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Client vs Server -->
+    <div class="grid-2">
+      <div class="card">
+        <h3>Client (Client-Side)</h3>
+        <p>One <strong>user</strong> of an application. Can be a desktop computer, tablet, or mobile device. Multiple clients interact with the same server-side application simultaneously.</p>
+        <div class="highlight" style="margin-top:10px">Client sends <strong>HTTP Request</strong> → Server sends <strong>HTTP Response</strong></div>
+      </div>
+      <div class="card">
+        <h3>Server (Server-Side)</h3>
+        <p>Where the <strong>application code is stored</strong>. Receives requests from clients, gathers the appropriate information, and sends back responses. Often includes a database (e.g. MySQL).</p>
+        <div class="highlight" style="margin-top:10px">Example flow: Browser → Internet → Web server (PHP interpreter + MySQL db) → back to browser as HTML</div>
+      </div>
+    </div>
+
+    <!-- Front-end / Back-end -->
+    <div class="grid-2">
+      <div class="card">
+        <h3>Front-End</h3>
+        <p>Everything the <strong>user sees</strong> in the browser. Built with HTML, CSS, and JavaScript. Focused on user interface and experience.</p>
+      </div>
+      <div class="card">
+        <h3>Back-End</h3>
+        <p>Everything that happens <strong>on the server</strong>. Business logic, databases, authentication. Users never directly see this.</p>
+      </div>
+    </div>
+
+    <!-- Protocols -->
+    <div class="card">
+      <h3>Protocols</h3>
+      <p>Rules that define how data is transmitted over the network. The web primarily uses:</p>
+      <div class="pill-list" style="margin-top:8px">
+        <span class="pill cyan">HTTP — HyperText Transfer Protocol (web pages)</span>
+        <span class="pill cyan">FTP — File Transfer Protocol (file uploads)</span>
+      </div>
+    </div>
+
+    <!-- API -->
+    <div class="card">
+      <h3>API — Application Programming Interface</h3>
+      <p>Created by a developer to let <strong>other developers use some functionality</strong> of an application <strong>without sharing the underlying code</strong>.</p>
+      <div class="pill-list" style="margin-top:8px">
+        <span class="pill orange">Facebook API</span>
+        <span class="pill orange">Twitter API</span>
+        <span class="pill orange">Google API</span>
+      </div>
+    </div>
+
+    <!-- Data Formats -->
+    <div class="card">
+      <h3>Data Formats</h3>
+      <p>The structure used to <strong>store and transmit data</strong>.</p>
+      <div class="pill-list" style="margin-top:8px">
+        <span class="pill indigo">XML — eXtensible Markup Language</span>
+        <span class="pill indigo">JSON — JavaScript Object Notation</span>
+        <span class="pill indigo">CSV — Comma-Separated Values</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- QUICK MEMORY AID -->
+  <section>
+    <div class="section-header">
+      <div class="section-num">⚡</div>
+      <h2>Quick Exam Memory Aid</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Concept</th><th>One-Line Answer</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>WWW created by</td><td>Tim Berners-Lee &amp; Robert Cailliau, ~1990, CERN Switzerland</td></tr>
+          <tr><td>Web 2.0 term popularised by</td><td>Tim O'Reilly</td></tr>
+          <tr><td>Semantic Web vision by</td><td>Tim Berners-Lee</td></tr>
+          <tr><td>Static site file type</td><td>.html — fixed, saved separately per page</td></tr>
+          <tr><td>Dynamic site file types</td><td>.php .asp .aspx .jsp .cfm .pl</td></tr>
+          <tr><td>CMS purpose</td><td>Publish content without HTML knowledge</td></tr>
+          <tr><td>HTML does</td><td>Structure</td></tr>
+          <tr><td>CSS does</td><td>Presentation / styling</td></tr>
+          <tr><td>JS does (client-side)</td><td>Interactivity in the browser</td></tr>
+          <tr><td>SQL vs NoSQL</td><td>SQL = structured/validated; NoSQL = flexible</td></tr>
+          <tr><td>API</td><td>Lets others use your app's features without seeing your code</td></tr>
+          <tr><td>Data formats</td><td>XML, JSON, CSV</td></tr>
+          <tr><td>Surface Web</td><td>Publicly indexed (Google etc.)</td></tr>
+          <tr><td>Deep Web</td><td>Not indexed, needs login (Netflix, PayPal…)</td></tr>
+          <tr><td>Dark Web</td><td>Needs special software (Tor), often illegal</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Secure Programming — Lectures 1 &amp; 2 &nbsp;·&nbsp; Dr. Nour Eldeen Mahmoud &nbsp;·&nbsp; <strong>Good luck on your exam! 🎯</strong>
+</footer>
+
+</body>
+</html>

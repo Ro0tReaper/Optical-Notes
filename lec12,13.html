@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Code Review — Exam Review</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --surface: #131929;
+    --surface2: #1a2236;
+    --border: #1f2e4a;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7fff6b;
+    --accent4: #c084fc;
+    --text: #dce8ff;
+    --muted: #6b83a8;
+    --warn: #ffd166;
+    --danger: #ff4f6b;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Sora', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 0 0 80px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0b0f1a 0%, #0d1829 40%, #0f1f3a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 40px 50px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,255,.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(0,212,255,.3);
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+    background: rgba(0,212,255,.05);
+  }
+  .hero h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto 28px;
+  }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: 1px solid;
+  }
+  .tag-blue  { color: var(--accent);  border-color: rgba(0,212,255,.3);  background: rgba(0,212,255,.07); }
+  .tag-orange{ color: var(--accent2); border-color: rgba(255,107,53,.3);  background: rgba(255,107,53,.07); }
+  .tag-green { color: var(--accent3); border-color: rgba(127,255,107,.3); background: rgba(127,255,107,.07); }
+  .tag-purple{ color: var(--accent4); border-color: rgba(192,132,252,.3); background: rgba(192,132,252,.07); }
+
+  /* ── NAV ── */
+  .toc {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .toc-inner { display: flex; gap: 6px; align-items: center; }
+  .toc-label { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-right: 8px; flex-shrink: 0; }
+  .toc a {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  .toc a:hover { color: var(--accent); border-color: rgba(0,212,255,.3); background: rgba(0,212,255,.07); }
+
+  /* ── LAYOUT ── */
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 56px 0 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,212,255,.1);
+    border: 1px solid rgba(0,212,255,.25);
+    padding: 4px 10px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -.3px;
+  }
+
+  /* ── CARDS GRID ── */
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: rgba(0,212,255,.25); }
+  .card-title {
+    font-family: var(--mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-blue   { background: var(--accent); }
+  .dot-orange { background: var(--accent2); }
+  .dot-green  { background: var(--accent3); }
+  .dot-purple { background: var(--accent4); }
+  .dot-warn   { background: var(--warn); }
+  .dot-danger { background: var(--danger); }
+
+  /* ── CHECKLIST ── */
+  .chk { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .chk li {
+    display: flex;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .chk li::before {
+    content: '✓';
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent3);
+    background: rgba(127,255,107,.1);
+    border: 1px solid rgba(127,255,107,.25);
+    min-width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .chk li.warn::before { content: '!'; color: var(--warn); background: rgba(255,209,102,.1); border-color: rgba(255,209,102,.3); }
+  .chk li.no::before   { content: '✗'; color: var(--danger); background: rgba(255,79,107,.1); border-color: rgba(255,79,107,.3); }
+  .chk li strong { color: var(--accent); }
+
+  /* ── CONCEPT PILL ── */
+  .concept { display: inline-block; font-family: var(--mono); font-size: 12px; padding: 3px 9px; border-radius: 4px; margin: 3px; }
+  .c-blue   { color: var(--accent);  background: rgba(0,212,255,.1);  border: 1px solid rgba(0,212,255,.2); }
+  .c-orange { color: var(--accent2); background: rgba(255,107,53,.1); border: 1px solid rgba(255,107,53,.2); }
+  .c-green  { color: var(--accent3); background: rgba(127,255,107,.1); border: 1px solid rgba(127,255,107,.2); }
+  .c-purple { color: var(--accent4); background: rgba(192,132,252,.1); border: 1px solid rgba(192,132,252,.2); }
+  .c-warn   { color: var(--warn);    background: rgba(255,209,102,.1); border: 1px solid rgba(255,209,102,.2); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    border-left: 3px solid;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .callout-info  { background: rgba(0,212,255,.07);  border-color: var(--accent);  color: var(--text); }
+  .callout-warn  { background: rgba(255,209,102,.07); border-color: var(--warn);   color: var(--text); }
+  .callout-danger{ background: rgba(255,79,107,.07);  border-color: var(--danger); color: var(--text); }
+  .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── FLOW STEPS ── */
+  .flow { display: flex; flex-direction: column; gap: 0; }
+  .flow-step {
+    display: flex;
+    gap: 16px;
+    position: relative;
+  }
+  .flow-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 15px; top: 34px;
+    width: 2px;
+    bottom: 0;
+    background: var(--border);
+  }
+  .flow-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 2px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .flow-body { padding: 4px 0 24px; }
+  .flow-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .flow-desc { font-size: 13px; color: var(--muted); }
+
+  /* ── TABLE ── */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .tbl th {
+    background: var(--surface2);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+  }
+  .tbl td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .tbl tr:hover td { background: rgba(255,255,255,.02); }
+  .code { font-family: var(--mono); font-size: 12px; color: var(--accent2); }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(0,212,255,.08), rgba(192,132,252,.06));
+    border: 1px solid rgba(0,212,255,.2);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+
+  /* ── STATUS CODES TABLE ── */
+  .status { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; }
+  .status-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+  }
+  .status-code { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--accent); }
+  .status-name { font-size: 12px; font-weight: 600; margin: 2px 0; }
+  .status-desc { font-size: 11px; color: var(--muted); }
+
+  /* ── HEADERS LIST ── */
+  .header-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }
+  .header-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent3);
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media(max-width: 600px) {
+    .hero { padding: 40px 20px 36px; }
+    .toc { padding: 14px 20px; }
+    .wrap { padding: 0 16px; }
+    .section-header { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Lectures 13 &amp; 14 · Exam Review</div>
+  <h1>Secure <span>Code Review</span><br>+ OWASP Practices</h1>
+  <p>Everything you need to know — simplified, organized, and exam-ready. No fluff.</p>
+  <div class="hero-tags">
+    <span class="tag tag-blue">SAST / Static Analysis</span>
+    <span class="tag tag-orange">OWASP Checklist</span>
+    <span class="tag tag-green">SDL Lifecycle</span>
+    <span class="tag tag-purple">Secure Coding</span>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<nav class="toc">
+  <div class="toc-inner">
+    <span class="toc-label">Jump to</span>
+    <a href="#concepts">Core Concepts</a>
+    <a href="#sdl">SDL Flow</a>
+    <a href="#sast">SAST Scanners</a>
+    <a href="#auth">Authentication</a>
+    <a href="#authz">Authorization</a>
+    <a href="#session">Session</a>
+    <a href="#crypto">Cryptography</a>
+    <a href="#input">Input Validation</a>
+    <a href="#output">Output Encoding</a>
+    <a href="#logging">Logging</a>
+    <a href="#data">Data Protection</a>
+    <a href="#comms">Communication</a>
+    <a href="#sysconfig">System Config</a>
+    <a href="#db">Database</a>
+    <a href="#files">File Mgmt</a>
+    <a href="#memory">Memory</a>
+    <a href="#general">General Coding</a>
+    <a href="#headers">HTTP Headers</a>
+    <a href="#statuscodes">REST Codes</a>
+    <a href="#langs">Languages</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ═══════════════════════════════════════════ CORE CONCEPTS -->
+  <div class="section-header" id="concepts">
+    <span class="section-num">01</span>
+    <h2>Core Concepts &amp; Buzzwords</h2>
+  </div>
+
+  <div class="grid grid-3">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Source Code Review</div>
+      <p style="font-size:13.5px;color:var(--muted)">Manually inspecting source code to find security flaws. Also called <strong style="color:var(--accent)">Static Code Analysis</strong>. The goal is to catch what automated scanners miss.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-orange"></span>SAST</div>
+      <p style="font-size:13.5px;color:var(--muted)"><strong style="color:var(--accent2)">Static Application Security Testing</strong> — automated scanners that analyze code without running it. Examples: <strong style="color:var(--text)">Veracode</strong>, <strong style="color:var(--text)">Checkmarx</strong>.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-green"></span>SDL</div>
+      <p style="font-size:13.5px;color:var(--muted)"><strong style="color:var(--accent3)">Security Development Lifecycle</strong> — framework that embeds security at every phase: Architecture → Development → Deployment → Production.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-purple"></span>Manual vs Automatic</div>
+      <p style="font-size:13.5px;color:var(--muted)">You need <strong style="color:var(--accent4)">both</strong>. Auto-scanner runs first during CI/CD. Manual review happens before deployment to catch what the scanner missed.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-warn"></span>False Positive</div>
+      <p style="font-size:13.5px;color:var(--muted)">When a scanner flags something that is NOT actually a vulnerability. You (the AppSec analyst) evaluate and approve or reject these.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-danger"></span>Security Champion</div>
+      <p style="font-size:13.5px;color:var(--muted)">The development team lead responsible for security. They submit false positive requests in the SAST portal and await your approval.</p>
+    </div>
+  </div>
+
+  <div class="callout callout-warn" style="margin-top:20px">
+    <span class="callout-icon">⚠️</span>
+    <span>Before starting a code review, always review the <strong>Threat Modeling document</strong> first — understand the project's architecture, entry points, assets, external dependencies, trust levels, and security threats.</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SDL FLOW -->
+  <div class="section-header" id="sdl">
+    <span class="section-num">02</span>
+    <h2>Secure Development Lifecycle (SDL) Flow</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-body">
+          <div class="flow-title">Architecture Phase</div>
+          <div class="flow-desc">Define architecture. Use the secure coding practices document as a reference for all technical decisions. Threat modeling happens here.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-body">
+          <div class="flow-title">Development Phase (CI/CD)</div>
+          <div class="flow-desc">Developers push code to the build server daily. SAST scanner (e.g. Veracode) automatically scans after each build and flags vulnerabilities. No HIGH or CRITICAL issues allowed before release.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-body">
+          <div class="flow-title">Before Gating (Deployment)</div>
+          <div class="flow-desc">Manual source code review + Web Intrusion testing. Scanner backlog must have zero High/Critical issues. Risk assessment done by Risk Analyst. Pentester runs final tests.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-body">
+          <div class="flow-title">Production</div>
+          <div class="flow-desc">Yearly health check: Network Infrastructure + Web Intrusion. Pentester reviews the live environment.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title"><span class="dot dot-blue"></span>Tools in the SDL</div>
+        <ul class="chk">
+          <li><strong>Veracode / Checkmarx</strong> — SAST scanners</li>
+          <li><strong>Sonatype / Nexus / BlackDuck</strong> — Third-party library scanners</li>
+          <li><strong>Jenkins / Team Foundation Server</strong> — Build servers (CI/CD)</li>
+          <li><strong>Nessus / Nexpose</strong> — Network infrastructure scanning</li>
+          <li><strong>Burp Pro</strong> — Web intrusion testing</li>
+        </ul>
+      </div>
+      <div class="callout callout-info">
+        <span class="callout-icon">💡</span>
+        <span>When evaluating SAST scanners: check the <strong>Gartner list</strong>, scan multiple apps with each, then compare false positives vs vulnerabilities found. Don't blindly trust rankings — test yourself.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SAST -->
+  <div class="section-header" id="sast">
+    <span class="section-num">03</span>
+    <h2>SAST Scanners — How They Work</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Continuous Integration Flow</div>
+      <ul class="chk">
+        <li>Dev finishes work → pushes to build server daily</li>
+        <li>SAST scanner triggers automatically on each build</li>
+        <li>Flags any new vulnerabilities in the code</li>
+        <li>AppSec analyst reviews results with dev lead (Security Champion)</li>
+        <li>Security Champion submits false positive requests via SAST portal</li>
+        <li>You approve or reject false positives</li>
+        <li>Before release: backlog must have <strong>zero High/Critical</strong> issues</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-orange"></span>Manual Review Happens After Automatic</div>
+      <ul class="chk">
+        <li>Manual review catches what scanners <em>miss</em></li>
+        <li class="warn">Neither alone is enough — you need <strong>both</strong></li>
+        <li>Manual review occurs pre-deployment (gating stage)</li>
+        <li>Your role: support dev team + report scanner bugs to vendor</li>
+      </ul>
+      <div class="callout callout-danger" style="margin-top:14px">
+        <span class="callout-icon">🔴</span>
+        <span>Scanners are NOT perfect. Many false positives arise. You are the gatekeeper for approving/rejecting them.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ AUTH -->
+  <div class="section-header" id="auth">
+    <span class="section-num">04</span>
+    <h2>Authentication &amp; Password Management</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Must-Do Rules</div>
+      <ul class="chk">
+        <li>Use <strong>TLS</strong> (HTTPS), never HTTP cleartext for credentials</li>
+        <li>Enforce authentication on ALL pages except intentional public ones</li>
+        <li>Auth logic must be validated <strong>server-side only</strong></li>
+        <li>Hash passwords with strong algorithms — <strong class="no" style="color:var(--danger)">NOT MD5 or SHA-1</strong></li>
+        <li>Use <strong>salting</strong> alongside hashing</li>
+        <li>Password hashing must happen <strong>server-side</strong></li>
+        <li>Validate ALL auth data <em>after</em> all fields are filled (not field-by-field)</li>
+        <li>Use <strong>only HTTP POST</strong> for transmitting credentials</li>
+        <li>Re-authenticate before critical operations</li>
+        <li>Use <strong>Multi-Factor Authentication (MFA)</strong> for high-value accounts</li>
+        <li>Disable "Remember Me" for password fields</li>
+        <li>Report last login (success or fail) to user at next login</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-orange"></span>Error Messages &amp; Lockout</div>
+      <ul class="chk">
+        <li class="no">Never say "Invalid username" or "Invalid password" separately</li>
+        <li>Always say: <strong>"Invalid username and/or password"</strong></li>
+        <li>Error responses must be <strong>identical</strong> in display AND source code</li>
+        <li>Lock account after <strong>5 failed attempts</strong> (common standard)</li>
+        <li class="warn">Lockout long enough to stop brute force, short enough to prevent DoS</li>
+        <li>Alert user via <strong>email or SMS</strong> on password change/reset</li>
+      </ul>
+      <hr class="divider">
+      <div class="card-title" style="margin-top:14px"><span class="dot dot-green"></span>Password Complexity Policy</div>
+      <ul class="chk">
+        <li>Minimum <strong>8 characters</strong> (16 is better, passphrase even better)</li>
+        <li>At least <strong>1 uppercase</strong> letter</li>
+        <li>At least <strong>1 special character</strong></li>
+        <li>At least <strong>1 number</strong></li>
+        <li>Password fields must <strong>not echo</strong> the input (use type="password")</li>
+        <li>Disable <strong>autocomplete</strong> on password fields</li>
+        <li>Prevent <strong>password reuse</strong></li>
+        <li>Passwords at least <strong>1 day old</strong> before change allowed</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title"><span class="dot dot-purple"></span>Password Reset Rules</div>
+    <div class="grid grid-3">
+      <ul class="chk">
+        <li>Reset questions must have <strong>sufficiently random answers</strong></li>
+        <li class="warn">"What is your favorite color?" = BAD question</li>
+      </ul>
+      <ul class="chk">
+        <li>Email resets: send only to <strong>pre-registered address</strong></li>
+        <li>Include a <strong>temporary random link/password</strong> with short expiry</li>
+      </ul>
+      <ul class="chk">
+        <li>Temp passwords must be <strong>changed on next use</strong></li>
+        <li>Third-party auth credentials must be <strong>encrypted</strong> — never in cleartext config files</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ AUTHZ -->
+  <div class="section-header" id="authz">
+    <span class="section-num">05</span>
+    <h2>Authorization &amp; Access Control</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Authorization Rules</div>
+      <ul class="chk">
+        <li>Authorization must be implemented <strong>server-side</strong></li>
+        <li>If app can't access security config (e.g. DB down) → <strong>deny all access</strong></li>
+        <li>Authorization must exist on <strong>every web request</strong> including API endpoints</li>
+        <li>If auth data stored client-side → must be <strong>encrypted</strong></li>
+        <li>OS/service accounts should have <strong>least privilege</strong></li>
+        <li>Only allow HTTP methods: <strong>GET, POST, PUT, DELETE</strong></li>
+        <li>Force <strong>logout</strong> immediately after authorization changes take effect</li>
+        <li>Never rely solely on the <strong>Referer header</strong> — it can be spoofed</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-orange"></span>Access Control Rules (OWASP)</div>
+      <ul class="chk">
+        <li>Use a <strong>single site-wide component</strong> for all access checks</li>
+        <li>Access controls must <strong>fail securely</strong></li>
+        <li>Restrict protected URLs, functions, files to <strong>authorized users only</strong></li>
+        <li>Restrict direct object references to authorized users</li>
+        <li>Server-side and presentation layer access rules must <strong>match</strong></li>
+        <li>Limit <strong>transactions per user/device per time period</strong> (rate limiting)</li>
+        <li>Disable unused accounts (no more than <strong>30 days</strong> after expiry)</li>
+        <li>Enforce disabling of accounts when authorization changes (role change, leaving company)</li>
+        <li>Create an <strong>Access Control Policy document</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SESSION -->
+  <div class="section-header" id="session">
+    <span class="section-num">06</span>
+    <h2>Session Management</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Session Rules</div>
+      <ul class="chk">
+        <li>Sessions managed <strong>server-side</strong> only</li>
+        <li>Session IDs must be <strong>random</strong> (not predictable)</li>
+        <li>Logout must <strong>fully terminate</strong> the session</li>
+        <li>Logout available on <strong>all authenticated pages</strong></li>
+        <li>Set <strong>inactivity timeout</strong> — calculate based on security risk of resource</li>
+        <li class="no">Never put session IDs in <strong>URLs, logs, or error messages</strong></li>
+        <li>Session ID lives in the <strong>Cookie header only</strong></li>
+        <li>Set <strong>Secure</strong> attribute on cookies (HTTPS only)</li>
+        <li>Set <strong>HttpOnly</strong> attribute on cookies (blocks JS access)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-green"></span>Advanced Session Rules (OWASP)</div>
+      <ul class="chk">
+        <li>Generate <strong>new session ID</strong> on any re-authentication</li>
+        <li>If session established before login → close it, create new one after login</li>
+        <li>Disallow <strong>concurrent logins</strong> with same user ID</li>
+        <li>Generate new session ID when switching <strong>HTTP → HTTPS</strong></li>
+        <li>Regenerate session ID <strong>periodically</strong> (mitigates hijacking)</li>
+        <li>Use per-session <strong>random tokens</strong> for sensitive operations (CSRF protection)</li>
+        <li>Use per-request tokens for <strong>highly critical</strong> operations</li>
+        <li>Disallow <strong>persistent logins</strong>; enforce periodic termination</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ CRYPTO -->
+  <div class="section-header" id="crypto">
+    <span class="section-num">07</span>
+    <h2>Cryptography</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-purple"></span>Cryptography Rules</div>
+      <ul class="chk">
+        <li>All crypto logic on the <strong>server-side</strong></li>
+        <li>Critical data (DB connection strings, passwords, keys) must be <strong>encrypted</strong>, never cleartext</li>
+        <li>Crypto keys accessible only to <strong>super admins</strong></li>
+        <li>All random items (numbers, filenames, strings) use <strong>cryptographically secure random generators</strong></li>
+        <li>Use <strong>latest/greatest secure algorithms</strong></li>
+        <li>Reference <strong>NIST</strong> at https://csrc.nist.gov for algorithm guidance</li>
+        <li>Modules must be <strong>FIPS 140-2 compliant</strong> (or equivalent)</li>
+        <li>Crypto modules should <strong>fail securely</strong></li>
+        <li>Have a <strong>key management policy</strong></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-danger"></span>What NOT to Use</div>
+      <ul class="chk">
+        <li class="no"><strong>MD5</strong> — weak, do not use for passwords</li>
+        <li class="no"><strong>SHA-1</strong> — weak, avoid if possible</li>
+        <li class="no">Hardcoded credentials anywhere in source code</li>
+        <li class="no">Cleartext passwords in config files</li>
+        <li class="warn">Always use <strong>salted hashes</strong> for stored passwords</li>
+        <li class="warn">Protect the master secret from unauthorized access</li>
+      </ul>
+      <div class="callout callout-info" style="margin-top:14px">
+        <span class="callout-icon">📚</span>
+        <span>NIST = National Institute of Standards and Technology. The authority on approved cryptographic algorithms.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ INPUT -->
+  <div class="section-header" id="input">
+    <span class="section-num">08</span>
+    <h2>Input Validation</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Core Rules</div>
+      <ul class="chk">
+        <li>All data validation on <strong>server-side (trusted system)</strong></li>
+        <li><strong>Encode data before validating</strong> (canonicalize first)</li>
+        <li>All validation failures → <strong>reject input</strong> with custom error message</li>
+        <li>Validate everything processed in backend: form fields, <strong>hidden fields, URLs, headers</strong></li>
+        <li>Validate data type, range, and length</li>
+        <li>Use a <strong>whitelist</strong> of allowed characters whenever possible</li>
+        <li>Specify character set (e.g. <strong>UTF-8</strong>) for all input sources</li>
+        <li>Validate data from <strong>redirects</strong> (attacker can bypass pre-redirect validation)</li>
+        <li>Use a <strong>centralized input validation routine</strong></li>
+        <li><strong>Truncate</strong> all input strings to reasonable length before copy/concatenate</li>
+        <li class="no">No hardcoded SQL queries in source code</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-danger"></span>Hazardous Characters to Check</div>
+      <div style="margin-bottom:12px">
+        <span class="concept c-orange">&lt;</span>
+        <span class="concept c-orange">&gt;</span>
+        <span class="concept c-orange">"</span>
+        <span class="concept c-orange">'</span>
+        <span class="concept c-orange">%</span>
+        <span class="concept c-orange">(</span>
+        <span class="concept c-orange">)</span>
+        <span class="concept c-orange">&amp;</span>
+        <span class="concept c-orange">+</span>
+        <span class="concept c-orange">\</span>
+        <span class="concept c-orange">\'</span>
+        <span class="concept c-orange">\"</span>
+      </div>
+      <div class="card-title" style="margin-bottom:10px"><span class="dot dot-warn"></span>Also Check Discretely</div>
+      <ul class="chk">
+        <li><strong>Null bytes</strong> — <span class="code">%00</span></li>
+        <li><strong>New line chars</strong> — <span class="code">%0d %0a \r \n</span></li>
+        <li><strong>Dot-dot-slash</strong> — <span class="code">../ ..\</span> (path traversal)</li>
+        <li>UTF-8 encoded traversal — <span class="code">%c0%ae%c0%ae/</span></li>
+        <li>Verify only <strong>ASCII in HTTP headers</strong> (request &amp; response)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ OUTPUT -->
+  <div class="section-header" id="output">
+    <span class="section-num">09</span>
+    <h2>Output Encoding</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-green"></span>Output Encoding Rules</div>
+      <ul class="chk">
+        <li>All encoding logic on the <strong>server-side</strong></li>
+        <li>Use a standard, tested routine for each type of outbound encoding</li>
+        <li>Contextually encode all data returned to client from outside the app's trust boundary</li>
+        <li>Encode all characters unless known safe for the intended interpreter</li>
+        <li>Sanitize all output for: <strong>SQL, XML, LDAP</strong> queries</li>
+        <li>Sanitize output for <strong>OS commands</strong></li>
+        <li><strong>HTML entity encoding</strong> is one method but doesn't work in all contexts</li>
+        <li>Apply output encoding based on <strong>context</strong>: HTML body, HTML attribute, JS, CSS, URL, etc.</li>
+      </ul>
+    </div>
+    <div class="callout callout-info" style="align-self:start">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Canonicalize</strong> means reducing various encodings to a single simple form before validating. This prevents double-encoding attacks.<br><br>
+        <strong>HTML Entity Encoding</strong> replaces characters like <code style="color:var(--accent2)">&lt;</code> with <code style="color:var(--accent2)">&amp;lt;</code> making them inert in browsers.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ LOGGING -->
+  <div class="section-header" id="logging">
+    <span class="section-num">10</span>
+    <h2>Error Handling &amp; Logging</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-orange"></span>Error Handling Rules</div>
+      <ul class="chk">
+        <li class="no">Never disclose sensitive info in error messages (stack traces, debug info, session IDs)</li>
+        <li>Use <strong>custom error messages</strong> and custom error pages</li>
+        <li>Use generic error handlers that hide implementation details</li>
+        <li>App handles errors — don't rely on server configuration</li>
+        <li>Properly <strong>free allocated memory</strong> when errors occur</li>
+        <li>Error handling logic for security controls → <strong>deny access by default</strong></li>
+        <li>When exceptions occur, exit the function <strong>securely</strong></li>
+        <li class="warn">Error/monitor logs must NOT be on the same server (prevents DoS by filling disk)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>What to Log (Always)</div>
+      <ul class="chk">
+        <li>All <strong>validation failures</strong></li>
+        <li>All <strong>authentication attempts</strong> (especially failures)</li>
+        <li>All <strong>authorization failures</strong></li>
+        <li>Tampering events (e.g. URL manipulation, SQL injection attempts)</li>
+        <li>Invalid or expired session token usage</li>
+        <li>All <strong>administrative functions</strong> and security config changes</li>
+        <li>All cryptographic module failures</li>
+        <li>Backend TLS connection failures</li>
+        <li>Access from certain countries / high-frequency requests</li>
+        <li>All system exceptions</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title"><span class="dot dot-green"></span>Logging Best Practices</div>
+    <div class="grid grid-3">
+      <ul class="chk">
+        <li>Logging controls on <strong>server-side</strong></li>
+        <li>Log both <strong>success and failure</strong> of security events</li>
+        <li>Restrict log access to <strong>authorized individuals only</strong></li>
+      </ul>
+      <ul class="chk">
+        <li>Use a <strong>master/centralized logging routine</strong> (one class or module)</li>
+        <li>Log data must be <strong>clear enough</strong> to understand what happened</li>
+        <li>Sanitize log data if it comes from user input</li>
+      </ul>
+      <ul class="chk">
+        <li class="no">Never store passwords or session IDs in logs</li>
+        <li>Use <strong>cryptographic hash</strong> to validate log integrity</li>
+        <li>Ensure a log analysis mechanism exists</li>
+      </ul>
+    </div>
+    <div class="callout callout-info" style="margin-top:12px">
+      <span class="callout-icon">📋</span>
+      <span>Log event data must include: <strong>Timestamp</strong>, Severity rating, Security tag, User identity, Source IP, Event outcome (success/fail), Event description.</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ DATA PROTECTION -->
+  <div class="section-header" id="data">
+    <span class="section-num">11</span>
+    <h2>Data Protection</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Data Protection Rules</div>
+      <ul class="chk">
+        <li>Temp/cached sensitive data → stored securely, <strong>purged ASAP</strong></li>
+        <li class="no">Remove source code comments that reveal sensitive info about the application</li>
+        <li>Protect web server files — only intended files accessible by clients</li>
+        <li>Protect: config files, backups, deployment scripts, temp files</li>
+        <li class="no">Never put sensitive info in <strong>URL query strings</strong></li>
+        <li>Disable caching for pages with confidential data: use <strong>Cache-Control: no-store</strong> + <strong>Pragma: no-cache</strong></li>
+        <li>Data in transit must use <strong>latest TLS</strong></li>
+        <li>Implement <strong>least privilege</strong> — users get only what they need</li>
+        <li>Protect server-side source code from being downloaded by users</li>
+        <li class="no">No passwords/connection strings in cleartext on client side</li>
+        <li>Support removal of sensitive data when no longer needed</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-warn"></span>Things That Reveal Info — Avoid</div>
+      <ul class="chk">
+        <li class="no">Comments in production code</li>
+        <li class="no">Unnecessary app/system documentation</li>
+        <li class="no">Sensitive info in HTTP GET parameters</li>
+        <li class="no">Auto-complete on sensitive forms</li>
+        <li class="no">Client-side caching of sensitive pages</li>
+        <li class="no">MS Viewstate or Flash embedding of sensitive data</li>
+      </ul>
+      <div class="callout callout-warn" style="margin-top:14px">
+        <span class="callout-icon">⚠️</span>
+        <span>Use <strong>Referer header carefully</strong> when linking to external domains — it can leak sensitive query parameters.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ COMMUNICATION -->
+  <div class="section-header" id="comms">
+    <span class="section-num">12</span>
+    <h2>Communication Security</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>TLS Rules</div>
+      <ul class="chk">
+        <li>Encrypt <strong>all sensitive information in transit</strong> with TLS</li>
+        <li>TLS certs must be: <strong>valid, correct domain, not expired</strong>, with intermediate certs</li>
+        <li class="no">Failed TLS must <strong>NOT fall back</strong> to insecure connection</li>
+        <li>Use TLS for all <strong>authenticated access</strong> and all sensitive info</li>
+        <li>Use TLS for connections to external systems with sensitive data</li>
+        <li>Use a <strong>single standard TLS implementation</strong> configured properly</li>
+        <li>Specify <strong>character encodings</strong> for all connections</li>
+        <li>Filter sensitive parameters from HTTP Referer when linking externally</li>
+        <li>Consistently use HTTPS — don't switch back and forth with HTTP</li>
+      </ul>
+    </div>
+    <div class="callout callout-danger" style="align-self:start">
+      <span class="callout-icon">🔴</span>
+      <div>
+        <strong>Never allow TLS downgrade to HTTP.</strong> If a TLS connection fails, the connection should fail entirely — not silently fall back to unencrypted HTTP.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ SYSTEM CONFIG -->
+  <div class="section-header" id="sysconfig">
+    <span class="section-num">13</span>
+    <h2>System Configuration</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-orange"></span>Server &amp; Framework Config</div>
+      <ul class="chk">
+        <li>Servers/frameworks/components on <strong>latest approved version</strong> with all patches</li>
+        <li>Turn off <strong>directory listings</strong></li>
+        <li>Web server/service accounts use <strong>least privilege</strong></li>
+        <li>Fail securely when exceptions occur</li>
+        <li>Remove all <strong>unnecessary functionality and files</strong></li>
+        <li>Remove test code before production deployment</li>
+        <li>Remove unnecessary info from <strong>HTTP response headers</strong> (OS version, web server version, framework)</li>
+        <li>Isolate <strong>dev environments</strong> from production network</li>
+        <li>Implement a <strong>software change control system</strong></li>
+        <li>Implement an <strong>asset management system</strong></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-green"></span>robots.txt &amp; HTTP Methods</div>
+      <ul class="chk">
+        <li class="warn">Don't list individual hidden directories in robots.txt — put them all in a <strong>parent directory</strong> and disallow the parent</li>
+        <li>Define which <strong>HTTP methods (GET/POST)</strong> the app supports per page</li>
+        <li>Disable unnecessary HTTP methods (e.g. <strong>WebDAV</strong>)</li>
+        <li>If HTTP 1.0 and 1.1 both supported — configure consistently</li>
+        <li>Security config store must be exportable in <strong>human-readable</strong> format for auditing</li>
+      </ul>
+      <div class="callout callout-info" style="margin-top:14px">
+        <span class="callout-icon">💡</span>
+        <span><strong>robots.txt tip:</strong> Instead of disallowing /admin, /backup, /private separately — create a parent /hidden/ directory and disallow that one path. This avoids advertising all your hidden paths.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ DATABASE -->
+  <div class="section-header" id="db">
+    <span class="section-num">14</span>
+    <h2>Database Security</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Database Rules</div>
+      <ul class="chk">
+        <li>Use <strong>strongly-typed parameterized queries</strong> (prevents SQL injection)</li>
+        <li>Ensure variables are <strong>strongly typed</strong></li>
+        <li>App connects to DB with <strong>least privilege</strong></li>
+        <li>Use <strong>secure credentials</strong> for DB access</li>
+        <li class="no">Connection strings must <strong>NOT be hardcoded</strong> in the application</li>
+        <li>Connection strings in <strong>separate encrypted config file</strong> on trusted system</li>
+        <li>Use <strong>stored procedures</strong> to abstract data access</li>
+        <li>Close the DB connection <strong>as soon as possible</strong></li>
+        <li>Change/remove all <strong>default DB admin passwords</strong></li>
+        <li>Turn off unnecessary DB functionality (stored procs, services, utilities)</li>
+        <li>Remove unnecessary default vendor content/schemas</li>
+        <li>Disable default accounts not needed for business</li>
+        <li>App connects with <strong>different credentials per trust level</strong> (user, read-only, guest, admin)</li>
+      </ul>
+    </div>
+    <div class="callout callout-warn" style="align-self:start">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>Parameterized queries</strong> work by separating the SQL structure from the data. The query is compiled first, then data is plugged in — so injected SQL in data can't alter the query structure.<br><br>
+        Never use string concatenation to build SQL queries.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ FILE MGMT -->
+  <div class="section-header" id="files">
+    <span class="section-num">15</span>
+    <h2>File Management</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-orange"></span>File Upload Rules</div>
+      <ul class="chk">
+        <li>User must be <strong>authenticated</strong> before uploading any file</li>
+        <li>Limit the <strong>types of files</strong> that can be uploaded</li>
+        <li>Validate by checking <strong>file headers</strong> — extension alone is NOT enough</li>
+        <li>Save uploaded files on a <strong>separate server</strong>, not the web server</li>
+        <li>Prevent web server from executing uploaded files</li>
+        <li>Turn off <strong>execution privileges</strong> on the upload directory</li>
+        <li>Antivirus + endpoint security on the <strong>upload server</strong></li>
+        <li>Validate/remove uploaded files that could be <strong>executed/interpreted</strong> by web server</li>
+        <li>UNIX: mount target dir as logical drive or use <strong>chrooted environment</strong></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>File Path &amp; Access Rules</div>
+      <ul class="chk">
+        <li class="no">Never pass directory or file paths directly</li>
+        <li>Use <strong>index values mapped to a pre-defined path list</strong></li>
+        <li class="no">Never send the full/absolute file path to the client</li>
+        <li class="no">Never pass user-supplied data to dynamic include functions</li>
+        <li class="no">Don't pass user data to a dynamic redirect</li>
+        <li>If redirect required: accept only <strong>validated relative path URLs</strong></li>
+        <li>Web app files and resources must be <strong>read-only</strong></li>
+        <li>Scan uploaded files for <strong>viruses and malware</strong></li>
+        <li>Use a <strong>whitelist</strong> of allowed filenames and types for existing files</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ MEMORY -->
+  <div class="section-header" id="memory">
+    <span class="section-num">16</span>
+    <h2>Memory Management</h2>
+  </div>
+
+  <div class="card">
+    <div class="grid grid-3">
+      <ul class="chk">
+        <li>Validate <strong>input and output</strong> for untrusted data</li>
+        <li>Verify buffer is as large as specified</li>
+        <li>Check buffer boundaries in loops — no writing past allocated space</li>
+      </ul>
+      <ul class="chk">
+        <li>With <span class="code">strncpy()</span> — if dest buffer = source size, string may <strong>not be NULL-terminated</strong></li>
+        <li>Truncate all input strings to reasonable length before passing to <strong>copy/concatenation</strong></li>
+        <li>Explicitly close resources — <strong>don't rely on garbage collection</strong></li>
+      </ul>
+      <ul class="chk">
+        <li>Use <strong>non-executable stacks</strong> when available</li>
+        <li class="no">Avoid known vulnerable functions: <span class="code">printf, strcat, strcpy</span></li>
+        <li>Properly <strong>free allocated memory</strong> on function completion and all exit points</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ GENERAL CODING -->
+  <div class="section-header" id="general">
+    <span class="section-num">17</span>
+    <h2>General Coding Practices</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>General Secure Coding Rules</div>
+      <ul class="chk">
+        <li>Use <strong>tested and approved managed code</strong> rather than new unmanaged code for common tasks</li>
+        <li>Use <strong>task-specific built-in APIs</strong> for OS operations</li>
+        <li class="no">Never let the app issue OS commands directly or via command shells</li>
+        <li>Use <strong>checksums/hashes</strong> to verify integrity of libraries, executables, config files</li>
+        <li>Use <strong>locking/synchronization</strong> to prevent race conditions</li>
+        <li>Protect <strong>shared variables</strong> from inappropriate concurrent access</li>
+        <li>Explicitly <strong>initialize all variables</strong> before first use</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-green"></span>Elevated Privileges &amp; Third-Party</div>
+      <ul class="chk">
+        <li>If elevated privileges needed: raise <strong>as late as possible</strong>, drop <strong>as soon as possible</strong></li>
+        <li class="no">Never pass user data to a <strong>dynamic execution function</strong></li>
+        <li>Restrict users from generating or altering code</li>
+        <li>Review all <strong>secondary apps, third-party code, and libraries</strong> for safety</li>
+        <li>For automatic updates: use <strong>cryptographic signatures</strong> on code + encrypted download channel</li>
+        <li class="warn">Understand your language's numeric representation (overflow, precision, truncation)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ THIRD-PARTY LIBS -->
+  <div class="section-header" id="thirdparty">
+    <span class="section-num">18</span>
+    <h2>Third-Party Libraries</h2>
+  </div>
+
+  <div class="card">
+    <div class="grid grid-3">
+      <ul class="chk">
+        <li>Use <strong>checksums</strong> to verify integrity of downloaded libraries and scripts</li>
+        <li>Always use the <strong>latest stable version</strong> of libraries</li>
+      </ul>
+      <ul class="chk">
+        <li>Use a <strong>third-party library scanner</strong> — e.g. Sonatype, BlackDuck</li>
+        <li>Review third-party code before use</li>
+      </ul>
+      <ul class="chk">
+        <li>Validate business necessity of each third-party component</li>
+        <li>Monitor for newly discovered vulnerabilities in libraries</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ HTTP HEADERS -->
+  <div class="section-header" id="headers">
+    <span class="section-num">19</span>
+    <h2>Required HTTP Security Headers</h2>
+  </div>
+
+  <div class="callout callout-warn">
+    <span class="callout-icon">📌</span>
+    <span>These headers MUST exist in every web application response. This is commonly tested in exams.</span>
+  </div>
+
+  <div class="header-grid" style="margin-top:16px">
+    <div class="header-item">X-Frame-Options<div style="font-size:10px;color:var(--muted);margin-top:4px;font-family:var(--sans)">Prevents clickjacking (iframe embedding)</div></div>
+    <div class="header-item">X-Content-Type-Options<div style="font-size:10px;color:var(--muted);margin-top:4px;font-family:var(--sans)">Stops MIME type sniffing</div></div>
+    <div class="header-item">Strict-Transport-Security<div style="font-size:10px;color:var(--muted);margin-top:4px;font-family:var(--sans)">Forces HTTPS (HSTS)</div></div>
+    <div class="header-item">Content-Security-Policy<div style="font-size:10px;color:var(--muted);margin-top:4px;font-family:var(--sans)">Defines trusted content sources (XSS mitigation)</div></div>
+    <div class="header-item">X-Permitted-Cross-Domain-Policies<div style="font-size:10px;color:var(--muted);margin-top:4px;font-family:var(--sans)">Controls Flash/PDF cross-domain access</div></div>
+    <div class="header-item">X-XSS-Protection: 1; mode=block<div style="font-size:10px;color:var(--muted);margin-top:4px;font-family:var(--sans)">Enables browser XSS filter (blocks attacks)</div></div>
+    <div class="header-item">X-Content-Type-Options: nosniff<div style="font-size:10px;color:var(--muted);margin-top:4px;font-family:var(--sans)">Prevents content-type sniffing attacks</div></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ REST CODES -->
+  <div class="section-header" id="statuscodes">
+    <span class="section-num">20</span>
+    <h2>REST API Status Codes (Best Practices)</h2>
+  </div>
+
+  <div class="callout callout-info">
+    <span class="callout-icon">💡</span>
+    <span>When designing a REST API, use proper status codes beyond just 200 (success) and 500 (error). Proper codes help validate requests correctly.</span>
+  </div>
+
+  <div class="status" style="margin-top:16px">
+    <div class="status-item">
+      <div class="status-code">200</div>
+      <div class="status-name">OK</div>
+      <div class="status-desc">Action successful</div>
+    </div>
+    <div class="status-item">
+      <div class="status-code">202</div>
+      <div class="status-name">Accepted</div>
+      <div class="status-desc">Request to create resource accepted</div>
+    </div>
+    <div class="status-item">
+      <div class="status-code">204</div>
+      <div class="status-name">No Content</div>
+      <div class="status-desc">POST request didn't include a client-generated ID</div>
+    </div>
+    <div class="status-item">
+      <div class="status-code">400</div>
+      <div class="status-name">Bad Request</div>
+      <div class="status-desc">Request is malformed</div>
+    </div>
+    <div class="status-item">
+      <div class="status-code">401</div>
+      <div class="status-name">Unauthorized</div>
+      <div class="status-desc">Wrong authentication ID or credentials</div>
+    </div>
+    <div class="status-item">
+      <div class="status-code">403</div>
+      <div class="status-name">Forbidden</div>
+      <div class="status-desc">Authenticated user lacks permission for resource</div>
+    </div>
+    <div class="status-item">
+      <div class="status-code">404</div>
+      <div class="status-name">Not Found</div>
+      <div class="status-desc">Requested resource doesn't exist</div>
+    </div>
+    <div class="status-item">
+      <div class="status-code">405</div>
+      <div class="status-name">Method Not Allowed</div>
+      <div class="status-desc">Unexpected HTTP method in request</div>
+    </div>
+    <div class="status-item">
+      <div class="status-code">429</div>
+      <div class="status-name">Too Many Requests</div>
+      <div class="status-desc">DoS attack detected / rate limit hit</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ LANGUAGES -->
+  <div class="section-header" id="langs">
+    <span class="section-num">21</span>
+    <h2>Programming Languages Overview</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Categories &amp; Languages</div>
+      <table class="tbl">
+        <tr><th>Category</th><th>Languages</th></tr>
+        <tr><td>Web App Dev</td><td><span class="code">Java, C#/.NET, PHP</span></td></tr>
+        <tr><td>Drivers / Hardware</td><td><span class="code">C, C++, Assembly</span></td></tr>
+        <tr><td>Reverse Engineering</td><td><span class="code">Assembly</span></td></tr>
+        <tr><td>Database</td><td><span class="code">SQL</span></td></tr>
+        <tr><td>Scripting</td><td><span class="code">Python, Perl, Ruby</span></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-green"></span>Learning Path for AppSec</div>
+      <ul class="chk">
+        <li>Start with a <strong>scripting language</strong> (Python recommended) — for automation and basic programming skills</li>
+        <li>Learn at least one web app language: <strong>Java, C#/.NET, or PHP</strong></li>
+        <li>Practice by actually <strong>building web applications</strong></li>
+        <li>You'll learn <strong>SQL</strong> automatically while building web apps (two birds, one stone)</li>
+        <li>Assembly is optional for AppSec — skip unless doing malware/RE work</li>
+        <li class="warn">Drivers/hardware/malware RE: not relevant for AppSec — skip these</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ ENTERPRISE GUIDELINES -->
+  <div class="section-header" id="enterprise">
+    <span class="section-num">22</span>
+    <h2>Enterprise Secure Coding Guidelines</h2>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-purple"></span>Your Role as AppSec Expert</div>
+      <ul class="chk">
+        <li>You are the <strong>custodian</strong> of secure coding best practices documents/checklists</li>
+        <li>Update them as technology evolves</li>
+        <li>Share via the company's <strong>intranet</strong> with developers</li>
+        <li>If no secure coding document exists → <strong>create one</strong> and propose to management</li>
+        <li>Encourage <strong>secure coding training</strong> for developers</li>
+        <li>Use the checklist both as developer guidelines AND as your manual review checklist</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-orange"></span>Miscellaneous Security Rules</div>
+      <ul class="chk">
+        <li>Remove test code before production deployment</li>
+        <li>Don't disclose directory structure in <strong>robots.txt</strong></li>
+        <li>Remove unnecessary info from HTTP headers (OS, server, framework versions)</li>
+        <li>If app must elevate privileges → <strong>drop them ASAP</strong></li>
+        <li>Properly free all allocated memory at all exit points</li>
+        <li>Implement <strong>least privilege</strong> everywhere</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ RISK OVERVIEW -->
+  <div class="section-header" id="risk">
+    <span class="section-num">23</span>
+    <h2>Risk &amp; Security Principles (OWASP)</h2>
+  </div>
+
+  <div class="highlight-box">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:1px">Security Goal (CIA Triad)</div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:150px">
+        <div style="color:var(--accent);font-weight:700;margin-bottom:4px">Confidentiality</div>
+        <div style="font-size:13px;color:var(--muted)">Info disclosed only to authorized parties</div>
+      </div>
+      <div style="flex:1;min-width:150px">
+        <div style="color:var(--accent3);font-weight:700;margin-bottom:4px">Integrity</div>
+        <div style="font-size:13px;color:var(--muted)">Info is accurate, complete, unaltered</div>
+      </div>
+      <div style="flex:1;min-width:150px">
+        <div style="color:var(--accent2);font-weight:700;margin-bottom:4px">Availability</div>
+        <div style="font-size:13px;color:var(--muted)">System is accessible and usable</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-warn"></span>Risk Formula</div>
+      <div style="font-family:var(--mono);font-size:14px;padding:14px;background:var(--surface2);border-radius:6px;border:1px solid var(--border);text-align:center;margin-bottom:12px">
+        <span style="color:var(--danger)">Threat Agent</span> → <span style="color:var(--warn)">System</span> → <span style="color:var(--accent4)">Vulnerability</span> → <span style="color:var(--accent2)">Exploit</span> → <span style="color:var(--accent3)">Impact</span>
+      </div>
+      <p style="font-size:13px;color:var(--muted)">Analogy: Car burglar (threat agent) checks cars (system) for unlocked doors (vulnerability), opens the door (exploit), steals contents (impact).</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Where Flaws Are Introduced</div>
+      <ul class="chk">
+        <li>Not identifying security requirements <strong>upfront</strong></li>
+        <li>Conceptual designs with <strong>logic errors</strong></li>
+        <li>Poor coding practices introducing <strong>technical vulnerabilities</strong></li>
+        <li>Improper <strong>deployment</strong></li>
+        <li>Flaws introduced during <strong>maintenance/updates</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout callout-warn" style="margin-top:16px">
+    <span class="callout-icon">⚠️</span>
+    <span><strong>Client-side controls provide little security:</strong> Hidden fields, client-side input validation, pull-down menus, radio buttons — attackers bypass all of these using proxies (Burp, OWASP WebScarab) or packet capture (WireShark). Always validate server-side.</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ QUICK REFERENCE -->
+  <div class="section-header" id="quickref">
+    <span class="section-num">24</span>
+    <h2>Quick Reference Cheat Sheet</h2>
+  </div>
+
+  <div class="highlight-box">
+    <div style="font-size:13px;color:var(--muted);margin-bottom:16px;font-family:var(--mono);letter-spacing:1px;text-transform:uppercase">The Golden Rules — Know These Cold</div>
+    <div class="grid grid-2">
+      <ul class="chk">
+        <li>Everything important happens <strong>server-side</strong> (auth, validation, crypto, logging)</li>
+        <li>Never trust client-side controls</li>
+        <li>Use <strong>HTTPS / TLS</strong> everywhere, always</li>
+        <li>Passwords: <strong>salted hash, no MD5/SHA-1</strong></li>
+        <li>Error messages: <strong>never reveal internals</strong></li>
+        <li>Session IDs: <strong>random, in cookies only, never in URLs</strong></li>
+        <li>Cookies: <strong>Secure + HttpOnly attributes</strong></li>
+        <li>Lock account after <strong>5 failed attempts</strong></li>
+        <li>Use <strong>parameterized queries</strong> — no hardcoded SQL</li>
+      </ul>
+      <ul class="chk">
+        <li>Input validation: <strong>whitelist approach, server-side</strong></li>
+        <li>SAST + Manual review = both required</li>
+        <li>Least privilege everywhere: users, services, DB connections</li>
+        <li>No sensitive info in <strong>URLs, logs, error messages</strong></li>
+        <li>Validate file uploads by <strong>header, not extension</strong></li>
+        <li>Upload files go to <strong>separate server</strong>, not web server</li>
+        <li>Remove all <strong>test code, comments, debug info</strong> before production</li>
+        <li>Deny all access when security config unavailable</li>
+        <li>Use <strong>MFA</strong> for high-value accounts</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top:48px;padding:24px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center">
+    <div style="font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">Sources</div>
+    <p style="font-size:13px;color:var(--muted)">Lecture 13 — Secure Code Review &nbsp;·&nbsp; Lecture 14 — OWASP Secure Code Review &nbsp;·&nbsp; OWASP Secure Coding Practices Quick Reference Guide v2.0.1 (Dec 2022)</p>
+  </div>
+
+</div><!-- /wrap -->
+</body>
+</html>

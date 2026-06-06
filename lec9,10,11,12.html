@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Software – Lectures 9–12 Exam Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=IBM+Plex+Mono:wght@400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --card: #1a1e2a;
+    --border: #252a38;
+    --accent: #00e5ff;
+    --accent2: #ff4b6e;
+    --accent3: #ffe04b;
+    --accent4: #7effa0;
+    --text: #e8eaf0;
+    --muted: #7a82a0;
+    --mono: 'IBM Plex Mono', monospace;
+    --head: 'Syne', sans-serif;
+    --body: 'Lato', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* TOP BANNER */
+  header {
+    background: linear-gradient(135deg, #0d1520 0%, #0d0f14 60%);
+    border-bottom: 2px solid var(--accent);
+    padding: 40px 48px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  header .label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  header h1 {
+    font-family: var(--head);
+    font-size: clamp(26px, 4vw, 46px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: #fff;
+  }
+  header h1 span { color: var(--accent); }
+  header p {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 560px;
+  }
+
+  /* NAV / TOC */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 48px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  nav a {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 1px;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--accent); }
+
+  /* LAYOUT */
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  /* SECTION */
+  section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--accent);
+    border-radius: 4px 0 0 4px;
+  }
+  section.red::before   { background: var(--accent2); }
+  section.yellow::before{ background: var(--accent3); }
+  section.green::before { background: var(--accent4); }
+  section.purple::before{ background: #c084fc; }
+
+  .sec-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  section.red    .sec-tag { color: var(--accent2); }
+  section.yellow .sec-tag { color: var(--accent3); }
+  section.green  .sec-tag { color: var(--accent4); }
+  section.purple .sec-tag { color: #c084fc; }
+
+  h2 {
+    font-family: var(--head);
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  h3 {
+    font-family: var(--head);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 22px 0 8px;
+  }
+  section.red    h3 { color: var(--accent2); }
+  section.yellow h3 { color: var(--accent3); }
+  section.green  h3 { color: var(--accent4); }
+  section.purple h3 { color: #c084fc; }
+
+  p { margin-bottom: 10px; color: #cbd0e0; }
+  p:last-child { margin-bottom: 0; }
+
+  ul, ol {
+    padding-left: 20px;
+    margin-bottom: 10px;
+    color: #cbd0e0;
+  }
+  li { margin-bottom: 5px; }
+  li strong { color: #fff; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: #0d1520;
+    color: var(--accent3);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  pre {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    background: #0a0d14;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent3);
+    color: var(--accent3);
+    padding: 16px 20px;
+    border-radius: 0 6px 6px 0;
+    margin: 14px 0;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* CALLOUT BOXES */
+  .callout {
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    font-size: 14px;
+  }
+  .callout.danger  { background: rgba(255,75,110,.1); border-left: 3px solid var(--accent2); color: #ffa0b5; }
+  .callout.info    { background: rgba(0,229,255,.07); border-left: 3px solid var(--accent); color: #a0f0ff; }
+  .callout.tip     { background: rgba(126,255,160,.07); border-left: 3px solid var(--accent4); color: #b0ffd0; }
+  .callout.warn    { background: rgba(255,224,75,.07); border-left: 3px solid var(--accent3); color: #ffe89a; }
+  .callout strong  { color: #fff; }
+
+  /* ATTACK FLOW (visual steps) */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin: 14px 0;
+  }
+  .flow-step {
+    background: #0d1520;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--text);
+    min-width: 130px;
+    text-align: center;
+  }
+  .flow-step span { display: block; font-family: var(--mono); font-size: 10px; color: var(--muted); margin-bottom: 3px; }
+  .flow-arrow { color: var(--accent3); font-size: 20px; font-weight: bold; }
+
+  /* COMPARISON TABLE */
+  .tbl-wrap { overflow-x: auto; margin: 14px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  thead th {
+    background: #0d1520;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+  }
+  tbody td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: #cbd0e0;
+    vertical-align: top;
+  }
+  tbody tr:hover td { background: rgba(255,255,255,.03); }
+
+  /* CHIPS */
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .chip.hi { border-color: var(--accent2); color: var(--accent2); }
+  .chip.med { border-color: var(--accent3); color: var(--accent3); }
+  .chip.lo { border-color: var(--accent4); color: var(--accent4); }
+
+  /* GRID 2-col */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 14px 0; }
+  @media(max-width: 640px){ .grid2 { grid-template-columns: 1fr; } }
+
+  .mini-card {
+    background: #0d1520;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 13.5px;
+  }
+  .mini-card strong { display: block; color: #fff; margin-bottom: 6px; font-family: var(--head); }
+
+  /* RANK TABLE coloring */
+  .rank-1 { color: var(--accent2); font-weight: 700; }
+  .rank-hi { color: var(--accent3); }
+  .rank-lo { color: var(--accent4); }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+
+  /* SMOOTH SCROLL */
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="label">Lectures 9 · 10 · 11 · 12 — Exam Review</div>
+  <h1>Secure Software <span>Design</span></h1>
+  <p>Every topic, attack, defence, command, and list from the lectures — simplified for quick revision. Replace the slides with this.</p>
+</header>
+
+<nav>
+  <a href="#output">Output Rules</a>
+  <a href="#http">HTTP Basics</a>
+  <a href="#cookies">Cookies & Sessions</a>
+  <a href="#xss">XSS</a>
+  <a href="#csrf">CSRF</a>
+  <a href="#headers">Hardening Headers</a>
+  <a href="#misc">Redirection & Caching</a>
+  <a href="#sop">Same-Origin Policy</a>
+  <a href="#lists">Vuln Lists</a>
+  <a href="#cwe25">CWE Top 25</a>
+  <a href="#guides">Coding Guides</a>
+  <a href="#php">PHP Tips</a>
+</nav>
+
+<main>
+
+<!-- ===================== SECTION 1: OUTPUT ===================== -->
+<section id="output">
+  <div class="sec-tag">Section 1</div>
+  <h2>Sending Output Safely</h2>
+
+  <h3>Minimize Feedback to Untrusted Users</h3>
+  <ul>
+    <li>Say <strong>"Login failed"</strong> — never say <em>why</em> (bad password vs bad username).</li>
+    <li>Log failures server-side instead of revealing info to attacker.</li>
+    <li>If usernames are already public, hiding them is less important — focus on not leaking passwords.</li>
+    <li><strong>Never echo passwords</strong> on screen — prevents shoulder surfing.</li>
+  </ul>
+
+  <h3>Don't Send Comments to Users</h3>
+  <ul>
+    <li>HTML/CSS/XML comments can accidentally contain passwords, session IDs, or PII.</li>
+    <li>Strip comments before sending to users, or keep them in a separate server-side file.</li>
+  </ul>
+
+  <h3>Handle Unresponsive / Full Output</h3>
+  <ul>
+    <li>If a browser hangs or is slow, <strong>do not let your server hang too</strong> — that's a DoS vector.</li>
+    <li>Release locks <em>before</em> replying, not after.</li>
+    <li>Use <strong>write timeouts</strong> on network output (measure from start of attempt).</li>
+  </ul>
+
+  <h3>Control Character Encoding</h3>
+  <ul>
+    <li>Always declare encoding explicitly — never let the browser guess.</li>
+    <li>If browser guesses wrong, an attacker may exploit that to inject content.</li>
+  </ul>
+  <pre>&lt;meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"&gt;
+<!-- or in HTTP header: -->
+Content-Type: text/html; charset=ISO-8859-1</pre>
+
+  <h3>Escape Metacharacters in Output</h3>
+  <ul>
+    <li>Common HTML/XML metacharacters: <code>&lt; &gt; &amp; " '</code></li>
+    <li>Use an <strong>allowlist</strong>, not a denylist.</li>
+    <li>Escape exactly once — double-escaping or missed escaping both cause problems.</li>
+    <li>Many web frameworks auto-escape by default — know when they do and don't.</li>
+  </ul>
+
+  <div class="callout tip"><strong>Tip:</strong> Prefer frameworks that escape HTML output automatically. Know the cases where auto-escaping is disabled (e.g., "raw" output helpers) — those are where bugs live.</div>
+</section>
+
+<!-- ===================== SECTION 2: HTTP ===================== -->
+<section id="http" class="yellow">
+  <div class="sec-tag">Section 2</div>
+  <h2>HTTP / HTTPS / HTML Basics</h2>
+
+  <h3>Standard HTTP Methods</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Method</th><th>Purpose</th><th>Safe?</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td>Retrieve info</td><td>✅ Should have NO side effects</td></tr>
+      <tr><td>HEAD</td><td>Like GET, only headers (no body)</td><td>✅ Same rule as GET</td></tr>
+      <tr><td>POST</td><td>Submit form / data</td><td>⚠️ Has side effects</td></tr>
+      <tr><td>PUT</td><td>Store/replace data</td><td>⚠️ Has side effects</td></tr>
+      <tr><td>DELETE</td><td>Delete a resource</td><td>⚠️ Has side effects</td></tr>
+      <tr><td>OPTIONS</td><td>Get communication options</td><td>—</td></tr>
+      <tr><td>TRACE</td><td>Show what server receives</td><td>—</td></tr>
+      <tr><td>CONNECT</td><td>Reserved (tunnelling)</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout danger"><strong>Rule:</strong> GET and HEAD must NOT buy/sell things, change status, or have side effects. If a user triggered it accidentally, they "cannot be held accountable." Use POST/PUT/DELETE for state-changing actions.</div>
+
+  <h3>HTTP/1.1 vs HTTP/2</h3>
+  <div class="grid2">
+    <div class="mini-card">
+      <strong>HTTP/1.1</strong>
+      Text-based; each line ends with CRLF; blank line ends request. Easier to read/debug manually.
+    </div>
+    <div class="mini-card">
+      <strong>HTTP/2</strong>
+      Binary (faster, compact); fully multiplexed (parallel over 1 connection); header compression; translates losslessly to/from HTTP/1.1.
+    </div>
+  </div>
+
+  <h3>HTTP/1.1 Request Example (GET)</h3>
+  <pre>GET /index.html HTTP/1.1
+Host: www.dwheeler.com
+Accept-Language: en
+Connection: keep-alive
+Referer: https://www.dwheeler.com/misc.html
+(blank line)</pre>
+
+  <h3>HTTP/1.1 Response Status Codes</h3>
+  <ul>
+    <li><strong>2xx</strong> — Success (200 = OK)</li>
+    <li><strong>4xx</strong> — Client error (404 = Not Found, 401 = Unauthorized)</li>
+  </ul>
+
+  <h3>POST Request Example</h3>
+  <pre>POST /myform.html HTTP/1.1
+Host: www.example.com
+Cookie: myId=dwheeler
+Referer: http://www.example.com/index.html
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 325
+Connection: keep-alive
+(blank line)
+(encoded form data)</pre>
+
+  <h3>GET vs POST — When to Use Each</h3>
+  <ul>
+    <li>GET parameters go in the URL → stored in browser history, sent in Referer headers, written to logs. <strong>Never use GET for sensitive data.</strong></li>
+    <li><strong>Use POST when:</strong> doing a state-changing action, sending sensitive info, authentication is required. If using POST, <strong>forbid GET as an alternative</strong>.</li>
+  </ul>
+</section>
+
+<!-- ===================== SECTION 3: COOKIES & SESSIONS ===================== -->
+<section id="cookies" class="green">
+  <div class="sec-tag">Section 3</div>
+  <h2>Cookies &amp; Session Management</h2>
+
+  <h3>How Cookies Work</h3>
+  <pre>Set-Cookie: name=value
+Set-Cookie: name2=value2; Expires=Wed, 09-Jun-2021 10:18:14 GMT</pre>
+  <ul>
+    <li>Browser includes cookie on every subsequent request to that domain.</li>
+    <li>No expiration set → cookie deleted when browser closes.</li>
+    <li>Browser sends only <strong>name/value</strong> back — not the attributes.</li>
+  </ul>
+
+  <h3>Cookie Attributes</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Attribute</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>Domain</code></td><td>Which server domain the cookie is sent to</td></tr>
+      <tr><td><code>Path</code></td><td>Which URL path triggers sending the cookie</td></tr>
+      <tr><td><code>Expires</code> / <code>Max-Age</code></td><td>When cookie expires (seconds for Max-Age)</td></tr>
+      <tr><td><code>Secure</code></td><td>Only send over encrypted (HTTPS) channel</td></tr>
+      <tr><td><code>HttpOnly</code></td><td>Cookie inaccessible to JavaScript — only HTTP/HTTPS</td></tr>
+      <tr><td><code>SameSite</code></td><td>Lax or Strict — only send with same-origin requests (CSRF defence)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Why Sessions Are Needed</h3>
+  <p>HTTP is stateless — server has no memory of previous requests. Sessions use a <strong>session ID</strong> (usually in a cookie) to link requests together (shopping cart, logged-in state).</p>
+
+  <h3>Secure Session ID Requirements</h3>
+  <ul>
+    <li>At least <strong>128 bits of random data</strong>.</li>
+    <li>Must use a <strong>cryptographically secure PRNG</strong> (not "add 1", not roll-your-own).</li>
+    <li>Encrypt session IDs over untrusted channels.</li>
+    <li>Use an existing, tested library/framework for session management.</li>
+  </ul>
+
+  <h3>Always Create a NEW Session on Login</h3>
+  <div class="callout danger"><strong>Ignoring old sessions on login prevents session fixation attacks.</strong> Always create a fresh session ID when a user authenticates, regardless of whether they already have a session.</div>
+
+  <h3>Session Fixation Attack</h3>
+  <div class="flow">
+    <div class="flow-step"><span>Step 1 — Mallory</span>Logs in, gets session_id=111</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>Step 2 — Mallory→Alice</span>Sends link with ?session_id=111</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>Step 3 — Alice</span>Clicks link, logs in with session_id=111</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>Step 4 — Server</span>Reuses session_id=111, now associated with Alice</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>Step 4 — Mallory</span>Accesses with session_id=111 → Alice's permissions!</div>
+  </div>
+  <p><strong>Fix:</strong> always regenerate session ID after authentication.</p>
+
+  <h3>Limit Session Lifetime</h3>
+  <ul>
+    <li>Set both an <strong>idle timeout</strong> and a <strong>maximum session lifetime</strong>.</li>
+    <li>Fewer valid IDs = smaller attack window if one is stolen.</li>
+  </ul>
+  <pre>/* Java Servlet — web.xml — idle timeout in minutes */
+&lt;session-config&gt;
+  &lt;session-timeout&gt;60&lt;/session-timeout&gt;
+&lt;/session-config&gt;</pre>
+  <p>For maximum (absolute) lifetime, use <code>doFilter()</code>: store creation time in session; invalidate after max lifetime.</p>
+
+  <h3>Logout Must Destroy Server-Side Session</h3>
+  <ul>
+    <li>Deleting the cookie client-side is NOT enough — the old cookie could be reused.</li>
+    <li>Server must <strong>invalidate the session</strong> on logout.</li>
+    <li><strong>Failures:</strong> Office 365, Yahoo Mail, WordPress (as of 2013).</li>
+    <li><strong>Pass:</strong> Gmail, Tweetdeck, Facebook.</li>
+    <li>Always provide a <strong>logout button</strong> on every page.</li>
+  </ul>
+</section>
+
+<!-- ===================== SECTION 4: XSS ===================== -->
+<section id="xss" class="red">
+  <div class="sec-tag">Section 4</div>
+  <h2>Cross-Site Scripting (XSS)</h2>
+
+  <div class="callout danger"><strong>Core idea:</strong> Attacker injects malicious script into a trusted site. Victim's browser receives and executes it, trusting it because it came from the real server.</div>
+
+  <h3>3 Types of XSS</h3>
+  <div class="grid2">
+    <div class="mini-card">
+      <strong>1. Persistent (Stored)</strong>
+      Attacker submits malicious data (e.g., HTML with script in a comment). Server stores it in DB. When victim loads the page, malicious code is served and runs automatically.
+    </div>
+    <div class="mini-card">
+      <strong>2. Reflected</strong>
+      Attacker crafts a URL/form that sends malicious data to the server. Server "reflects" it straight back in the response. Victim's browser runs it, thinking it came from the trusted server.
+    </div>
+  </div>
+  <div class="mini-card" style="margin-top:10px">
+    <strong>3. DOM-Based</strong>
+    Client is tricked into sending itself the attack via the DOM (no server round-trip needed). See: <a href="https://owasp.org/www-community/Types_of_Cross-Site_Scripting" style="color:var(--accent2)">OWASP XSS Types</a>
+  </div>
+
+  <h3>Countering XSS</h3>
+  <ul>
+    <li><strong>Output escaping (BEST defence)</strong> — escape all untrusted data before rendering. Use framework auto-escaping. Covers all cases if done everywhere.</li>
+    <li><strong>Input filtering</strong> — strip/reject metacharacters (<code>&lt; &gt; &amp; " '</code>) on input. Often incomplete, but useful for defence-in-depth. Use HTML-sanitisation libraries to allow safe tags like <code>&lt;i&gt;</code> without allowing <code>&lt;script&gt;</code>.</li>
+    <li><strong>HttpOnly on cookies</strong> — JavaScript can't read these cookies, limiting data an XSS attacker can steal. Imperfect but helpful.</li>
+    <li><strong>Content Security Policy (CSP)</strong> — see next subsection.</li>
+  </ul>
+  <div class="callout tip"><strong>Avoid copying data back to user</strong> where possible — if you never echo a URL, you can never echo it wrongly.</div>
+
+  <h3>Content Security Policy (CSP)</h3>
+  <p>An HTTP response header that tells the browser what sources are trusted. Browsers only execute JS/resources from those sources.</p>
+  <pre>Content-Security-Policy: default-src 'self'
+<!-- All content must come from the same origin -->
+
+Content-Security-Policy: default-src 'self' *.trusted.com
+<!-- Also allow anything from trusted.com subdomains -->
+
+Content-Security-Policy: default-src 'self'; img-src *; script-src scripts.js.com
+<!-- Images from anywhere; scripts only from scripts.js.com --></pre>
+  <ul>
+    <li>Supported: Chrome 16+, Safari 6+, Firefox 4+. IE 10 has very limited support.</li>
+    <li>Requires moving all inline JS to separate files (else browser can't distinguish it from injected JS).</li>
+    <li>Can also disable <code>eval()</code> and inline JS.</li>
+    <li>Twitter and Facebook have deployed CSP.</li>
+  </ul>
+  <div class="callout warn"><strong>CSP is not a silver bullet.</strong> Attackers can sometimes work around it (e.g., injecting into HTML that leaks hidden field values to evil.com via an unclosed img tag). Use output escaping as primary defence; CSP as an additional layer.</div>
+</section>
+
+<!-- ===================== SECTION 5: CSRF ===================== -->
+<section id="csrf" class="purple">
+  <div class="sec-tag">Section 5</div>
+  <h2>Cross-Site Request Forgery (CSRF / XSRF)</h2>
+
+  <div class="callout info"><strong>Core idea:</strong> Attacker causes a victim's already-authenticated browser to make an unintended request to a trusted site. Browser automatically includes the session cookie, so the server thinks it's legitimate.</div>
+
+  <h3>How It Works — Classic Example</h3>
+  <div class="flow">
+    <div class="flow-step"><span>Victim</span>Logged into bank.com</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>Attacker (evil.com)</span>Page contains:<br><code>&lt;img src="http://bank.com/transfer?amount=10000&amp;dest=evilcorp"&gt;</code></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>Browser</span>Fetches that URL, auto-attaches bank.com cookie</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step"><span>Bank.com</span>Cookie valid → transfer executed!</div>
+  </div>
+
+  <h3>CSRF vs XSS</h3>
+  <div class="grid2">
+    <div class="mini-card"><strong>XSS — fools the CLIENT</strong><br>Malicious script runs in victim's browser; browser does something bad for the attacker.</div>
+    <div class="mini-card"><strong>CSRF — fools the SERVER</strong><br>Legitimate browser makes an unintended request; server accepts it because the cookie checks out.</div>
+  </div>
+
+  <h3>CSRF Defences</h3>
+
+  <p><strong>1. Secret Validation Token (most common, always works)</strong></p>
+  <pre>&lt;input type="hidden" name="csrf_token" value="23a3af01b..."&gt;</pre>
+  <ul>
+    <li>Server embeds a random, hard-to-guess token in every form.</li>
+    <li>Attacker can't read it (different origin), so they can't forge a valid request.</li>
+    <li>Variations: session identifier, session-independent token, session-dependent token, HMAC of session ID.</li>
+    <li>Most modern frameworks (e.g., Rails <code>authenticity_token</code>) do this automatically.</li>
+  </ul>
+
+  <p><strong>2. SameSite Cookie Attribute (best long-term solution)</strong></p>
+  <pre>Set-Cookie: session=abc; SameSite=Lax
+Set-Cookie: session=abc; SameSite=Strict</pre>
+  <ul>
+    <li><strong>Lax</strong>: cookie sent only for top-level navigations (safe). Chrome and Firefox now default to Lax.</li>
+    <li><strong>Strict</strong>: cookie only sent when request comes from the same site.</li>
+  </ul>
+
+  <p><strong>3. Check HTTP Referer / Origin Header</strong></p>
+  <pre>Referer: http://www.facebook.com/home.php
+Origin: http://www.facebook.com/home.php</pre>
+  <ul>
+    <li>Accept only if Origin/Referer matches expected domain.</li>
+    <li><strong>Must treat "no Referer" as unauthorized</strong> (attacker can suppress it).</li>
+    <li>Not a complete solution alone (client vulnerabilities may subvert it).</li>
+    <li><em>Note: "Referer" is a misspelling of "Referrer" in the HTTP spec.</em></li>
+  </ul>
+
+  <p><strong>4. Additional Measures</strong></p>
+  <ul>
+    <li>Require re-authentication for critical operations.</li>
+    <li>Apply CSRF countermeasures to login page too (prevent login CSRF).</li>
+    <li>Auto-logout after X minutes inactivity.</li>
+    <li>Don't allow GET requests to have side effects (only POST for state changes).</li>
+  </ul>
+
+  <h3>CSRF on Non-Web Targets: Home Router Example</h3>
+  <ul>
+    <li>50% of home routers use default or no password.</li>
+    <li>Attacker's evil.com page sends request to <code>192.168.1.1</code> (router admin) — browser forwards it with any existing auth.</li>
+    <li>Attacker can enable remote admin, reset password, etc.</li>
+  </ul>
+</section>
+
+<!-- ===================== SECTION 6: HARDENING HEADERS ===================== -->
+<section id="headers">
+  <div class="sec-tag">Section 6</div>
+  <h2>HTTP Hardening Headers</h2>
+  <p>Add these headers to make attacks harder. Quick scan tool: <code>https://securityheaders.io/</code></p>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Header</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>Content-Security-Policy</code></td><td>Allowlist trusted script/resource sources; blocks inline JS, eval(). (Covered in XSS section.)</td></tr>
+      <tr><td><code>Strict-Transport-Security</code> (HSTS)</td><td>"Only use HTTPS from now on for this site." Prevents downgrade attacks.</td></tr>
+      <tr><td><code>X-Content-Type-Options: nosniff</code></td><td>Browser must not guess (sniff) MIME type. Prevents MIME-confusion attacks.</td></tr>
+      <tr><td><code>X-Frame-Options</code></td><td>Clickjacking protection — controls whether page can be loaded in a frame/iframe.</td></tr>
+      <tr><td><code>X-XSS-Protection</code></td><td>Enables browser's built-in XSS filter to detect reflected XSS. On by default in most browsers.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Reference: <a href="https://www.owasp.org/index.php/List_of_useful_HTTP_headers" style="color:var(--accent)">OWASP List of Useful HTTP Headers</a></p>
+</section>
+
+<!-- ===================== SECTION 7: REDIRECT & CACHING ===================== -->
+<section id="misc" class="yellow">
+  <div class="sec-tag">Section 7</div>
+  <h2>Redirection &amp; Caching</h2>
+
+  <h3>Open Redirect / Unvalidated Redirects</h3>
+  <p>Don't use untrusted user input to decide where to redirect. Solutions (OWASP order):</p>
+  <ol>
+    <li><strong>Avoid redirects/forwards entirely</strong> if possible.</li>
+    <li>If used, <strong>don't use user parameters</strong> to compute the destination.</li>
+    <li>If you must use a parameter, <strong>validate and authorise</strong> the value. Use a mapping (e.g., <code>dest=1</code> maps to a fixed URL) rather than the raw URL.</li>
+    <li>Use <strong>OWASP ESAPI</strong> to override <code>sendRedirect()</code> to enforce safe destinations.</li>
+  </ol>
+
+  <h3>Disable Caching for Sensitive Data</h3>
+  <ul>
+    <li>Browsers cache pages to disk — cached sensitive pages can be read later.</li>
+    <li><strong>Correct approach (HTTP 1.1):</strong></li>
+  </ul>
+  <pre>Cache-Control: no-store</pre>
+  <div class="callout danger"><strong>Common mistake:</strong> Using non-standard/legacy cache-disabling mechanisms. A 2013 study found 70% of financial, healthcare, insurance, and utility sites did this wrong — effectively only disabling caching in IE6. Use the standard <code>Cache-Control: no-store</code>.</div>
+</section>
+
+<!-- ===================== SECTION 8: SOP & CLIENT-SERVER ===================== -->
+<section id="sop" class="green">
+  <div class="sec-tag">Section 8</div>
+  <h2>Same-Origin Policy &amp; Client-Server Trust</h2>
+
+  <h3>Same-Origin Policy (SOP)</h3>
+  <ul>
+    <li>JavaScript can only access data on another page if both share the same <strong>URI scheme + hostname + port</strong>.</li>
+    <li>Primary exceptions:
+      <ul>
+        <li>Legacy operations: <code>img src</code>, submitting POST forms, including scripts.</li>
+        <li>Windows/frames where both set <code>document.domain</code> to the same value.</li>
+        <li><code>postMessage()</code> text passing.</li>
+        <li>WebSockets (server checks Origin header).</li>
+        <li>CORS (Cross-Origin Resource Sharing) — explicit server opt-in.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>Server Must Not Trust the Client</h3>
+  <div class="callout danger">
+    <strong>Never trust client-side validation.</strong> Attacker controls the client (including JavaScript running there). All validation and authorisation must be enforced server-side. Client-side checks are only UX improvements.
+  </div>
+  <ul>
+    <li>Store important state on the server — don't let the client dictate it.</li>
+    <li>Any request to change data must be checked server-side first.</li>
+    <li>Extra caution when running JS on client or providing direct DB access.</li>
+  </ul>
+</section>
+
+<!-- ===================== SECTION 9: VULNERABILITY LISTS ===================== -->
+<section id="lists">
+  <div class="sec-tag">Section 9</div>
+  <h2>Vulnerability Lists &amp; Taxonomies</h2>
+
+  <h3>CVE — Common Vulnerabilities and Exposures</h3>
+  <ul>
+    <li><strong>Vulnerability</strong>: specific mistake in specific software directly usable by attacker.</li>
+    <li><strong>Exposure</strong>: configuration issue or mistake giving access usable as a stepping-stone.</li>
+    <li>Format: <code>CVE-YEAR-NUMBER</code> (e.g., <code>CVE-2013-1380</code> = specific Adobe Flash bug).</li>
+    <li>Common naming system so different organisations can cross-reference reports.</li>
+    <li>More info: <code>cve.mitre.org</code> and <code>nvd.nist.gov</code></li>
+  </ul>
+
+  <h3>CVSS — Common Vulnerability Scoring System v2.0</h3>
+  <p>Score 0–10 (10 = riskiest) to help prioritise remediation.</p>
+  <p><strong>Base Metrics (intrinsic, always apply):</strong></p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Metric</th><th>Options</th></tr></thead>
+    <tbody>
+      <tr><td>Access Vector (AV)</td><td>Local / Adjacent Network / Network</td></tr>
+      <tr><td>Access Complexity (AC)</td><td>High / Medium / Low</td></tr>
+      <tr><td>Authentication (Au)</td><td>Multiple / Single / None</td></tr>
+      <tr><td>Confidentiality Impact (C)</td><td>None / Partial / Complete</td></tr>
+      <tr><td>Integrity Impact (I)</td><td>None / Partial / Complete</td></tr>
+      <tr><td>Availability Impact (A)</td><td>None / Partial / Complete</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>Temporal Metrics (optional, change over time):</strong> Exploitability (E), Remediation Level (RL), Report Confidence (RC).</p>
+  <p><strong>Environmental Metrics (optional, context-specific):</strong> Collateral Damage Potential (CDP), Target Distribution (TD), Security Requirements (CR, IR, AR).</p>
+
+  <h3>CWE — Common Weakness Enumeration</h3>
+  <ul>
+    <li><strong>Weakness</strong> = a <em>type</em> of vulnerability (category), not a specific bug.</li>
+    <li>Format: <code>CWE-NUMBER</code> (e.g., <code>CWE-120</code> = Classic Buffer Overflow).</li>
+    <li>Has parent/child relationships (e.g., CWE-119 is parent of CWE-125 and CWE-787).</li>
+    <li>More info: <code>cwe.mitre.org</code></li>
+  </ul>
+
+  <h3>WASC Threat Classification v2.0</h3>
+  <p><strong>Attacks include:</strong> Brute Force, Buffer Overflow, XSS, CSRF, SQL Injection, Path Traversal, Session Fixation, OS Commanding, Format String, Integer Overflows, LDAP Injection, Remote File Inclusion, Routing Detour, XML Entity Expansion, and more.</p>
+  <p><strong>Weaknesses include:</strong> App Misconfiguration, Improper Input/Output Handling, Insufficient Authentication/Authorization/Session Expiration, Information Leakage, Insecure Indexing, Insufficient Transport Layer Protection, Server Misconfiguration.</p>
+
+  <h3>NIST NVD CWE Subset — Key Entries</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Name</th><th>CWE-ID</th><th>Short Description</th></tr></thead>
+    <tbody>
+      <tr><td>Authentication Issues</td><td>CWE-287</td><td>Failure to properly authenticate users</td></tr>
+      <tr><td>Credentials Management</td><td>CWE-255</td><td>Improper creation/storage/transmission of passwords</td></tr>
+      <tr><td>Permissions / Access Control</td><td>CWE-264</td><td>Failure to enforce permissions or privileges</td></tr>
+      <tr><td>Buffer Errors</td><td>CWE-119</td><td>Attempts to put more data in a buffer than it can hold</td></tr>
+      <tr><td>CSRF</td><td>CWE-352</td><td>Failure to verify sender actually intended to send the request</td></tr>
+      <tr><td>XSS</td><td>CWE-79</td><td>Failure to validate/filter/encode user input before returning it</td></tr>
+      <tr><td>Cryptographic Issues</td><td>CWE-310</td><td>Insecure algorithm, weak keys, plaintext, bad RNG</td></tr>
+      <tr><td>Path Traversal</td><td>CWE-22</td><td>User input with <code>..</code> leaks access to unintended files</td></tr>
+      <tr><td>Code Injection</td><td>CWE-94</td><td>Attacker-controlled file executed; includes PHP RFI, bad uploads</td></tr>
+      <tr><td>Format String</td><td>CWE-134</td><td>Attacker-controlled input used as format string parameter</td></tr>
+      <tr><td>Configuration</td><td>CWE-16</td><td>General config problem (not passwords/permissions)</td></tr>
+      <tr><td>Info Leak / Disclosure</td><td>CWE-200</td><td>Exposure of system/sensitive/private info, fingerprinting</td></tr>
+      <tr><td>Input Validation</td><td>CWE-20</td><td>Failure to ensure well-formed, valid input (overlaps XSS, SQLi)</td></tr>
+      <tr><td>Numeric Errors</td><td>CWE-189</td><td>Integer overflow, signedness, truncation, underflow</td></tr>
+      <tr><td>OS Command Injection</td><td>CWE-78</td><td>User input injected into shell commands (system() etc.)</td></tr>
+      <tr><td>Race Conditions</td><td>CWE-362</td><td>Resource state changes between check and use (TOCTOU)</td></tr>
+      <tr><td>Resource Management</td><td>CWE-399</td><td>Memory leaks, infinite loops, disk exhaustion</td></tr>
+      <tr><td>SQL Injection</td><td>CWE-89</td><td>User input embedded in SQL without filtering/quoting</td></tr>
+      <tr><td>Link Following</td><td>CWE-59</td><td>Symlink/hard link followed to unintended files</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>NSA CAS Weakness Classes</h3>
+  <div class="chips">
+    <span class="chip">Authentication &amp; Access Control</span>
+    <span class="chip">Buffer Handling</span>
+    <span class="chip">Code Quality</span>
+    <span class="chip">Control Flow Management</span>
+    <span class="chip">Encryption &amp; Randomness</span>
+    <span class="chip">Error Handling</span>
+    <span class="chip">File Handling</span>
+    <span class="chip">Information Leaks</span>
+    <span class="chip">Initialization &amp; Shutdown</span>
+    <span class="chip">Injection</span>
+    <span class="chip">Malicious Logic</span>
+    <span class="chip">Number Handling</span>
+    <span class="chip">Pointer &amp; Reference Handling</span>
+  </div>
+
+  <h3>Using "Top" Lists in Assurance Cases</h3>
+  <ul>
+    <li>Can't prove "zero implementation mistakes" — instead, pick a "top" list and show countermeasures for each item.</li>
+    <li>Default recommendation: <strong>OWASP Top 10</strong> for web apps, <strong>SANS/CWE Top 25</strong> for everything else.</li>
+    <li>Best "top" list is the one most relevant to your project and environment.</li>
+    <li>You do NOT need to memorise CWE numbers — but you must know what a name means if it's been covered.</li>
+  </ul>
+</section>
+
+<!-- ===================== SECTION 10: CWE TOP 25 ===================== -->
+<section id="cwe25" class="red">
+  <div class="sec-tag">Section 10</div>
+  <h2>CWE Top 25 Most Dangerous Software Errors</h2>
+  <p>2019 edition — based on real NVD data from 2017–2018. The 2011 version is also in the lecture (included below).</p>
+
+  <h3>2019 CWE Top 25</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>#</th><th>CWE-ID</th><th>Name</th></tr></thead>
+    <tbody>
+      <tr><td class="rank-1">1</td><td>CWE-119</td><td>Improper Restriction of Operations within Bounds of Memory Buffer <em>(parent of #5 &amp; #12)</em></td></tr>
+      <tr><td class="rank-1">2</td><td>CWE-79</td><td>Cross-Site Scripting (XSS)</td></tr>
+      <tr><td class="rank-1">3</td><td>CWE-20</td><td>Improper Input Validation</td></tr>
+      <tr><td class="rank-hi">4</td><td>CWE-200</td><td>Information Exposure</td></tr>
+      <tr><td class="rank-hi">5</td><td>CWE-125</td><td>Out-of-bounds Read <em>(child of #1)</em></td></tr>
+      <tr><td class="rank-hi">6</td><td>CWE-89</td><td>SQL Injection</td></tr>
+      <tr><td class="rank-hi">7</td><td>CWE-416</td><td>Use After Free</td></tr>
+      <tr><td class="rank-hi">8</td><td>CWE-190</td><td>Integer Overflow or Wraparound</td></tr>
+      <tr><td class="rank-hi">9</td><td>CWE-352</td><td>CSRF</td></tr>
+      <tr><td class="rank-hi">10</td><td>CWE-22</td><td>Path Traversal</td></tr>
+      <tr><td>11</td><td>CWE-78</td><td>OS Command Injection</td></tr>
+      <tr><td>12</td><td>CWE-787</td><td>Out-of-bounds Write <em>(child of #1)</em></td></tr>
+      <tr><td>13</td><td>CWE-287</td><td>Improper Authentication</td></tr>
+      <tr><td>14</td><td>CWE-476</td><td>NULL Pointer Dereference</td></tr>
+      <tr><td>15</td><td>CWE-732</td><td>Incorrect Permission Assignment for Critical Resource</td></tr>
+      <tr><td>16</td><td>CWE-434</td><td>Unrestricted Upload of File with Dangerous Type</td></tr>
+      <tr><td>17</td><td>CWE-611</td><td>Improper Restriction of XML External Entity Reference</td></tr>
+      <tr><td>18</td><td>CWE-94</td><td>Code Injection</td></tr>
+      <tr><td>19</td><td>CWE-798</td><td>Use of Hard-coded Credentials</td></tr>
+      <tr><td>20</td><td>CWE-400</td><td>Uncontrolled Resource Consumption</td></tr>
+      <tr><td class="rank-lo">21</td><td>CWE-772</td><td>Missing Release of Resource after Effective Lifetime</td></tr>
+      <tr><td class="rank-lo">22</td><td>CWE-426</td><td>Untrusted Search Path</td></tr>
+      <tr><td class="rank-lo">23</td><td>CWE-502</td><td>Deserialization of Untrusted Data</td></tr>
+      <tr><td class="rank-lo">24</td><td>CWE-269</td><td>Improper Privilege Management</td></tr>
+      <tr><td class="rank-lo">25</td><td>CWE-295</td><td>Improper Certificate Validation</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>2011 CWE/SANS Top 25 (also in lecture)</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>#</th><th>CWE-ID</th><th>Name</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>CWE-89</td><td>SQL Injection</td></tr>
+      <tr><td>2</td><td>CWE-78</td><td>OS Command Injection</td></tr>
+      <tr><td>3</td><td>CWE-120</td><td>Classic Buffer Overflow</td></tr>
+      <tr><td>4</td><td>CWE-79</td><td>XSS</td></tr>
+      <tr><td>5</td><td>CWE-306</td><td>Missing Authentication for Critical Function</td></tr>
+      <tr><td>6</td><td>CWE-862</td><td>Missing Authorization</td></tr>
+      <tr><td>7</td><td>CWE-798</td><td>Use of Hard-coded Credentials</td></tr>
+      <tr><td>8</td><td>CWE-311</td><td>Missing Encryption of Sensitive Data</td></tr>
+      <tr><td>9</td><td>CWE-434</td><td>Unrestricted Upload of File with Dangerous Type</td></tr>
+      <tr><td>10</td><td>CWE-807</td><td>Reliance on Untrusted Inputs in a Security Decision</td></tr>
+      <tr><td>11</td><td>CWE-250</td><td>Execution with Unnecessary Privileges</td></tr>
+      <tr><td>12</td><td>CWE-352</td><td>CSRF</td></tr>
+      <tr><td>13</td><td>CWE-22</td><td>Path Traversal</td></tr>
+      <tr><td>14</td><td>CWE-494</td><td>Download of Code Without Integrity Check</td></tr>
+      <tr><td>15</td><td>CWE-863</td><td>Incorrect Authorization</td></tr>
+      <tr><td>16</td><td>CWE-829</td><td>Inclusion of Functionality from Untrusted Control Sphere</td></tr>
+      <tr><td>17</td><td>CWE-732</td><td>Incorrect Permission Assignment for Critical Resource</td></tr>
+      <tr><td>18</td><td>CWE-676</td><td>Use of Potentially Dangerous Function</td></tr>
+      <tr><td>19</td><td>CWE-327</td><td>Use of a Broken or Risky Cryptographic Algorithm</td></tr>
+      <tr><td>20</td><td>CWE-131</td><td>Incorrect Calculation of Buffer Size</td></tr>
+      <tr><td>21</td><td>CWE-307</td><td>Improper Restriction of Excessive Authentication Attempts</td></tr>
+      <tr><td>22</td><td>CWE-601</td><td>URL Redirection to Untrusted Site (Open Redirect)</td></tr>
+      <tr><td>23</td><td>CWE-134</td><td>Uncontrolled Format String</td></tr>
+      <tr><td>24</td><td>CWE-190</td><td>Integer Overflow or Wraparound</td></tr>
+      <tr><td>25</td><td>CWE-759</td><td>Use of a One-Way Hash without a Salt</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ===================== SECTION 11: CODING GUIDES ===================== -->
+<section id="guides">
+  <div class="sec-tag">Section 11</div>
+  <h2>Coding Standards &amp; Checklists</h2>
+
+  <h3>SEI CERT Top 10 Secure Coding Practices</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>#</th><th>Practice</th><th>Key Point</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Validate Input</td><td>All untrusted data: CLI args, network, env vars, user files. Eliminates the vast majority of vulnerabilities.</td></tr>
+      <tr><td>2</td><td>Heed Compiler Warnings</td><td>Highest warning level; fix all warnings. Use static and dynamic analysis tools.</td></tr>
+      <tr><td>3</td><td>Architect for Security</td><td>Design software to implement security policies. E.g., separate subsystems by privilege level.</td></tr>
+      <tr><td>4</td><td>Keep It Simple</td><td>Simpler design = fewer mistakes. Complexity makes assurance harder.</td></tr>
+      <tr><td>5</td><td>Default Deny</td><td>Access denied by default; only allow explicitly. Permission-based, not exclusion-based.</td></tr>
+      <tr><td>6</td><td>Least Privilege</td><td>Minimum permissions for minimum time. Reduces attacker's opportunities.</td></tr>
+      <tr><td>7</td><td>Sanitize Data to Other Systems</td><td>Sanitize before calling shells, DBs, COTS. The calling process knows the context — it is responsible.</td></tr>
+      <tr><td>8</td><td>Defence in Depth</td><td>Multiple layers: if one fails, another catches it. Combine secure coding + secure runtime.</td></tr>
+      <tr><td>9</td><td>Quality Assurance</td><td>Fuzz testing, penetration testing, source code audits, independent security reviews.</td></tr>
+      <tr><td>10</td><td>Adopt a Secure Coding Standard</td><td>Use a standard for your language/platform (e.g., SEI CERT, OWASP).</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>SANS SWAT Checklist (Securing Web Application Technologies)</h3>
+
+  <p><strong>Error Handling &amp; Logging:</strong></p>
+  <ul>
+    <li>Display generic error messages; no unhandled exceptions; suppress framework-generated errors.</li>
+    <li>Log all: authentication activities, privilege changes, admin activities, access to sensitive data.</li>
+    <li>Do NOT log inappropriate data; store logs securely.</li>
+  </ul>
+
+  <p><strong>Data Protection:</strong></p>
+  <ul>
+    <li>Use SSL everywhere; disable HTTP access for SSL-enabled resources.</li>
+    <li>Use <code>Strict-Transport-Security</code> header.</li>
+    <li>Store passwords using a strong, iterative, salted hash.</li>
+    <li>Securely exchange encryption keys; disable weak SSL ciphers.</li>
+    <li>Use valid SSL certificates from a reputable CA.</li>
+    <li>Disable data caching via <code>Cache-Control</code> headers and <code>autocomplete</code>.</li>
+    <li>Limit use and storage of sensitive data.</li>
+  </ul>
+
+  <p><strong>Configuration &amp; Operations:</strong></p>
+  <ul>
+    <li>Rigorous change management, defined security requirements, design review, code reviews, security testing, hardened infrastructure, incident handling plan, security training.</li>
+  </ul>
+
+  <p><strong>Authentication:</strong></p>
+  <ul>
+    <li>Don't hardcode credentials; strong password reset system; strong password policy.</li>
+    <li>Account lockout against brute force; don't disclose info in error messages.</li>
+    <li>Store DB credentials securely; apps/middleware run with minimal privileges.</li>
+  </ul>
+
+  <p><strong>Session Management:</strong></p>
+  <ul>
+    <li>Session IDs sufficiently random; regenerate session tokens on login.</li>
+    <li>Idle session timeout; absolute session timeout; destroy sessions on tampering signs.</li>
+    <li>Invalidate session after logout; logout button on every page.</li>
+    <li>Use <code>HttpOnly</code> and <code>Secure</code> cookie flags; set correct domain/path/expiration.</li>
+  </ul>
+
+  <p><strong>Input &amp; Output Handling:</strong></p>
+  <ul>
+    <li>Contextual output encoding; prefer whitelists over blacklists.</li>
+    <li>Use parameterised SQL queries; CSRF tokens in forms.</li>
+    <li>Set encoding for your application; validate uploaded files.</li>
+    <li>Use <code>nosniff</code> header for uploaded content; validate input source.</li>
+    <li>Use <code>X-Frame-Options</code>; use CSP / <code>X-XSS-Protection</code> headers.</li>
+  </ul>
+
+  <p><strong>Access Control:</strong></p>
+  <ul>
+    <li>Apply access control checks consistently; principle of least privilege.</li>
+    <li>Don't use direct object references for access control checks.</li>
+    <li>Don't use unvalidated forwards or redirects.</li>
+  </ul>
+</section>
+
+<!-- ===================== SECTION 12: PHP ===================== -->
+<section id="php" class="yellow">
+  <div class="sec-tag">Section 12</div>
+  <h2>PHP Security Best Practices</h2>
+
+  <h3>Configuration</h3>
+  <ul>
+    <li>Set <code>register_globals = Off</code> in PHP configuration.</li>
+    <li>Enable all error reporting for development: <code>&lt;?php error_reporting(E_ALL); ?&gt;</code></li>
+    <li>Avoid file uploads where possible; disable in <code>php.ini</code>: <code>file_uploads = Off</code></li>
+  </ul>
+
+  <h3>Dangerous Functions — Be Very Careful</h3>
+  <div class="callout danger">If an attacker can control the string passed to any of these, they can execute arbitrary code:</div>
+  <div class="chips">
+    <span class="chip hi">eval()</span>
+    <span class="chip hi">exec()</span>
+    <span class="chip hi">include()</span>
+    <span class="chip hi">passthru()</span>
+    <span class="chip hi">popen()</span>
+    <span class="chip hi">preg_replace() with /e</span>
+    <span class="chip hi">require()</span>
+    <span class="chip hi">system()</span>
+    <span class="chip hi">backtick operator ``</span>
+  </div>
+
+  <h3>PHP Sanitisation Functions</h3>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Function</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>strip_tags($str)</code></td><td>Returns string with all HTML/PHP tags removed. You can specify allowed tags as exceptions.</td></tr>
+      <tr><td><code>htmlentities($str, ENT_QUOTES)</code></td><td>Converts <code>&amp;</code>, quotes, <code>&lt;</code>, <code>&gt;</code> into HTML entities (<code>&amp;amp;</code>, <code>&amp;lt;</code>, etc.). The <code>ENT_QUOTES</code> flag also escapes single quotes.</td></tr>
+      <tr><td><code>escapeshellcmd($str)</code></td><td>Escapes characters that could be used to inject shell commands: <code>#&amp;;`|*?~&lt;&gt;^()[]{}$\</code>, <code>\x0A</code>, <code>\xFF</code>. Single and double quotes escaped only if unpaired.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Resources (from lecture)</h3>
+  <ul>
+    <li><strong>OWASP</strong> — owasp.org (web app security)</li>
+    <li><strong>PHP Manual</strong> — security chapter in official docs</li>
+    <li><strong>DVWA</strong> (Damn Vulnerable Web Application) — intentionally insecure app to practice on</li>
+    <li><strong>OWASP PHP Security Cheat Sheet</strong></li>
+    <li><strong>iniscan</strong> — php.ini scanner for security best practices</li>
+    <li><strong>Kali Linux</strong> — penetration testing distro</li>
+    <li><strong>Observatory by Mozilla</strong> — online security checker</li>
+    <li><strong>versionscan</strong> — PHP version vulnerability scanner</li>
+    <li><strong>Roave Security Advisories</strong> — ensures no installed dependencies have known vulnerabilities</li>
+    <li><strong>OWASP ZAP</strong> (Zed Attack Proxy) — free security testing tool</li>
+    <li><strong>SensioLabs Security</strong> — checks PHP projects for known issues</li>
+  </ul>
+</section>
+
+<!-- ===================== QUICK SUMMARY ===================== -->
+<section>
+  <div class="sec-tag">Quick Recap</div>
+  <h2>Everything in One Glance</h2>
+  <div class="grid2">
+    <div class="mini-card">
+      <strong>Output Safety</strong>
+      Escape metacharacters. Declare charset. Don't send comments. Use timeouts. Minimize error detail to users.
+    </div>
+    <div class="mini-card">
+      <strong>HTTP</strong>
+      GET = no side effects. POST for sensitive/actions. Use HTTPS. Status: 2xx=ok, 4xx=client error.
+    </div>
+    <div class="mini-card">
+      <strong>Cookies</strong>
+      Always set: <code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code>. Short expiry. Invalidate on logout.
+    </div>
+    <div class="mini-card">
+      <strong>Sessions</strong>
+      128-bit CSPRNG ID. New session on login. Idle + absolute timeout. Destroy on logout server-side.
+    </div>
+    <div class="mini-card">
+      <strong>XSS</strong>
+      Escape output (primary). HttpOnly cookies. CSP header. Input filter (secondary). Attacker fools CLIENT.
+    </div>
+    <div class="mini-card">
+      <strong>CSRF</strong>
+      Secret token + SameSite cookie (best combo). Check Origin header. Re-auth for critical ops. Attacker fools SERVER.
+    </div>
+    <div class="mini-card">
+      <strong>Hardening Headers</strong>
+      CSP, HSTS, X-Content-Type-Options: nosniff, X-Frame-Options, X-XSS-Protection.
+    </div>
+    <div class="mini-card">
+      <strong>Redirection &amp; Caching</strong>
+      Validate redirect destinations. Use mapping not raw URLs. Disable caching: <code>Cache-Control: no-store</code>.
+    </div>
+    <div class="mini-card">
+      <strong>Trust</strong>
+      Server must NEVER trust client-side validation. Enforce everything server-side. SOP restricts JS cross-origin access.
+    </div>
+    <div class="mini-card">
+      <strong>Vuln Lists</strong>
+      CVE = specific bug. CWE = type of bug. CVSS = severity score 0–10. Use OWASP Top 10 (web) or CWE Top 25 (general).
+    </div>
+    <div class="mini-card">
+      <strong>CERT Top 10 Practices</strong>
+      Validate input. Default deny. Least privilege. Defence in depth. Keep simple. Sanitize outputs.
+    </div>
+    <div class="mini-card">
+      <strong>PHP</strong>
+      register_globals=Off. Avoid eval/exec/system with untrusted input. Use strip_tags, htmlentities, escapeshellcmd.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Secure Software Design · Lectures 9–12 · Based on notes by Dr. David A. Wheeler · All rights reserved to original author.
+</footer>
+
+</body>
+</html>
