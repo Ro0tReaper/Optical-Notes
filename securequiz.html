@@ -3445,3 +3445,317 @@
     <div class="explanation show"><strong>Lines 3 and 4 are vulnerable.</strong> FILTER_VALIDATE_URL only checks URL format, not the destination. Attacker can use <code>http://127.0.0.1</code>, <code>http://169.254.169.254/latest/meta-data/</span> (AWS metadata), or <code>file:///etc/passwd</code>. Fix: whitelist allowed domains, block private IPs, use cURL with restrictions.</div>
   </div>
 </div>
+<div class="code-block"><span class="variable">$xml</span> = <span class="variable">$_POST</span>[<span class="string">'xml_data'</span>];                             <span class="comment">// Line 1</span>
+<span class="variable">$doc</span> = <span class="keyword">new</span> <span class="function">SimpleXMLElement</span>(<span class="variable">$xml</span>);                   <span class="comment">// Line 2</span>
+<span class="keyword">foreach</span> (<span class="variable">$doc</span>-><span class="variable">item</span> <span class="keyword">as</span> <span class="variable">$item</span>) {                         <span class="comment">// Line 3</span>
+    <span class="keyword">echo</span> <span class="variable">$item</span>-><span class="variable">name</span> . <span class="string">"&lt;br&gt;"</span>;                          <span class="comment">// Line 4</span>
+}                                                          <span class="comment">// Line 5</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Vulnerable Line</div>
+    <div class="code-block"><span class="variable">$doc</span> = <span class="keyword">new</span> <span class="function">SimpleXMLElement</span>(<span class="variable">$xml</span>);                   <span class="comment">// Line 2 - VULNERABLE (XXE enabled by default)</span></div>
+    <div class="explanation show"><strong>Line 2 is vulnerable.</strong> SimpleXMLElement processes external entities by default. Attacker submits: <code>&lt;!DOCTYPE foo [&lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;]&gt;&lt;root&gt;&amp;xxe;&lt;/root&gt;</code> to read local files. Fix: use <code>libxml_disable_entity_loader(true)</code> before parsing (PHP &lt;8.0), or use LIBXML_NOENT flag. PHP 8.0+ disables external entities by default.</div>
+  </div>
+</div>
+
+<div class="q-card" data-type="findvuln">
+  <div class="q-num">QUESTION 28 <span class="diff diff-hard">HARD</span></div>
+  <span class="topic-tag">Race Condition (TOCTOU)</span>
+  <div class="q-text">Which lines create a race condition vulnerability?</div>
+  <div class="code-block"><span class="variable">$stmt</span> = <span class="variable">$conn</span>-><span class="function">prepare</span>(<span class="string">"SELECT used FROM tokens WHERE token=? AND used=0"</span>); <span class="comment">// Line 1</span>
+<span class="variable">$stmt</span>-><span class="function">bind_param</span>(<span class="string">"s"</span>, <span class="variable">$token</span>);                            <span class="comment">// Line 2</span>
+<span class="variable">$stmt</span>-><span class="function">execute</span>();                                           <span class="comment">// Line 3</span>
+<span class="variable">$row</span> = <span class="variable">$stmt</span>-><span class="function">get_result</span>()-><span class="function">fetch_assoc</span>();              <span class="comment">// Line 4</span>
+<span class="keyword">if</span> (<span class="variable">$row</span>) {                                                <span class="comment">// Line 5</span>
+    <span class="variable">$conn</span>-><span class="function">query</span>(<span class="string">"UPDATE tokens SET used=1 WHERE token='$token'"</span>); <span class="comment">// Line 6</span>
+    <span class="keyword">echo</span> <span class="string">"Token used successfully"</span>;                         <span class="comment">// Line 7</span>
+}                                                          <span class="comment">// Line 8</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Vulnerable Lines</div>
+    <div class="code-block"><span class="variable">$row</span> = <span class="variable">$stmt</span>-><span class="function">get_result</span>()-><span class="function">fetch_assoc</span>();              <span class="comment">// Line 4 - CHECK</span>
+<span class="keyword">if</span> (<span class="variable">$row</span>) {                                                <span class="comment">// Line 5 - TIME GAP begins</span>
+    <span class="variable">$conn</span>-><span class="function">query</span>(<span class="string">"UPDATE tokens SET used=1 WHERE token='$token'"</span>); <span class="comment">// Line 6 - USE (also has SQLi!)</span></div>
+    <div class="explanation show"><strong>Lines 4-6 create a TOCTOU race condition.</strong> Between the SELECT (check) and UPDATE (use), another concurrent request can pass the same check. Two requests both see used=0, both proceed. Also, Line 6 has SQL injection (string interpolation). Fix: use atomic UPDATE with WHERE used=0 and check affected_rows, or SELECT FOR UPDATE with transactions.</div>
+  </div>
+</div>
+
+<div class="q-card" data-type="findvuln">
+  <div class="q-num">QUESTION 29 <span class="diff diff-hard">HARD</span></div>
+  <span class="topic-tag">DOM-Based XSS</span>
+  <div class="q-text">Which line is vulnerable?</div>
+  <div class="code-block"><span class="variable">$searchQuery</span> = <span class="variable">$_GET</span>[<span class="string">'q'</span>];                            <span class="comment">// Line 1</span>
+<span class="variable">$safeQuery</span> = <span class="function">htmlspecialchars</span>(<span class="variable">$searchQuery</span>, ENT_QUOTES, <span class="string">'UTF-8'</span>); <span class="comment">// Line 2</span>
+<span class="keyword">echo</span> <span class="string">"&lt;input type='text' value='$safeQuery'&gt;"</span>;        <span class="comment">// Line 3</span>
+<span class="keyword">echo</span> <span class="string">"&lt;div id='results'&gt;&lt;/div&gt;"</span>;                    <span class="comment">// Line 4</span>
+<span class="keyword">echo</span> <span class="string">"&lt;script&gt;document.getElementById('results').innerHTML='"</span> . <span class="variable">$searchQuery</span> . <span class="string">"'&lt;/script&gt;"</span>; <span class="comment">// Line 5</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Vulnerable Lines</div>
+    <div class="code-block"><span class="keyword">echo</span> <span class="string">"&lt;input type='text' value='$safeQuery'&gt;"</span>;        <span class="comment">// Line 3 - XSS if escaped quote breaks out of attribute</span>
+<span class="keyword">echo</span> <span class="string">"&lt;script&gt;document.getElementById('results').innerHTML='"</span> . <span class="variable">$searchQuery</span> . <span class="string">"'&lt;/script&gt;"</span>; <span class="comment">// Line 5 - CRITICALLY VULNERABLE (raw in JS context!)</span></div>
+    <div class="explanation show"><strong>Lines 3 and 5 are vulnerable.</strong> Line 3: htmlspecialchars with ENT_QUOTES escapes quotes, BUT single quotes in the HTML attribute still break out if the attribute uses single quotes. Line 5 is the worst: raw unescaped user input is placed directly inside a JavaScript string that sets innerHTML. An attacker inputs <code>');alert(1);//</code> to execute arbitrary JS. Fix: use json_encode() for JS contexts, and always use double quotes with ENT_QUOTES for HTML attributes.</div>
+  </div>
+</div>
+
+<div class="q-card" data-type="findvuln">
+  <div class="q-num">QUESTION 30 <span class="diff diff-hard">HARD</span></div>
+  <span class="topic-tag">CORS Misconfiguration</span>
+  <div class="q-text">Which line is vulnerable?</div>
+  <div class="code-block"><span class="variable">$origin</span> = <span class="variable">$_SERVER</span>[<span class="string">'HTTP_ORIGIN'</span>] ?? <span class="string">''</span>;             <span class="comment">// Line 1</span>
+<span class="function">header</span>(<span class="string">"Access-Control-Allow-Origin: $origin"</span>);          <span class="comment">// Line 2</span>
+<span class="function">header</span>(<span class="string">"Access-Control-Allow-Credentials: true"</span>);       <span class="comment">// Line 3</span>
+<span class="keyword">echo</span> <span class="function">json_encode</span>(<span class="variable">$userData</span>);                         <span class="comment">// Line 4</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Vulnerable Lines</div>
+    <div class="code-block"><span class="function">header</span>(<span class="string">"Access-Control-Allow-Origin: $origin"</span>);          <span class="comment">// Line 2 - Reflects ANY origin</span>
+<span class="function">header</span>(<span class="string">"Access-Control-Allow-Credentials: true"</span>);       <span class="comment">// Line 3 - Allows cookies with reflected origin</span></div>
+    <div class="explanation show"><strong>Lines 2 and 3 together are critically vulnerable.</strong> Reflecting the Origin header back with Allow-Credentials:true means ANY website can make authenticated cross-origin requests and read the response data. An evil.com page can fetch user data with their cookies. Fix: whitelist specific allowed origins, never reflect Origin with credentials.</div>
+  </div>
+</div>
+
+<!-- Find Vuln 31-38 Expert Level -->
+<div class="q-card" data-type="findvuln">
+  <div class="q-num">QUESTION 31 <span class="diff diff-expert">EXPERT</span></div>
+  <span class="topic-tag">backtick + filter_var Bypass</span>
+  <div class="q-text">Which line is vulnerable?</div>
+  <div class="code-block"><span class="variable">$email</span> = <span class="function">filter_var</span>(<span class="variable">$_POST</span>[<span class="string">'email'</span>], FILTER_VALIDATE_EMAIL); <span class="comment">// Line 1</span>
+<span class="keyword">if</span> (<span class="variable">$email</span>) {                                             <span class="comment">// Line 2</span>
+    <span class="variable">$domain</span> = <span class="function">explode</span>(<span class="string">'@'</span>, <span class="variable">$email</span>)[1];                <span class="comment">// Line 3</span>
+    <span class="variable">$output</span> = `<span class="function">dig</span> <span class="variable">$domain</span> MX`;                            <span class="comment">// Line 4</span>
+    <span class="keyword">echo</span> <span class="function">htmlspecialchars</span>(<span class="variable">$output</span>);                 <span class="comment">// Line 5</span>
+}                                                          <span class="comment">// Line 6</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Vulnerable Line</div>
+    <div class="code-block"><span class="variable">$output</span> = `<span class="function">dig</span> <span class="variable">$domain</span> MX`;                            <span class="comment">// Line 4 - VULNERABLE (command injection via email domain)</span></div>
+    <div class="explanation show"><strong>Line 4 is vulnerable.</strong> FILTER_VALIDATE_EMAIL only validates email format. An attacker uses: <code>test@example.com;cat /etc/passwd</code> — this passes FILTER_VALIDATE_EMAIL (because the part before ; is a valid-looking email prefix in some interpretations) or uses creative formatting. Even with strict validation, the domain portion is passed to backticks without escapeshellarg(). Fix: whitelist allowed domains, use escapeshellarg(), or avoid shell commands entirely.</div>
+  </div>
+</div>
+
+<div class="q-card" data-type="findvuln">
+  <div class="q-num">QUESTION 32 <span class="diff diff-expert">EXPERT</span></div>
+  <span class="topic-tag">preg_replace /e</span>
+  <div class="q-text">Which line is vulnerable?</div>
+  <div class="code-block"><span class="variable">$input</span> = <span class="variable">$_POST</span>[<span class="string">'content'</span>];                          <span class="comment">// Line 1</span>
+<span class="variable">$input</span> = <span class="function">htmlspecialchars</span>(<span class="variable">$input</span>, ENT_QUOTES);        <span class="comment">// Line 2</span>
+<span class="variable">$output</span> = <span class="function">preg_replace</span>(<span class="string">'/\[b\](.*?)\[\/b\]/e'</span>, <span class="string">'"&lt;b&gt;$1&lt;/b&gt;"'</span>, <span class="variable">$input</span>); <span class="comment">// Line 3</span>
+<span class="keyword">echo</span> <span class="variable">$output</span>;                                         <span class="comment">// Line 4</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Vulnerable Line</div>
+    <div class="code-block"><span class="variable">$output</span> = <span class="function">preg_replace</span>(<span class="string">'/\[b\](.*?)\[\/b\]/e'</span>, <span class="string">'"&lt;b&gt;$1&lt;/b&gt;"'</span>, <span class="variable">$input</span>); <span class="comment">// Line 3 - VULNERABLE (/e executes replacement as PHP!)</span></div>
+    <div class="explanation show"><strong>Line 3 is critically vulnerable.</strong> The /e modifier treats the replacement string as PHP code. Although input was escaped for HTML on Line 2, the /e modifier evaluates the replacement BEFORE the HTML output context. Attacker injects: <code>[b]{${system('whoami')}}[/b]</code> — the $1 replacement becomes PHP code executed by eval(). Note: htmlspecialchars doesn't prevent this because /e operates at the PHP level, not HTML. Fix: use preg_replace_callback().</div>
+  </div>
+</div>
+
+<div class="q-card" data-type="findvuln">
+  <div class="q-num">QUESTION 33 <span class="diff diff-expert">EXPERT</span></div>
+  <span class="topic-tag">LDAP Injection</span>
+  <div class="q-text">Which line is vulnerable?</div>
+  <div class="code-block"><span class="variable">$uid</span> = <span class="function">trim</span>(<span class="variable">$_POST</span>[<span class="string">'username'</span>]);                     <span class="comment">// Line 1</span>
+<span class="variable">$uid</span> = <span class="function">htmlspecialchars</span>(<span class="variable">$uid</span>, ENT_QUOTES);           <span class="comment">// Line 2</span>
+<span class="variable">$filter</span> = <span class="string">"(uid=$uid)"</span>;                                 <span class="comment">// Line 3</span>
+<span class="variable">$result</span> = <span class="function">ldap_search</span>(<span class="variable">$ldap</span>, <span class="string">"dc=example,dc=com"</span>, <span class="variable">$filter</span>); <span class="comment">// Line 4</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Vulnerable Lines</div>
+    <div class="code-block"><span class="variable">$uid</span> = <span class="function">htmlspecialchars</span>(<span class="variable">$uid</span>, ENT_QUOTES);           <span class="comment">// Line 2 - HTML escaping is NOT LDAP escaping!</span>
+<span class="variable">$filter</span> = <span class="string">"(uid=$uid)"</span>;                                 <span class="comment">// Line 3 - Unescaped user input in LDAP filter</span></div>
+    <div class="explanation show"><strong>Lines 2 and 3 are vulnerable.</strong> htmlspecialchars escapes HTML metacharacters, NOT LDAP metacharacters. LDAP has its own special characters: (, ), *, \, and null byte. Attacker injects: <code>admin)(|(uid=*</code> which becomes <code>(uid=admin)(|(uid=*))</code> — always true, bypasses auth. Fix: use ldap_escape() or escape (, ), *, \, \x00 manually.</div>
+  </div>
+</div>
+
+<div class="q-card" data-type="findvuln">
+  <div class="q-num">QUESTION 34 <span class="diff diff-expert">EXPERT</span></div>
+  <span class="topic-tag">XPath Injection</span>
+  <div class="q-text">Which line is vulnerable?</div>
+  <div class="code-block"><span class="variable">$user</span> = <span class="function">filter_input</span>(INPUT_POST, <span class="string">'user'</span>, FILTER_SANITIZE_STRING); <span class="comment">// Line 1</span>
+<span class="variable">$pass</span> = <span class="variable">$_POST</span>[<span class="string">'pass'</span>];                                <span class="comment">// Line 2</span>
+<span class="variable">$xpath</span> = <span class="string">"//user[name='$user' and password='$pass']"</span>;     <span class="comment">// Line 3</span>
+<span class="variable">$result</span> = <span class="variable">$xml</span>-><span class="function">xpath</span>(<span class="variable">$xpath</span>);                         <span class="comment">// Line 4</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Vulnerable Lines</div>
+    <div class="code-block"><span class="variable">$pass</span> = <span class="variable">$_POST</span>[<span class="string">'pass'</span>];                                <span class="comment">// Line 2 - No sanitization</span>
+<span class="variable">$xpath</span> = <span class="string">"//user[name='$user' and password='$pass']"</span>;     <span class="comment">// Line 3 - XPath injection via unescaped single quotes</span></div>
+    <div class="explanation show"><strong>Lines 2 and 3 are vulnerable.</strong> FILTER_SANITIZE_STRING on Line 1 doesn't escape single quotes for XPath context. Attacker injects: <code>' or '1'='1</code> in the user field, making the XPath: <code>//user[name='' or '1'='1' and password='...']</code> — always true. Fix: escape single quotes by doubling them (''), or use a proper XPath escaping function.</div>
+  </div>
+</div>
+
+<div class="q-card" data-type="findvuln">
+  <div class="q-num">QUESTION 35 <span class="diff diff-expert">EXPERT</span></div>
+  <span class="topic-tag">Variable Variable Injection</span>
+  <div class="q-text">Which line is vulnerable?</div>
+  <div class="code-block"><span class="variable">$field</span> = <span class="variable">$_GET</span>[<span class="string">'field'</span>];                              <span class="comment">// Line 1</span>
+<span class="variable">$value</span> = <span class="variable">$_GET</span>[<span class="string">'value'</span>];                             <span class="comment">// Line 2</span>
+<span class="keyword">if</span> (<span class="function">in_array</span>(<span class="variable">$field</span>, [<span class="string">'name'</span>, <span class="string">'email'</span>, <span class="string">'phone'</span>])) {     <span class="comment">// Line 3</span>
+    <span class="variable">$$field</span> = <span class="variable">$value</span>;                                   <span class="comment">// Line 4</span>
+}                                                          <span class="comment">// Line 5</span>
+<span class="keyword">echo</span> <span class="string">"Name: $name, Email: $email"</span>;                     <span class="comment">// Line 6</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Vulnerable Line</div>
+    <div class="code-block">    <span class="variable">$$field</span> = <span class="variable">$value</span>;                                   <span class="comment">// Line 4 - VULNERABLE (variable variable)</span></div>
+    <div class="explanation show"><strong>Line 4 is vulnerable.</strong> Although Line 3 uses in_array as a whitelist, in_array by default uses loose comparison. If field=<code>name</code> (integer 0), it would match the first string element due to type juggling. More critically, $$field creates a variable variable - if the whitelist is bypassed, the attacker can set ANY variable in scope (e.g., field=_SESSION to overwrite session data). Fix: add true as third parameter to in_array for strict comparison, and avoid variable variables with user input.</div>
+  </div>
+</div>
+
+<div class="q-card" data-type="findvuln">
+  <div class="q-num">QUESTION 36 <span class="diff diff-expert">EXPERT</span></div>
+  <span class="topic-tag">register_globals Emulation</span>
+  <div class="q-text">Which line is vulnerable?</div>
+  <div class="code-block"><span class="keyword">foreach</span> (<span class="variable">$_REQUEST</span> <span class="keyword">as</span> <span class="variable">$key</span> => <span class="variable">$val</span>) {                   <span class="comment">// Line 1</span>
+    <span class="variable">$$key</span> = <span class="variable">$val</span>;                                       <span class="comment">// Line 2</span>
+}                                                          <span class="comment">// Line 3</span>
+<span class="keyword">if</span> (<span class="variable">$authenticated</span>) {                                 <span class="comment">// Line 4</span>
+    <span class="keyword">echo</span> <span class="string">"Secret admin area"</span>;                           <span class="comment">// Line 5</span>
+}                                                          <span class="comment">// Line 6</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Vulnerable Line</div>
+    <div class="code-block">    <span class="variable">$$key</span> = <span class="variable">$val</span>;                                       <span class="comment">// Line 2 - CRITICALLY VULNERABLE (register_globals emulation)</span></div>
+    <div class="explanation show"><strong>Line 2 is critically vulnerable.</strong> This recreates the infamous register_globals feature (removed in PHP 5.4). An attacker sends <code>?authenticated=1</code> in the query string, and Line 2 creates <code>$authenticated = 1</code>, bypassing the check on Line 4. This is essentially the same as register_globals. Fix: NEVER extract request variables into local scope. Access them directly from $_GET/$_POST.</div>
+  </div>
+</div>
+
+<div class="q-card" data-type="findvuln">
+  <div class="q-num">QUESTION 37 <span class="diff diff-expert">EXPERT</span></div>
+  <span class="topic-tag">Double Encoding Bypass</span>
+  <div class="q-text">Which line is vulnerable?</div>
+  <div class="code-block"><span class="variable">$input</span> = <span class="variable">$_GET</span>[<span class="string">'data'</span>];                                <span class="comment">// Line 1</span>
+<span class="variable">$input</span> = <span class="function">urldecode</span>(<span class="variable">$input</span>);                            <span class="comment">// Line 2</span>
+<span class="variable">$input</span> = <span class="function">htmlspecialchars</span>(<span class="variable">$input</span>, ENT_QUOTES, <span class="string">'UTF-8'</span>); <span class="comment">// Line 3</span>
+<span class="keyword">echo</span> <span class="string">"&lt;div&gt;$input&lt;/div&gt;"</span>;                           <span class="comment">// Line 4</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Vulnerable Line</div>
+    <div class="code-block"><span class="variable">$input</span> = <span class="function">urldecode</span>(<span class="variable">$input</span>);                            <span class="comment">// Line 2 - VULNERABLE (manual decode before escaping)</span></div>
+    <div class="explanation show"><strong>Line 2 is vulnerable.</strong> PHP already automatically decodes URL-encoded data in $_GET. Calling urldecode() AGAIN causes double-decoding. Attacker sends: <code>%253Cscript%253E</code> — PHP decodes once to <code>%3Cscript%3E</code>, then urldecode() on Line 2 decodes again to <code>&lt;script&gt;</code>. htmlspecialchars on Line 3 then sees the already-decoded tags. Fix: never call urldecode() on $_GET/$_POST data — PHP already handles this.</div>
+  </div>
+</div>
+
+<div class="q-card" data-type="findvuln">
+  <div class="q-num">QUESTION 38 <span class="diff diff-expert">EXPERT</span></div>
+  <span class="topic-tag">Multi-Vulnerability Audit</span>
+  <div class="q-text">Identify ALL vulnerable lines in this code:</div>
+  <div class="code-block"><span class="function">session_start</span>();                                            <span class="comment">// Line 1</span>
+<span class="variable">$id</span> = <span class="variable">$_GET</span>[<span class="string">'id'</span>];                                       <span class="comment">// Line 2</span>
+<span class="variable">$sql</span> = <span class="string">"SELECT * FROM users WHERE id=$id"</span>;               <span class="comment">// Line 3</span>
+<span class="variable">$user</span> = <span class="variable">$conn</span>-><span class="function">query</span>(<span class="variable">$sql</span>)-><span class="function">fetch_assoc</span>();             <span class="comment">// Line 4</span>
+<span class="function">setcookie</span>(<span class="string">"role"</span>, <span class="variable">$user</span>[<span class="string">'role'</span>]);                    <span class="comment">// Line 5</span>
+<span class="keyword">echo</span> <span class="string">"Welcome, {$user['name']}!"</span>;                      <span class="comment">// Line 6</span>
+<span class="keyword">if</span> (<span class="variable">$user</span>[<span class="string">'role'</span>] === <span class="string">'admin'</span>) {                   <span class="comment">// Line 7</span>
+    <span class="keyword">echo</span> <span class="string">"Admin Panel"</span>;                                 <span class="comment">// Line 8</span>
+}                                                          <span class="comment">// Line 9</span></div>
+  <button class="show-btn" onclick="toggleAnswer(this)"><span class="arrow">▼</span> Show Answer</button>
+  <div class="answer-area">
+    <div class="answer-label">✗ Multiple Vulnerable Lines</div>
+    <div class="code-block"><span class="variable">$sql</span> = <span class="string">"SELECT * FROM users WHERE id=$id"</span>;               <span class="comment">// Line 3 - SQL INJECTION (no prepared statement)</span>
+<span class="variable">$user</span> = <span class="variable">$conn</span>-><span class="function">query</span>(<span class="variable">$sql</span>)-><span class="function">fetch_assoc</span>();             <span class="comment">// Line 4 - No error handling (info disclosure on failure)</span>
+<span class="function">setcookie</span>(<span class="string">"role"</span>, <span class="variable">$user</span>[<span class="string">'role'</span>]);                    <span class="comment">// Line 5 - COOKIE TAMPERING (role in client-side cookie, no Secure/HttpOnly)</span>
+<span class="keyword">echo</span> <span class="string">"Welcome, {$user['name']}!"</span>;                      <span class="comment">// Line 6 - REFLECTED XSS (no output escaping)</span>
+<span class="keyword">if</span> (<span class="variable">$user</span>[<span class="string">'role'</span>] === <span class="string">'admin'</span>) {                   <span class="comment">// Line 7 - CLIENT-SIDE TRUST (role checked from DB result but also in cookie on Line 5)</span></div>
+    <div class="explanation show"><strong>5 vulnerabilities identified:</strong><br>
+    <strong>Line 3 — SQL Injection:</strong> $id directly interpolated, no prepared statement.<br>
+    <strong>Line 4 — No error handling:</strong> If query fails, error message exposes DB structure.<br>
+    <strong>Line 5 — Cookie tampering:</strong> Role stored in cookie without Secure/HttpOnly/SameSite. User can modify role to "admin".<br>
+    <strong>Line 6 — Reflected XSS:</strong> User name from DB echoed without htmlspecialchars(). If name contains script tags (from a previous injection), it executes.<br>
+    <strong>Line 7 — Authorization bypass:</strong> While this line reads from DB, Line 5 already put the role in a cookie, meaning an attacker who tampers the cookie can bypass this check on subsequent requests where the code might read from cookie instead of DB.<br><br>
+    <strong>Full fix:</strong> Prepared statements for SQL, error logging (not display), HttpOnly+Secure cookies, server-side session for role, htmlspecialchars on all output.</div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<footer>
+  Secure Programming — Comprehensive Exam Quiz &nbsp;·&nbsp; 114 Questions &nbsp;·&nbsp; All Lectures Covered &nbsp;·&nbsp; <strong>Good luck! 🎯</strong>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════
+// SCORE TRACKER
+// ═══════════════════════════════════════════════════
+let score = 0;
+let total = 0;
+
+// Count total MCQ questions
+document.querySelectorAll('[data-type="mcq"]').forEach(() => total++);
+
+const scoreVal = document.getElementById('scoreVal');
+const scoreTotal = document.getElementById('scoreTotal');
+const scoreFill = document.getElementById('scoreFill');
+
+scoreTotal.textContent = ' / ' + total;
+
+function updateScore() {
+  scoreVal.textContent = score;
+  scoreFill.style.width = (total > 0 ? (score / total * 100) : 0) + '%';
+}
+
+// ═══════════════════════════════════════════════════
+// MCQ CHECK
+// ═══════════════════════════════════════════════════
+function checkMCQ(el) {
+  const card = el.closest('.q-card');
+  if (card.dataset.answered) return;
+  card.dataset.answered = 'true';
+
+  const options = card.querySelectorAll('.option');
+  const isCorrect = el.hasAttribute('data-correct');
+
+  options.forEach(opt => {
+    opt.style.pointerEvents = 'none';
+    if (opt.hasAttribute('data-correct')) {
+      opt.classList.add('correct');
+    }
+  });
+
+  if (!isCorrect) {
+    el.classList.add('wrong');
+  } else {
+    score++;
+    updateScore();
+  }
+
+  const exp = card.querySelector('.explanation');
+  if (exp) exp.classList.add('show');
+}
+
+// ═══════════════════════════════════════════════════
+// TOGGLE ANSWER (Write Code / Find Vuln)
+// ═══════════════════════════════════════════════════
+function toggleAnswer(btn) {
+  btn.classList.toggle('open');
+  const area = btn.nextElementSibling;
+  if (area) {
+    area.classList.toggle('show');
+    btn.querySelector('.arrow').style.transform = area.classList.contains('show') ? 'rotate(180deg)' : '';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// ACTIVE NAV HIGHLIGHTING
+// ═══════════════════════════════════════════════════
+const sections = document.querySelectorAll('.sec-header, .sec-header[id]');
+const navLinks = document.querySelectorAll('.toc a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-100px 0px -60% 0px' });
+
+sections.forEach(sec => {
+  if (sec.id) observer.observe(sec);
+});
+</script>
+
+</body>
+</html>
