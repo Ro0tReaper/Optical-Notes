@@ -1,0 +1,27 @@
+</div>`).join('\n');`
+  }).join('');
+}
+function toggleVuln(i,btn){
+  const el=document.getElementById('vuln-exp-'+i),codeEl=document.getElementById('vuln-code-'+i),isOpen=el.classList.contains('open');
+  el.classList.toggle('open');btn.classList.toggle('open');
+  btn.innerHTML=isOpen?'<i class="fas fa-chevron-down"></i> Show Vulnerable Line':'<i class="fas fa-chevron-down"></i> Hide Vulnerable Line';
+  if(!isOpen){
+    scores.vuln.c++;
+    const q=vulnData[i],lines=codeEl.innerHTML.split('\n');
+    if(lines[q.vl]){
+      lines[q.vl]=`<span class="vuln-line"><span class="line-num">${q.vl+1}</span>${lines[q.vl].replace(/<span class="line-num">(\d+)<\/span>/,'').replace(/<span class="code-block">/g,'')}</span>`;
+    }
+    codeEl.innerHTML=lines.join('\n');
+    updateScores();
+  }
+}
+function resetSec(sec){
+  if(sec==='mcq'){scores.mcq={c:0,i:0,a:0};renderMCQ();}
+  else if(sec==='code'){scores.code.c=0;renderCode();}
+  else if(sec==='vuln'){scores.vuln.c=0;renderVuln();}
+  updateScores();
+}
+renderMCQ();renderCode();renderVuln();updateScores();
+</script>
+</body>
+</html>
