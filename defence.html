@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AppSec & Network Defense Quiz</title>
+<style>
+  :root{
+    --bg:#0f1724;
+    --card:#16233a;
+    --accent:#2dd4bf;
+    --accent2:#60a5fa;
+    --text:#e6eef8;
+    --muted:#9fb3c8;
+    --correct:#22c55e;
+    --wrong:#ef4444;
+    --warn:#f59e0b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', Tahoma, Verdana, sans-serif;
+    background:linear-gradient(135deg,#0f1724 0%, #1a2332 100%);
+    color:var(--text);
+    padding:20px;
+    line-height:1.55;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:28px 20px 18px;
+  }
+  header h1{
+    margin:0;
+    font-size:2.1em;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  header p{color:var(--muted);margin-top:8px;}
+
+  .progress-bar{
+    background:#1f2c44;
+    border-radius:10px;
+    height:10px;
+    overflow:hidden;
+    margin:18px 0 28px;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    width:0%;
+    transition:width .3s ease;
+  }
+
+  .section-title{
+    margin:34px 0 14px;
+    padding-bottom:8px;
+    border-bottom:2px solid #2a3b56;
+    color:var(--accent2);
+    font-size:1.3em;
+  }
+
+  .q-card{
+    background:var(--card);
+    border:1px solid #233453;
+    border-radius:14px;
+    padding:20px 22px;
+    margin-bottom:18px;
+    box-shadow:0 4px 14px rgba(0,0,0,.25);
+  }
+  .q-tag{
+    display:inline-block;
+    font-size:.72em;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    padding:3px 10px;
+    border-radius:999px;
+    background:#233453;
+    color:var(--accent);
+    margin-bottom:10px;
+  }
+  .q-tag.scenario{color:var(--warn);background:#2c2417;}
+  .q-text{font-size:1.05em;font-weight:600;margin-bottom:14px;}
+  .scenario-body{
+    font-size:.97em;
+    color:var(--muted);
+    background:#101c30;
+    border-left:3px solid var(--accent2);
+    padding:12px 14px;
+    border-radius:8px;
+    margin-bottom:14px;
+    white-space:pre-line;
+  }
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .opt{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    background:#101c30;
+    border:1px solid #243450;
+    border-radius:10px;
+    padding:10px 14px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .opt:hover{border-color:var(--accent2);}
+  .opt input{margin-top:3px;cursor:pointer;}
+  .opt.selected{border-color:var(--accent2);background:#162840;}
+  .opt.correct{
+    border-color:var(--correct);
+    background:rgba(34,197,94,.12);
+  }
+  .opt.wrong{
+    border-color:var(--wrong);
+    background:rgba(239,68,68,.12);
+  }
+  .opt.disabled{cursor:default;}
+
+  .explain{
+    margin-top:12px;
+    padding:12px 14px;
+    border-radius:8px;
+    background:#101c30;
+    border:1px dashed #2a3b56;
+    font-size:.92em;
+    color:var(--muted);
+    display:none;
+  }
+  .explain.show{display:block;}
+  .explain b{color:var(--text);}
+
+  .check-btn{
+    margin-top:14px;
+    background:var(--accent);
+    color:#06281f;
+    border:none;
+    padding:8px 18px;
+    border-radius:8px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:.9em;
+  }
+  .check-btn:hover{opacity:.9;}
+  .check-btn:disabled{opacity:.4;cursor:default;}
+
+  .diff-pill{
+    display:inline-block;
+    font-size:.7em;
+    font-weight:700;
+    padding:2px 9px;
+    border-radius:999px;
+    margin-left:8px;
+    vertical-align:middle;
+  }
+  .diff-easy{background:rgba(34,197,94,.18);color:var(--correct);}
+  .diff-medium{background:rgba(245,158,11,.18);color:var(--warn);}
+  .diff-hard{background:rgba(239,68,68,.18);color:var(--wrong);}
+
+  .score-box{
+    position:sticky;
+    top:10px;
+    background:var(--card);
+    border:1px solid #233453;
+    border-radius:14px;
+    padding:14px 18px;
+    text-align:center;
+    margin-bottom:10px;
+    font-weight:700;
+    font-size:1.05em;
+    z-index:10;
+  }
+  .score-box span{color:var(--accent);}
+
+  .final-btn{
+    display:block;
+    width:100%;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    color:#0a1622;
+    border:none;
+    padding:14px;
+    border-radius:12px;
+    font-weight:800;
+    font-size:1.05em;
+    cursor:pointer;
+    margin:30px 0 10px;
+  }
+  .final-result{
+    text-align:center;
+    font-size:1.15em;
+    padding:16px;
+    border-radius:12px;
+    background:var(--card);
+    display:none;
+    border:1px solid #233453;
+  }
+  .final-result.show{display:block;}
+
+  footer{text-align:center;color:var(--muted);font-size:.8em;margin:30px 0 10px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>AppSec & Network Defense Quiz</h1>
+    <p>OWASP Top 10 Web Vulnerabilities · CIA Triad · Network Security Controls & Protocols</p>
+  </header>
+
+  <div class="score-box">
+    Score: <span id="scoreDisplay">0</span> / <span id="totalDisplay">15</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="section-title">Part 1 — Multiple Choice Questions (10)</div>
+
+  <!-- MCQ 1 -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag">MCQ 1</span>
+    <div class="q-text">1. A web app exposes <code>https://example.com/profile?user_id=123</code>. Changing the value to <code>124</code> reveals another user's private data with no extra check. Which OWASP Top 10 category does this fall under?</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q1" value="a"> A) Cryptographic Failures</label>
+      <label class="opt"><input type="radio" name="q1" value="b"> B) Broken Access Control (IDOR)</label>
+      <label class="opt"><input type="radio" name="q1" value="c"> C) Security Misconfiguration</label>
+      <label class="opt"><input type="radio" name="q1" value="d"> D) SSRF</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q1','b',this)">Check Answer</button>
+    <div class="explain" id="exp_q1">
+      <b>Correct answer: B.</b> This is a classic Insecure Direct Object Reference (IDOR), a form of Broken Access Control — the app trusts the user-supplied ID without verifying the requester owns that resource.
+    </div>
+  </div>
+
+  <!-- MCQ 2 -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag">MCQ 2</span>
+    <div class="q-text">2. A developer stores passwords like this: <code>base64.b64encode("admin123".encode())</code>. What is the core problem?</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q2" value="a"> A) Base64 is too slow for large databases</label>
+      <label class="opt"><input type="radio" name="q2" value="b"> B) Base64 is encoding, not encryption/hashing — it's trivially reversible</label>
+      <label class="opt"><input type="radio" name="q2" value="c"> C) Base64 only works with ASCII passwords</label>
+      <label class="opt"><input type="radio" name="q2" value="d"> D) Base64 requires a secret key that wasn't provided</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q2','b',this)">Check Answer</button>
+    <div class="explain" id="exp_q2">
+      <b>Correct answer: B.</b> Base64 is a reversible encoding scheme with no key and no cryptographic protection — anyone can decode it instantly. Passwords should be hashed with bcrypt/PBKDF2 (one-way, salted).
+    </div>
+  </div>
+
+  <!-- MCQ 3 -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag">MCQ 3</span>
+    <div class="q-text">3. Which input, submitted as a username, demonstrates a classic SQL injection authentication bypass against <code>SELECT * FROM users WHERE username='{input}' AND password='{input}'</code>?</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q3" value="a"> A) admin123</label>
+      <label class="opt"><input type="radio" name="q3" value="b"> B) {{7*7}}</label>
+      <label class="opt"><input type="radio" name="q3" value="c"> C) ' OR '1'='1</label>
+      <label class="opt"><input type="radio" name="q3" value="d"> D) ../../etc/passwd</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q3','c',this)">Check Answer</button>
+    <div class="explain" id="exp_q3">
+      <b>Correct answer: C.</b> <code>' OR '1'='1</code> turns the WHERE clause into an always-true condition, returning rows regardless of the password. Option B is for SSTI, D is path traversal.
+    </div>
+  </div>
+
+  <!-- MCQ 4 -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag">MCQ 4</span>
+    <div class="q-text">4. A password recovery feature asks "What is your favorite color?" as the only verification step. This is best described as:</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q4" value="a"> A) An implementation bug (e.g. buffer overflow)</label>
+      <label class="opt"><input type="radio" name="q4" value="b"> B) Insecure Design — a flawed architectural/logic decision</label>
+      <label class="opt"><input type="radio" name="q4" value="c"> C) A Cryptographic Failure</label>
+      <label class="opt"><input type="radio" name="q4" value="d"> D) Server-Side Request Forgery</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q4','b',this)">Check Answer</button>
+    <div class="explain" id="exp_q4">
+      <b>Correct answer: B.</b> Weak security questions are a design-level flaw — no amount of clean coding fixes the fact that "favorite color" has roughly 10 likely answers. This is Insecure Design (A04), not a coding bug.
+    </div>
+  </div>
+
+  <!-- MCQ 5 -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag">MCQ 5</span>
+    <div class="q-text">5. A pentester finds that an error page returns: <code>MySQL error in query "SELECT * FROM users WHERE id='1'"</code>. This is an example of:</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q5" value="a"> A) Security Misconfiguration via verbose error messages</label>
+      <label class="opt"><input type="radio" name="q5" value="b"> B) A properly configured production app</label>
+      <label class="opt"><input type="radio" name="q5" value="c"> C) Broken Access Control</label>
+      <label class="opt"><input type="radio" name="q5" value="d"> D) Insecure Deserialization</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q5','a',this)">Check Answer</button>
+    <div class="explain" id="exp_q5">
+      <b>Correct answer: A.</b> Verbose errors leaking database type, table names, and query structure are a Security Misconfiguration (A05) — production apps should show generic error pages.
+    </div>
+  </div>
+
+  <!-- MCQ 6 -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag">MCQ 6</span>
+    <div class="q-text">6. A custom template engine renders user input directly. Submitting <code>{{7*7}}</code> returns <code>49</code>. What vulnerability class is this, and what category does it fall under?</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q6" value="a"> A) XSS, under A07</label>
+      <label class="opt"><input type="radio" name="q6" value="b"> B) Server-Side Template Injection (SSTI), under A06 Vulnerable & Outdated Components</label>
+      <label class="opt"><input type="radio" name="q6" value="c"> C) SSRF, under A10</label>
+      <label class="opt"><input type="radio" name="q6" value="d"> D) CSRF, under A01</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q6','b',this)">Check Answer</button>
+    <div class="explain" id="exp_q6">
+      <b>Correct answer: B.</b> Evaluating <code>{{7*7}}</code> to <code>49</code> proves the input is being parsed as a template expression — classic SSTI, which the material groups under A06 (often arising from vulnerable/misused template components).
+    </div>
+  </div>
+
+  <!-- MCQ 7 -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag">MCQ 7</span>
+    <div class="q-text">7. An admin account is protected only by a 4-digit PIN with no lockout policy. From a network security perspective, which control would most directly mitigate the resulting brute-force risk?</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q7" value="a"> A) Enabling directory listing</label>
+      <label class="opt"><input type="radio" name="q7" value="b"> B) Rate limiting / account lockout after failed attempts</label>
+      <label class="opt"><input type="radio" name="q7" value="c"> C) Switching from HTTPS to HTTP</label>
+      <label class="opt"><input type="radio" name="q7" value="d"> D) Increasing session token length only</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q7','b',this)">Check Answer</button>
+    <div class="explain" id="exp_q7">
+      <b>Correct answer: B.</b> A 4-digit PIN has only 10,000 combinations — trivial to brute force in seconds. Rate limiting / lockout after a small number of failed attempts (e.g. 5) is the direct mitigation for A07 Authentication Failures.
+    </div>
+  </div>
+
+  <!-- MCQ 8 -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag">MCQ 8</span>
+    <div class="q-text">8. A session cookie is set to <code>session_token=eyJyb2xlIjoidXNlciJ9</code>. The attacker decodes it, changes the JSON to <code>{"role":"admin"}</code>, re-encodes it, and sends it back — gaining admin access. What is the root cause?</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q8" value="a"> A) The cookie wasn't using HTTPS</label>
+      <label class="opt"><input type="radio" name="q8" value="b"> B) The token has no signature/integrity check, so tampering isn't detected (A08)</label>
+      <label class="opt"><input type="radio" name="q8" value="c"> C) The server logged the password</label>
+      <label class="opt"><input type="radio" name="q8" value="d"> D) The server allowed directory listing</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q8','b',this)">Check Answer</button>
+    <div class="explain" id="exp_q8">
+      <b>Correct answer: B.</b> This is a Software & Data Integrity Failure (A08) — the role claim isn't signed/verified (e.g. with HMAC in a real JWT), so the client can freely tamper with it.
+    </div>
+  </div>
+
+  <!-- MCQ 9 -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag">MCQ 9</span>
+    <div class="q-text">9. A "URL Preview" feature on a server fetches whatever URL a user submits, including <code>http://169.254.169.254/latest/meta-data/</code>. This attack pattern is called:</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q9" value="a"> A) Cross-Site Scripting (XSS)</label>
+      <label class="opt"><input type="radio" name="q9" value="b"> B) Server-Side Request Forgery (SSRF)</label>
+      <label class="opt"><input type="radio" name="q9" value="c"> C) Replay Attack</label>
+      <label class="opt"><input type="radio" name="q9" value="d"> D) Man-in-the-Middle</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q9','b',this)">Check Answer</button>
+    <div class="explain" id="exp_q9">
+      <b>Correct answer: B.</b> Tricking the server into requesting internal/cloud-metadata endpoints on the attacker's behalf is SSRF (A10) — mitigated by allowlisting destinations and blocking internal IP ranges.
+    </div>
+  </div>
+
+  <!-- MCQ 10 -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag">MCQ 10</span>
+    <div class="q-text">10. Which pairing of a network security <em>protocol</em> with its primary purpose is CORRECT, based on the Network Defense Fundamentals material?</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="q10" value="a"> A) WPA3 — secures remote SSH login</label>
+      <label class="opt"><input type="radio" name="q10" value="b"> B) IPSec — secures IP communication, commonly used in VPNs</label>
+      <label class="opt"><input type="radio" name="q10" value="c"> C) Kerberos — encrypts Wi-Fi traffic</label>
+      <label class="opt"><input type="radio" name="q10" value="d"> D) TLS — used only for password hashing</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('q10','b',this)">Check Answer</button>
+    <div class="explain" id="exp_q10">
+      <b>Correct answer: B.</b> IPSec operates at the network layer and secures IP communications, widely used to build VPN tunnels. WPA3 secures Wi-Fi, Kerberos is an AD authentication protocol, and TLS secures transport-layer traffic (HTTPS), not password hashing.
+    </div>
+  </div>
+
+  <div class="section-title">Part 2 — Scenario Questions (5)</div>
+
+  <!-- Scenario 1: Easy -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag scenario">Scenario 1 <span class="diff-pill diff-easy">Easy</span></span>
+    <div class="scenario-body">You're testing an internal HR portal. As a regular employee, you notice the "Edit Profile" link is hidden in your UI, but you recall that admins have a page at <code>/admin/users</code>. Out of curiosity, you type <code>https://hr.megacorp.local/admin/users</code> directly into your browser while logged in as a normal employee — and it loads the full employee list with edit buttons.</div>
+    <div class="q-text">What vulnerability is being demonstrated, and what is the single most important fix?</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="s1" value="a"> A) SSRF — the server is making outbound requests it shouldn't</label>
+      <label class="opt"><input type="radio" name="s1" value="b"> B) Missing function-level access control (Broken Access Control) — fix by enforcing server-side authorization checks on every admin route</label>
+      <label class="opt"><input type="radio" name="s1" value="c"> C) SQL Injection — fix by using parameterized queries</label>
+      <label class="opt"><input type="radio" name="s1" value="d"> D) Weak password policy — fix by enforcing MFA</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('s1','b',this)">Check Answer</button>
+    <div class="explain" id="exp_s1">
+      <b>Correct answer: B.</b> The admin page is only "hidden" in the UI — the server isn't actually checking the user's role before serving the page. This is Missing Function-Level Access Control (A01). The fix is a server-side middleware/role check on every sensitive route, never relying on hiding links client-side.
+    </div>
+  </div>
+
+  <!-- Scenario 2: Easy -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag scenario">Scenario 2 <span class="diff-pill diff-easy">Easy</span></span>
+    <div class="scenario-body">During a code review of "Kamosi Personal Dictionary," you find this Java snippet:
+
+String query = "SELECT * FROM words WHERE term = '" + userInput + "'";
+Statement stmt = connection.createStatement();
+ResultSet rs = stmt.executeQuery(query);
+
+A teammate says "it's fine, we trim whitespace from userInput before this line."</div>
+    <div class="q-text">Is the teammate's mitigation sufficient, and what should actually be done?</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="s2" value="a"> A) Yes — trimming whitespace prevents SQL injection</label>
+      <label class="opt"><input type="radio" name="s2" value="b"> B) No — string concatenation into SQL is still injectable regardless of trimming; use PreparedStatement with bound parameters</label>
+      <label class="opt"><input type="radio" name="s2" value="c"> C) No — the real fix is to Base64-encode userInput before concatenation</label>
+      <label class="opt"><input type="radio" name="s2" value="d"> D) Yes, as long as the database user has admin privileges</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('s2','b',this)">Check Answer</button>
+    <div class="explain" id="exp_s2">
+      <b>Correct answer: B.</b> Trimming whitespace does nothing to stop characters like <code>'</code>, <code>--</code>, or <code>OR 1=1</code> from altering query structure. The query must be rewritten using <code>PreparedStatement</code> with <code>?</code> placeholders (bound parameters) so user input is always treated as data, never as SQL syntax — directly matching the SonarQube SQLi remediation pattern.
+    </div>
+  </div>
+
+  <!-- Scenario 3: Medium -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag scenario">Scenario 3 <span class="diff-pill diff-medium">Medium</span></span>
+    <div class="scenario-body">You're doing a CTF web challenge. The app has a "Generate Report" feature where you supply a report title, and the response renders: "Report: {your_title}". You test by submitting a title of {{config}} and the page returns the full Flask app configuration object, including SECRET_KEY and a database connection string.
+
+Separately, you notice that after login, the app sets a cookie:
+auth=eyJ1c2VyIjoiZ3Vlc3QiLCJyb2xlIjoidXNlciJ9.signature_part
+
+You decode the first segment and get: {"user":"guest","role":"user"}</div>
+    <div class="q-text">Which TWO issues are present, and what's the correct prioritized action?</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="s3" value="a"> A) Only SSTI is present; the cookie is fine because it has a signature segment</label>
+      <label class="opt"><input type="radio" name="s3" value="b"> B) SSTI (rendering user input as a template, leaking config/secrets) AND a potential token-forgery risk if the signature isn't actually verified server-side or uses a weak/leaked key — fix both: never render user input as templates, and verify token signatures with a strong server-kept secret</label>
+      <label class="opt"><input type="radio" name="s3" value="c"> C) Only the cookie issue matters; SSTI returning config data is just informational and not exploitable</label>
+      <label class="opt"><input type="radio" name="s3" value="d"> D) This is a DoS vulnerability, fix with rate limiting only</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('s3','b',this)">Check Answer</button>
+    <div class="explain" id="exp_s3">
+      <b>Correct answer: B.</b> The <code>{{config}}</code> result confirms SSTI (A06) — and worse, it leaked the SECRET_KEY, which is often used to sign tokens. If that key is now known to the attacker, they could forge a valid signature for a tampered cookie like <code>{"user":"guest","role":"admin"}</code> — turning an SSTI into full account takeover via A08 token forgery. Fix: never render user-controlled strings as template syntax, and treat any leaked signing key as compromised (rotate it).
+    </div>
+  </div>
+
+  <!-- Scenario 4: Hard -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag scenario">Scenario 4 <span class="diff-pill diff-hard">Hard</span></span>
+    <div class="scenario-body">You're performing an internal pentest at MegaCorp. Recon on a public-facing "Invoice PDF Generator" reveals:
+
+1. It accepts a "logo_url" parameter to fetch a company logo: /generate?logo_url=https://partner-cdn.com/logo.png
+2. The generated PDF is built by a templating library, and the invoice "notes" field is inserted directly into the template string before rendering.
+3. The app runs on an AWS EC2 instance.
+4. Application logs (publicly accessible at /logs/app.log due to a misconfigured web server) show:
+   2026-06-10 09:14:02 DEBUG generate_invoice: logo_url=http://169.254.169.254/latest/meta-data/iam/security-credentials/ status=200 size=412
+   2026-06-10 09:14:55 DEBUG generate_invoice: notes={{self.__init__.__globals__.os.popen('id').read()}} status=200
+
+These two log entries are from previous testers (or attackers) and both returned HTTP 200.</div>
+    <div class="q-text">Identify the FULL attack chain represented here (which vulnerabilities, in what order, and the realistic worst-case impact) — and state the most critical fix to break the chain.</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="s4" value="a"> A) Just SSTI — fix by validating the "notes" field length</label>
+      <label class="opt"><input type="radio" name="s4" value="b"> B) Chain: (1) Security Logging failure exposes sensitive request data via /logs/app.log (A09); (2) the logo_url param is SSRF-vulnerable (A10) and was used to hit the AWS instance metadata endpoint to steal IAM credentials; (3) the notes field is SSTI-vulnerable (A06) and was used for RCE via Python object traversal. Worst case: attacker gets AWS IAM credentials AND remote code execution on the host. Most critical fix: block/allowlist outbound requests from logo_url (deny internal IP ranges incl. 169.254.169.254) AND stop rendering "notes" as a template — both must be fixed, but SSRF-to-metadata is the highest-impact path to cloud account compromise</label>
+      <label class="opt"><input type="radio" name="s4" value="c"> C) Just a logging issue — fix by deleting /logs/app.log</label>
+      <label class="opt"><input type="radio" name="s4" value="d"> D) Just SSRF — fix by switching the logo feature to HTTPS-only URLs</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('s4','b',this)">Check Answer</button>
+    <div class="explain" id="exp_s4">
+      <b>Correct answer: B.</b> This scenario chains three OWASP categories from the material into one realistic attack path:
+      <br><br>
+      <b>1. A09 (Logging/Monitoring failure):</b> Debug-level logs containing full request parameters are exposed at a public, unauthenticated <code>/logs/app.log</code> endpoint — this is how the tester/attacker activity becomes visible at all, and how a real attacker could harvest other users' sensitive data from logs.
+      <br><br>
+      <b>2. A10 (SSRF) → Cloud credential theft:</b> <code>logo_url=http://169.254.169.254/latest/meta-data/iam/security-credentials/</code> abuses the unvalidated URL-fetch feature to reach the AWS EC2 metadata service, which can return temporary IAM credentials for the instance's role — handing the attacker cloud-level access (S3 buckets, other AWS resources, etc.), far beyond just "viewing a file."
+      <br><br>
+      <b>3. A06 (SSTI) → RCE:</b> The "notes" field is rendered as a template, and the payload <code>{{self.__init__.__globals__.os.popen('id').read()}}</code> is a classic Jinja2/Python SSTI-to-RCE technique that walks Python's object graph to reach the <code>os</code> module and execute shell commands.
+      <br><br>
+      <b>Prioritized fixes:</b> (a) Allowlist <code>logo_url</code> to known CDN domains and explicitly block link-local/internal ranges (169.254.169.254, 127.0.0.1, 10.x, 192.168.x, 172.16-31.x) — this single fix prevents metadata-credential theft, often the highest-blast-radius issue in cloud environments; (b) never pass user-controlled strings into a template renderer — pass them as data/context variables instead; (c) restrict debug logging of full parameters and ensure <code>/logs/</code> requires authentication or isn't web-served at all.
+    </div>
+  </div>
+
+  <!-- Scenario 5: Hard -->
+  <div class="q-card" data-points="1">
+    <span class="q-tag scenario">Scenario 5 <span class="diff-pill diff-hard">Hard</span></span>
+    <div class="scenario-body">You're the lead on a small org's security overhaul (similar to setting up defenses for "Nova Development Company"). The current state:
+
+- All internal services (Git server, internal wiki, dev databases) sit on a flat /24 network with no segmentation. Any compromised laptop can directly reach the database on port 3306.
+- Developers SSH into production servers using shared root credentials ("devteam" / "devteam123"), no MFA, no per-user accounts.
+- The web app's login endpoint has no rate limiting (8-character mixed-case+digit passwords are required, but brute-forcing is otherwise unrestricted).
+- There is no IDS/IPS, and firewall rules allow ANY -> ANY on all internal subnets.
+- No centralized logging; each server keeps local logs that are rotated and deleted after 24 hours.
+- A recent incident: an attacker phished a developer's laptop, then pivoted to the database server directly, exfiltrated customer data, and the team only discovered it 3 weeks later via a customer complaint — by which time the relevant logs were gone.</div>
+    <div class="q-text">Using the CIA Triad and the Preventive/Detective/Corrective control framework, design a PRIORITIZED remediation plan. Which single first step would have most changed the outcome of the described incident, and why?</div>
+    <div class="options">
+      <label class="opt"><input type="radio" name="s5" value="a"> A) Buy a more expensive firewall brand — that alone solves everything</label>
+      <label class="opt"><input type="radio" name="s5" value="b"> B) Force all developers to change their password monthly — that alone solves everything</label>
+      <label class="opt"><input type="radio" name="s5" value="c"> C) Network segmentation (limit lateral movement from user subnet to DB subnet via ACLs/firewall rules) combined with centralized log retention/SIEM — segmentation would have stopped or slowed the pivot from laptop to DB (Preventive), and centralized logs with longer retention plus monitoring would have enabled detection within hours/days instead of weeks (Detective). Both are higher priority than cosmetic password rotation</label>
+      <label class="opt"><input type="radio" name="s5" value="d"> D) Nothing can be done after a phishing email succeeds — accept the risk</label>
+    </div>
+    <button class="check-btn" onclick="checkMCQ('s5','c',this)">Check Answer</button>
+    <div class="explain" id="exp_s5">
+      <b>Correct answer: C.</b> This scenario stitches together nearly the entire Network Defense Fundamentals framework into one incident post-mortem:
+      <br><br>
+      <b>What failed (mapped to CIA):</b> Confidentiality was breached (customer data exfiltrated), and the org had essentially zero visibility into Integrity/Availability impact because of weak monitoring.
+      <br><br>
+      <b>Why the "ANY -> ANY" flat network matters most:</b> The initial compromise (phished laptop) was arguably unavoidable purely through technical controls — social engineering succeeds against people. But the attacker's ability to go from "one compromised laptop" to "direct access to the production database" in one hop is a network design failure, not just an endpoint failure. Network segmentation (Preventive control — ACLs separating user/workstation subnets from database/server subnets, least-privilege firewall rules instead of ANY->ANY) would have either blocked the pivot outright or forced the attacker through additional, detectable hops.
+      <br><br>
+      <b>Why centralized logging matters second:</b> Local logs rotated/deleted after 24 hours guarantee that any slow-burn attack (3 weeks, in this case) leaves no forensic trail. A centralized logging/SIEM setup (Detective control) with longer retention and alerting on anomalies (e.g., a workstation suddenly opening a connection to port 3306 on the DB server) would have surfaced the incident in hours, not weeks — turning a "discovered by customer complaint" disaster into a contained incident.
+      <br><br>
+      <b>Other items (shared credentials/no MFA on SSH, no rate limiting on login, no IDS/IPS)</b> are all real findings worth fixing — shared root SSH access in particular is a severe finding (no accountability, can't revoke individual access, violates least privilege) — but segmentation + centralized logging directly address the root cause of how this specific incident escalated and went undetected, making them the highest-priority first steps. Password rotation policies (B) and brand of firewall (A) are largely irrelevant to what actually happened.
+    </div>
+  </div>
+
+  <button class="final-btn" onclick="showFinal()">Show Final Score</button>
+  <div class="final-result" id="finalResult"></div>
+
+  <footer>Built from: Cyber Defense Labs (OWASP Top 10 A01–A10) &amp; Computer Network &amp; Defense Fundamentals course material.</footer>
+</div>
+
+<script>
+let score = 0;
+const total = 15;
+document.getElementById('totalDisplay').textContent = total;
+
+function checkMCQ(name, correctVal, btn){
+  const radios = document.getElementsByName(name);
+  let selected = null;
+  for(const r of radios){ if(r.checked) selected = r.value; }
+  if(!selected){
+    alert('Please select an answer first.');
+    return;
+  }
+  for(const r of radios){
+    const label = r.closest('.opt');
+    label.classList.add('disabled');
+    r.disabled = true;
+    if(r.value === correctVal){
+      label.classList.add('correct');
+    } else if(r.value === selected){
+      label.classList.add('wrong');
+    }
+  }
+  const exp = document.getElementById('exp_' + name);
+  if(exp) exp.classList.add('show');
+
+  if(selected === correctVal){
+    score++;
+  }
+  btn.disabled = true;
+  btn.textContent = (selected === correctVal) ? 'Correct ✓' : 'Incorrect — see explanation';
+
+  document.getElementById('scoreDisplay').textContent = score;
+  const pct = Math.round((score/total)*100);
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function showFinal(){
+  const el = document.getElementById('finalResult');
+  const pct = Math.round((score/total)*100);
+  let verdict;
+  if(pct >= 90) verdict = "Excellent — strong command of both web app and network defense fundamentals.";
+  else if(pct >= 70) verdict = "Solid grasp — review the missed topics and you're exam-ready.";
+  else if(pct >= 50) verdict = "Decent foundation — revisit the OWASP categories and CIA/control framework sections.";
+  else verdict = "Needs more review — go back through both source documents before attempting again.";
+
+  el.innerHTML = `<b>Final Score: ${score} / ${total} (${pct}%)</b><br><br>${verdict}`;
+  el.classList.add('show');
+  el.scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
